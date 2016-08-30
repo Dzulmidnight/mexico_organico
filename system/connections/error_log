@@ -1,0 +1,6 @@
+[30-Jun-2016 12:18:46 America/Chicago] PHP Warning:  mysql_connect(): Access denied for user 'kafeprod_user'@'localhost' (using password: YES) in /home/kafeprod/public_html/connections/kafeprod_bio.php on line 10
+[30-Jun-2016 12:18:46 America/Chicago] PHP Fatal error:  Access denied for user 'kafeprod_user'@'localhost' (using password: YES) in /home/kafeprod/public_html/connections/kafeprod_bio.php on line 10
+[30-Jun-2016 12:21:52 America/Chicago] PHP Warning:  mysql_connect(): Access denied for user 'kafeprod_user'@'localhost' (using password: YES) in /home/kafeprod/public_html/connections/kafeprod_bio.php on line 14
+[30-Jun-2016 12:21:52 America/Chicago] PHP Fatal error:  Access denied for user 'kafeprod_user'@'localhost' (using password: YES) in /home/kafeprod/public_html/connections/kafeprod_bio.php on line 14
+[30-Jun-2016 12:22:04 America/Chicago] PHP Warning:  mysql_connect(): Access denied for user 'kafeprod_user'@'localhost' (using password: YES) in /home/kafeprod/public_html/connections/kafeprod_bio.php on line 14
+[30-Jun-2016 12:22:04 America/Chicago] PHP Fatal error:  Access denied for user 'kafeprod_user'@'localhost' (using password: YES) in /home/kafeprod/public_html/connections/kafeprod_bio.php on line 14
