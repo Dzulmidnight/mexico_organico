@@ -158,11 +158,20 @@ if (!function_exists("GetSQLValueString")) {
 		$actualizar = mysql_query($updateSQL,$conectar) or die(mysql_error());
 		$mensaje = "Nota Actualizada Correctamente";
 	}
-	if(isset($_POST['eliminar_nota']) && $_POST['eliminar_nota'] == 1){
+	if(isset($_POST['eliminar_articulo']) && $_POST['eliminar_articulo'] == 1){
 		$idarticulo = $_POST['idarticulo'];
-		$query = "DELETE FROM nota WHERE idarticulo = $idarticulo";
-		$eliminar = mysql_query($query,$conectar) or die(mysql_error());
-		$mensaje = "Nota Eliminada Correctamente";
+		$img = $_POST['img_articulo'];
+
+		unlink($img);
+		$deleteSQL = sprintf("DELETE FROM articulo WHERE idarticulo = %s",
+			GetSQLValueString($idarticulo, "int"));		
+		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
+
+		$deleteSQL = sprintf("DELETE FROM articulo_tag WHERE idarticulo = %s",
+			GetSQLValueString($idarticulo, "int"));
+		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
+
+		$mensaje = "Articulo Eliminado Correctamente";
 
 	}
 
@@ -440,8 +449,9 @@ if (!function_exists("GetSQLValueString")) {
 									<a class="btn btn-sm btn-warning" data-toggle="tooltip" title="Visualizar | Editar" href="?menu=articulo&add_articulo&detalle=<?php echo $articulo['idarticulo']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 									<!-- ELIMINAR NOTA -->
 
-									<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Articulo" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_nota" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+									<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Articulo" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_articulo" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
 									<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
+									<input type="hidden" name="img_articulo" value="<?php echo $articulo['img']; ?>">
 								</td>
 							</tr>
 						<?php

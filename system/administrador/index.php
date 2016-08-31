@@ -16,7 +16,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!--<link rel="icon" href="../../favicon.ico">-->
-
+    <link href="../../assets/img/ico.png" rel="shortcut icon">
     <title>México Orgánico</title>
 
 
@@ -116,6 +116,8 @@ $(function () {
             <li class="disabled"><a href="#">Usuario: <strong style="color:#c0392b"><?php echo $_SESSION['username'];?></strong></a></li>
             <li <?php if(empty($menu)){ echo 'class="active"';} ?>><a href="index.php">Inicio</span></a></li>
             <li <?php if($menu == "articulo"){ echo 'class="active"';} ?>><a href="?menu=articulo&listado">Articulos</a></li>
+            <li <?php if($menu == "biblioteca"){ echo 'class="active"';} ?>><a href="?menu=biblioteca&listado">Biblioteca</a></li>
+            <li <?php if($menu == "sitios"){ echo 'class="active"';} ?>><a href="?menu=sitios&listado">Sitios de Interes</a></li>
             <?php if($clase_usuario == 'adm'){ ?><li <?php if($menu == "usuarios"){ echo 'class="active"';}?> ><a href="?menu=usuarios">Usuarios</a></li><?php } ?>
             <li <?php if($menu == "cuenta"){ echo 'class="active"';} ?>><a href="?menu=cuenta">Mi Cuenta</a></li>
             <li><a href="../../connections/salir.php">Cerrar Sesión</a></li>

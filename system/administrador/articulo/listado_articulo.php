@@ -1,16 +1,63 @@
-<h3>Listado Articulos</h3>
 <?php 
+if (!function_exists("GetSQLValueString")) {
+  function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
+  {
+    if (PHP_VERSION < 6) {
+      $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
+    }
+
+    $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+
+    switch ($theType) {
+      case "text":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;    
+      case "long":
+      case "int":
+        $theValue = ($theValue != "") ? intval($theValue) : "NULL";
+        break;
+      case "double":
+        $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
+        break;
+      case "date":
+        $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
+        break;
+      case "defined":
+        $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
+        break;
+    }
+    return $theValue;
+  }
+}
+
+	if(isset($_POST['eliminar_articulo']) && $_POST['eliminar_articulo'] == 1){
+		$idarticulo = $_POST['idarticulo'];
+		$img = $_POST['img_articulo'];
+
+		unlink($img);
+		$deleteSQL = sprintf("DELETE FROM articulo WHERE idarticulo = %s",
+			GetSQLValueString($idarticulo, "int"));		
+		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
+
+		$deleteSQL = sprintf("DELETE FROM articulo_tag WHERE idarticulo = %s",
+			GetSQLValueString($idarticulo, "int"));
+		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
+
+		$mensaje = "Articulo Eliminado Correctamente";
+
+	}
 	//$query = "SELECT nota.*,  usuario.username FROM nota INNER JOIN usuario ON nota.idusuario = usuario.idusuario";
 	$query = "SELECT articulo.*, usuario.username FROM articulo INNER JOIN usuario ON articulo.autor = usuario.idusuario";
 	$row_articulo = mysql_query($query,$conectar) or die(mysql_error());
 	$total_articulo = mysql_num_rows($row_articulo);
 ?>
+<h3>Listado Articulos</h3>
 <table class="table table-bordered" style="font-size:12px;">
 	<thead>
 		<tr class="success">
 			<th class="text-center">Id</th>
-			<th class="text-center">Titulo</th>
-			<th class="text-center">Descripcion</th>
+			<th class="text-center">Título</th>
+			<th class="text-center">Descripción</th>
 			<th class="text-center">Imagen</th>
 			<th class="text-center">Tag(s)</th>
 			<th class="text-center">Autor</th>
@@ -41,6 +88,18 @@
 					 ?>
 					</td>
 					<td><?php echo $articulo['username']; ?></td>
+					<td>
+						<!-- EDITAR ARTICULO -->
+						<a class="btn btn-sm btn-warning" data-toggle="tooltip" title="Visualizar | Editar" href="?menu=articulo&add_articulo&detalle=<?php echo $articulo['idarticulo']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+						<!-- ELIMINAR NOTA -->
+						<form action="" method="POST">
+							<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Articulo" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_articulo" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+							<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
+							<input type="hidden" name="idarticulo" value="<?php echo $articulo['idarticulo']; ?>">
+							<input type="hidden" name="img_articulo" value="<?php echo $articulo['img']; ?>">
+						</form>
+					</td>
+
 				</tr>
 
 
