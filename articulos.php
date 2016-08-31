@@ -52,20 +52,24 @@ mysql_select_db($database, $conectar);
                                     </li>
 
                                     <li>
-                                        <a href="sitios_interes.html"><span class="fa-th ">Sitios de Interes</span></a>
+                                        <a href="sitios_interes.php"><span class="fa-th ">Sitios de Interes</span></a>
                                     </li>
 
                                     <li>
-                                        <a href="biblioteca.html"><span class="fa-font ">Biblioteca</span></a>
+                                        <a href="biblioteca.php"><span class="fa-font ">Biblioteca</span></a>
                                     </li>
                                     <li>
-                                        <a href="contact.html" class="fa-comment ">Contactanos</a>
+                                        <a href="contact.php" class="fa-comment ">Contactanos</a>
                                     </li>
+                                    <li>
+                                        <a href="login.php" class="fa-comment ">Login</a>
+                                    </li>
+
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-3 no-padding">
-                            <ul class="social-icons pull-right">
+                            <ul class="social-icons rounded color pull-right">
                                 <li class="social-rss">
                                     <a href="#" target="_blank" title="RSS"></a>
                                 </li>
@@ -106,7 +110,7 @@ mysql_select_db($database, $conectar);
                                     <div class="blog-item-header">
                                         <!-- Title -->
                                         <h2>
-                                            <a href="#"><?php echo $articulo['titulo']; ?></a>
+                                            <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><?php echo $articulo['titulo']; ?></a>
                                         </h2>
                                         <div class="clearfix"></div>
                                         <!-- End Title -->
@@ -166,7 +170,7 @@ mysql_select_db($database, $conectar);
                                                     <?php echo substr($articulo['contenido'], 0,300)." ..."; ?>
                                                 </p>
                                                 <!-- Read More -->
-                                                <a href="#" class="btn btn-primary">
+                                                <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>" class="btn btn-primary">
                                                     Leer Más
                                                     <i class="icon-chevron-right readmore-icon"></i>
                                                 </a>
@@ -190,7 +194,7 @@ mysql_select_db($database, $conectar);
                                     <!-- Title -->
                                     <h2>
                                         <a href="#">
-                                            Another Sample Blog</a>
+                                            Ejemplo Título 3</a>
                                     </h2>
                                     <div class="clearfix"></div>
                                     <!-- End Title -->
@@ -256,7 +260,7 @@ mysql_select_db($database, $conectar);
                                     <!-- Title -->
                                     <h2>
                                         <a href="#">
-                                            Yet Another Sample Blog Title</a>
+                                            Ejemplo Título 4</a>
                                     </h2>
                                     <div class="clearfix"></div>
                                     <!-- End Title -->
@@ -322,7 +326,7 @@ mysql_select_db($database, $conectar);
                                     <!-- Title -->
                                     <h2>
                                         <a href="#">
-                                            And One More Sample Blog Title</a>
+                                            Ejemplo Título 5</a>
                                     </h2>
                                     <div class="clearfix"></div>
                                     <!-- End Title -->
@@ -469,10 +473,10 @@ mysql_select_db($database, $conectar);
                                     ?>
                                         <li>
                                             <div class="recent-post">
-                                                <a href="">
+                                                <a href="articulo.php?articulo=<?php echo $last_articulos['idarticulo']; ?>">
                                                     <img class="pull-left" style="width:54px;" src="system/administrador/<?php echo $last_articulos['img']; ?>" alt="thumb1">
                                                 </a>
-                                                <a href="#" class="posts-list-title"><?php echo $last_articulos['titulo']; ?></a>
+                                                <a href="articulo.php?articulo=<?php echo $last_articulos['idarticulo']; ?>" class="posts-list-title"><?php echo $last_articulos['titulo']; ?></a>
                                                 <br>
                                                 <span class="recent-post-date">
                                                     <?php echo date('d/m/Y', $last_articulos['fecha_registro']); ?>
@@ -489,10 +493,10 @@ mysql_select_db($database, $conectar);
                                             <a href="">
                                                 <img class="pull-left" src="assets/img/blog/thumbs/thumb2.jpg" alt="thumb2">
                                             </a>
-                                            <a href="#" class="posts-list-title">Sidebar post example</a>
+                                            <a href="#" class="posts-list-title">Título</a>
                                             <br>
                                             <span class="recent-post-date">
-                                                July 30, 2013
+                                                Fecha
                                             </span>
                                         </div>
                                         <div class="clearfix"></div>
@@ -502,10 +506,10 @@ mysql_select_db($database, $conectar);
                                             <a href="">
                                                 <img class="pull-left" src="assets/img/blog/thumbs/thumb3.jpg" alt="thumb3">
                                             </a>
-                                            <a href="#" class="posts-list-title">Sidebar post example</a>
+                                            <a href="#" class="posts-list-title">Título</a>
                                             <br>
                                             <span class="recent-post-date">
-                                                July 30, 2013
+                                                Fecha
                                             </span>
                                         </div>
                                         <div class="clearfix"></div>
@@ -515,10 +519,10 @@ mysql_select_db($database, $conectar);
                                             <a href="">
                                                 <img class="pull-left" src="assets/img/blog/thumbs/thumb4.jpg" alt="thumb4">
                                             </a>
-                                            <a href="#" class="posts-list-title">Sidebar post example</a>
+                                            <a href="#" class="posts-list-title">Título</a>
                                             <br>
                                             <span class="recent-post-date">
-                                                July 30, 2013
+                                                Fecha
                                             </span>
                                         </div>
                                         <div class="clearfix"></div>
@@ -539,9 +543,19 @@ mysql_select_db($database, $conectar);
                         <!-- Disclaimer -->
                         <div class="col-md-4">
                             <h3 class="class margin-bottom-10">Declaración</h3>
-                            <p>All stock images on this template demo are for presentation purposes only, intended to represent a live site and are not included with the template or in any of the Joomla51 club membership plans.</p>
-                            <p>Most of the images used here are available from
-                                <a href="http://www.shutterstock.com/" target="_blank">shutterstock.com</a>. Links are provided if you wish to purchase them from their copyright owners.</p>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            </p>
                         </div>
                         <!-- End Disclaimer -->
                         <!-- Contact Details -->

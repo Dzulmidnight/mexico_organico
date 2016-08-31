@@ -48,7 +48,7 @@
                                     </li>
 
                                     <li>
-                                        <a href="articulos.html"><span class="fa-copy ">Articulos</span></a>
+                                        <a href="articulos.php"><span class="fa-copy ">Articulos</span></a>
                                     </li>
 
                                     <li>
@@ -56,16 +56,20 @@
                                     </li>
 
                                     <li>
-                                        <a href="biblioteca.html"><span class="fa-font ">Biblioteca</span></a>
+                                        <a href="biblioteca.php"><span class="fa-font ">Biblioteca</span></a>
                                     </li>
                                     <li>
-                                        <a href="contact.html" class="fa-comment ">Contactanos</a>
+                                        <a href="contact.php" class="fa-comment ">Contactanos</a>
                                     </li>
+                                    <li>
+                                        <a href="login.php" class="fa-comment ">Login</a>
+                                    </li>
+
                                 </ul>
                             </div>
                         </div>
                         <div class="col-md-3 no-padding">
-                            <ul class="social-icons pull-right">
+                            <ul class="social-icons rounded color pull-right">
                                 <li class="social-rss">
                                     <a href="#" target="_blank" title="RSS"></a>
                                 </li>
@@ -310,9 +314,19 @@
                         <!-- Disclaimer -->
                         <div class="col-md-4">
                             <h3 class="class margin-bottom-10">Declaración</h3>
-                            <p>All stock images on this template demo are for presentation purposes only, intended to represent a live site and are not included with the template or in any of the Joomla51 club membership plans.</p>
-                            <p>Most of the images used here are available from
-                                <a href="http://www.shutterstock.com/" target="_blank">shutterstock.com</a>. Links are provided if you wish to purchase them from their copyright owners.</p>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                            </p>rstock.com</a>. Links are provided if you wish to purchase them from their copyright owners.</p>
                         </div>
                         <!-- End Disclaimer -->
                         <!-- Contact Details -->

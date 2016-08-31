@@ -742,7 +742,7 @@ p.site-slogan {
   font-weight: normal;
   letter-spacing: 1px;
   line-height: normal;
-  padding: 19px 16px 20px;
+  padding: 19px 10px 16px 16px;
   text-transform: uppercase;
   display: block;
 }
