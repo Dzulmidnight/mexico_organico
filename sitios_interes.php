@@ -96,11 +96,24 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
             <!-- End Top Menu -->
             <!-- === END HEADER === -->
             <!-- === BEGIN CONTENT === -->
+
+
+            <!-- End Top Panels -->
+            <hr class="margin-top-3 0">
+            <!-- Middle Text -->
+            <div class="row">
+                <div class="col-md-12 text-center margin-top-10 animate fadeInUp">
+                    <h2 class="text-center">Sitio de Interes</h2>
+                    
+                </div>
+            </div>
+            <!-- End Middle Text -->
+            <hr>
+
             <div id="content">
                 <div class="container background-white">
                     <div class="row margin-vert-30">
                         <div class="col-md-12">
-                            <h2 class="margin-bottom-10">Sitios de Interes</h2>
                             <div class="row margin-bottom-30">
                                 <!--<div class="col-md-3 animate fadeInLeft">
                                     <p>Commodo id natoque malesuada sollicitudin elit suscipit. Curae suspendisse mauris posuere accumsan massa posuere lacus convallis tellus interdum. Amet nullam fringilla nibh nulla convallis ut venenatis purus lobortis.</p>
@@ -156,7 +169,7 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                                  ?>
                                 <!-- //Portfolio Item// -->
                                 <!-- Person Details -->
-                                <div class="col-md-3 col-sm-3 col-xs-6 person-details margin-bottom-30">
+                                <!--<div class="col-md-3 col-sm-3 col-xs-6 person-details margin-bottom-30">
                                     <figure>
                                         <figcaption>
                                             <h3 class="margin-bottom-10">Sitio 2
@@ -196,7 +209,7 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                                 </div>
                                 <!-- //Portfolio Item// -->
                                 <!-- Person Details -->
-                                <div class="col-md-3 col-sm-3 col-xs-6 person-details margin-bottom-30">
+                                <!--<div class="col-md-3 col-sm-3 col-xs-6 person-details margin-bottom-30">
                                     <figure>
                                         <figcaption>
                                             <h3 class="margin-bottom-10">Sitio 3
@@ -238,7 +251,7 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                             </div>
                             <hr class="margin-bottom-50">
                             <div class="row">
-                                <div class="col-md-6">
+                                <!--31/08<div class="col-md-6">
                                     <h3 class="margin-bottom-10">Maecenas congue dui</h3>
                                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo, laboriosam, quod odit quo quos itaque repellat quaerat a ad alias. Vel, nostrum id ab velit veritatis consequatur fugit sequi esse. Maecenas congue dui
                                         id posuere fermentum.</p>
@@ -246,7 +259,7 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                                 </div>
                                 <div class="col-md-6">
                                     <!-- Progress Bars -->
-                                    <h3 class="progress-label">Graphic Design
+                                  <!--31/08  <h3 class="progress-label">Graphic Design
                                         <span class="pull-right">92%</span>
                                     </h3>
                                     <div class="progress progress-xs">
@@ -268,10 +281,10 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                                         </div>
                                     </div>
                                     <!-- End Progress Bars -->
-                                </div>
+                                <!--31/08</div> 31/08-->
                             </div>
-                            <hr class="margin-bottom-30">
-                            <div class="row">
+                            <!--31/08 <hr class="margin-bottom-30"> 31/08-->
+                            <!--31/08 <div class="row">
                                 <div class="col-md-4">
                                     <div class="row">
                                         <div class="col-sm-4">
@@ -314,8 +327,8 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <hr class="margin-top-40">
+                            </div> 31/08-->
+                            <!--31/08<hr class="margin-top-40"> 31/08-->
                         </div>
                     </div>
                 </div>

@@ -94,6 +94,18 @@ mysql_select_db($database, $conectar);
             $query = "SELECT articulo.*, usuario.username FROM articulo INNER JOIN usuario ON articulo.autor = usuario.idusuario";
             $row_articulo = mysql_query($query,$conectar) or die(mysql_error());
              ?>
+            <!-- End Top Panels -->
+            <hr class="margin-top-3 0">
+            <!-- Middle Text -->
+            <div class="row">
+                <div class="col-md-12 text-center margin-top-10 animate fadeInUp">
+                    <h2 class="text-center">Artículos</h2>
+                    
+                </div>
+            </div>
+            <!-- End Middle Text -->
+            <hr>
+
             <div id="content">
                 <div class="container background-white">
                     <div class="row margin-vert-30">
@@ -108,15 +120,23 @@ mysql_select_db($database, $conectar);
                                 
                                     <!-- Blog Item Header -->
                                     <div class="blog-item-header">
-                                        <!-- Title -->
-                                        <h2>
-                                            <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><?php echo $articulo['titulo']; ?></a>
-                                        </h2>
-                                        <div class="clearfix"></div>
-                                        <!-- End Title -->
+                                        <div class="row">
+                                            <!-- Title -->
+                                            <div class="col-md-10">
+                                                <h2>
+                                                    <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><?php echo $articulo['titulo']; ?></a>
+                                                </h2>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <!-- End Title -->
+                                        </div>
                                         <!-- Date -->
                                         <div class="blog-post-date">
-                                            <a href="#"><?php echo date('d/m/Y', $articulo['fecha_registro']); ?></a>
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    <a href="#"><?php echo date('d/m/Y', $articulo['fecha_registro']); ?></a>    
+                                                </div>  
+                                            </div>              
                                         </div>
                                         <!-- End Date -->
                                     </div>

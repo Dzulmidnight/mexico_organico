@@ -171,6 +171,7 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                         <!-- Icons -->
                         <div class="col-md-4 text-center">
                             <h2 class="padding-top-10 animate fadeIn">Artículos</h2>
+                            <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><h4><?php echo $articulo['titulo']; ?></h4></a>
                             <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><img src="system/administrador/<?php echo $articulo['img']; ?>" class="animate fadeIn" style="height:200px;" alt="<?php echo $articulo['descripcion_img']; ?>"></a>
                             <p class="text-justify animate fadeIn"><?php echo substr($articulo['contenido'], 0,200)." ...[<b><a href='articulo.php?articulo=$articulo[idarticulo]'>Leer Más</a></b>]"; ?></p>
                             <a class="btn btn-primary" href="articulos.php">Consultar Más Artículos</a>
@@ -189,11 +190,12 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             }
                              ?>
                             <p class="text-justify animate fadeIn"><?php echo substr($sitios['descripcion'], 0,200); ?></p>
-                            <div class="col-md-6"><a href="//<?php echo $sitios['url']; ?>" target="_new"><u>Visitar el Sitio Web</u></a></div>
-                            <div class="col-md-6"><a class="btn btn-green" href="sitios_interes.php">Consultar Más Sitios</a></div>
+                            <div class="col-md-6"><a href="//<?php echo $sitios['url']; ?>" target="_blank"><u>Visitar el Sitio Web</u></a></div>
+                            <div class="col-md-6"><a class="btn btn-primary" href="sitios_interes.php">Consultar Más Sitios</a></div>
                         </div>
                         <div class="col-md-4 text-center">
                             <h2 class="padding-top-10 animate fadeIn">Biblioteca</h2>
+                            <a href="system/administrador/<?php echo $biblioteca['archivo']; ?>"><h4><?php echo $biblioteca['titulo']; ?></h4></a>
                             <img src="assets/img/logo.png" class="img-thumbnail animate fadeIn" style="height:200px;" alt="">
                             <p class="text-justify animate fadeIn"><?php echo $biblioteca['descripcion']; ?></p>
                             <div class="col-md-6"><u><a href="system/administrador/<?php echo $biblioteca['archivo']; ?>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Descargar</a></u></div>
@@ -235,6 +237,12 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
             </div>
             <!-- Portfolio -->
             <div id="portfolio" class="bottom-border-shadow">
+                <div class="row">
+                    <div class="col-md-12 text-center margin-top-10 animate fadeInUp">
+                        <h2 class="text-center">Nuestros Objetivos</h2>
+                    </div>
+                </div>
+
                 <div class="container bottom-border">
                     <div class="row padding-top-40">
                         <ul class="portfolio-group">
@@ -242,10 +250,10 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             <li class="portfolio-item col-sm-4 col-xs-6 margin-bottom-40">
                                 <a href="#">
                                     <figure class="animate fadeInLeft">
-                                        <img alt="image1" src="assets/img/frontpage/image1.jpg">
+                                        <img alt="asesoria y capacitación" src="assets/img/objetivos/asesoria.jpg">
                                         <figcaption>
-                                            <h3>Velit esse molestie</h3>
-                                            <span>Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui et everti tamquam suavitate mea.</span>
+                                            
+                                            <span>Asesorar y capacitar a productores, comunidades, organizaciones, Instituciones Educativas y empresas que requieran certificar sus productos y procesos orgánicos para el mercado nacional e internacional</span>
                                         </figcaption>
                                     </figure>
                                 </a>
@@ -255,10 +263,10 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             <li class="portfolio-item col-sm-4 col-xs-6 margin-bottom-40">
                                 <a href="#">
                                     <figure class="animate fadeIn">
-                                        <img alt="image2" src="assets/img/frontpage/image2.jpg">
+                                        <img alt="Formación de Tecnicos" src="assets/img/objetivos/formacion.jpg">
                                         <figcaption>
-                                            <h3>Quam nunc putamus</h3>
-                                            <span>Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui et everti tamquam suavitate mea.</span>
+                                            
+                                            <span>Formar cuadros técnicos en las comunidades, organizaciones y empresas que requieran certificar sus productos y procesos orgánicos para el mercado nacional e internacional.</span>
                                         </figcaption>
                                     </figure>
                                 </a>
@@ -268,10 +276,10 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             <li class="portfolio-item col-sm-4 col-xs-6 margin-bottom-40">
                                 <a href="#">
                                     <figure class="animate fadeInRight">
-                                        <img alt="image3" src="assets/img/frontpage/image3.jpg">
+                                        <img alt="Gestión de recursos" src="assets/img/objetivos/gestion.jpg">
                                         <figcaption>
-                                            <h3>Placerat facer possim</h3>
-                                            <span>Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui et everti tamquam suavitate mea.</span>
+                                            
+                                            <span>Gestionar recursos provenientes del gobierno o de la iniciativa privada Nacional e Internacional para apoyar la asesoría y procesos de capacitación a productores, comunidades, organizaciones y empresas que requieran certificar sus productos y procesos orgánicos para el mercado nacional e internacional.</span>
                                         </figcaption>
                                     </figure>
                                 </a>
@@ -281,10 +289,10 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             <li class="portfolio-item col-sm-4 col-xs-6 margin-bottom-40">
                                 <a href="#">
                                     <figure class="animate fadeInLeft">
-                                        <img alt="image4" src="assets/img/frontpage/image4.jpg">
+                                        <img alt="image4" src="assets/img/objetivos/sustentabilidad.jpg">
                                         <figcaption>
-                                            <h3>Nam liber tempor</h3>
-                                            <span>Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui et everti tamquam suavitate mea.</span>
+                                           
+                                            <span>Apoyo en el aprovechamiento de los recursos naturales, la protección del ambiente, la flora y la fauna, la preservación y restauración del equilibrio ecológico</span>
                                         </figcaption>
                                     </figure>
                                 </a>
@@ -294,10 +302,10 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             <li class="portfolio-item col-sm-4 col-xs-6 margin-bottom-40">
                                 <a href="#">
                                     <figure class="animate fadeIn">
-                                        <img alt="image5" src="assets/img/frontpage/image5.jpg">
+                                        <img alt="image5" src="assets/img/objetivos/alianza.jpg">
                                         <figcaption>
-                                            <h3>Donec non urna</h3>
-                                            <span>Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui et everti tamquam suavitate mea.</span>
+
+                                            <span>Crear alianzas estratégicas con otras organizaciones, instituciones educativas, redes y colectivos; así como ser filiales con otras organizaciones para el cumplimiento de su objetivo.</span>
                                         </figcaption>
                                     </figure>
                                 </a>
@@ -307,10 +315,10 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             <li class="portfolio-item col-sm-4 col-xs-6 margin-bottom-40">
                                 <a href="#">
                                     <figure class="animate fadeInRight">
-                                        <img alt="image6" src="assets/img/frontpage/image6.jpg">
+                                        <img alt="image6" src="assets/img/objetivos/actos.jpg">
                                         <figcaption>
-                                            <h3>Nullam consectetur</h3>
-                                            <span>Vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui et everti tamquam suavitate mea.</span>
+
+                                            <span> Celebrar todo tipo de actos y contratos de naturaleza Civil o de cualquier otro permitido por la ley para la consecución de los demás fines sociales.</span>
                                         </figcaption>
                                     </figure>
                                 </a>

@@ -18,6 +18,10 @@ switch ($menu) {
 	case 'sitios':
 		include("sitios/sitios.php");
 		break;
+	case 'correo':
+		include("correo.php");
+		break;
+
 	case 'organizacion':
 		include("organizacion/index.php");
 		break;

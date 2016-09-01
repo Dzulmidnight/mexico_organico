@@ -118,6 +118,7 @@ $(function () {
             <li <?php if($menu == "articulo"){ echo 'class="active"';} ?>><a href="?menu=articulo&listado">Articulos</a></li>
             <li <?php if($menu == "biblioteca"){ echo 'class="active"';} ?>><a href="?menu=biblioteca&listado">Biblioteca</a></li>
             <li <?php if($menu == "sitios"){ echo 'class="active"';} ?>><a href="?menu=sitios&listado">Sitios de Interes</a></li>
+            <li <?php if($menu == "correo"){ echo 'class="active"';} ?>><a href="?menu=correo">Correo</a></li>
             <?php if($clase_usuario == 'adm'){ ?><li <?php if($menu == "usuarios"){ echo 'class="active"';}?> ><a href="?menu=usuarios">Usuarios</a></li><?php } ?>
             <li <?php if($menu == "cuenta"){ echo 'class="active"';} ?>><a href="?menu=cuenta">Mi Cuenta</a></li>
             <li><a href="../../connections/salir.php">Cerrar Sesión</a></li>
