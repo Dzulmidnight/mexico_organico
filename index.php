@@ -70,7 +70,7 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                                         <a href="index.php" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
                                     </li>
                                     <li class="visible-xs visible-sm">
-                                        <a href="index.php">Inicio</a>
+                                        <a style="hover:white" href="index.php">Inicio</a>
                                     </li>
                                     <li>
                                         <a href="nosotros.html"><span class="fa-gears ">Nosotros</span></a>
@@ -189,7 +189,7 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             }
                              ?>
                             <p class="text-justify animate fadeIn"><?php echo substr($sitios['descripcion'], 0,200); ?></p>
-                            <div class="col-md-6"><a href="<?php echo $sitios['url']; ?>" target="_new"><u>Visitar el Sitio Web</u></a></div>
+                            <div class="col-md-6"><a href="//<?php echo $sitios['url']; ?>" target="_new"><u>Visitar el Sitio Web</u></a></div>
                             <div class="col-md-6"><a class="btn btn-green" href="sitios_interes.php">Consultar Más Sitios</a></div>
                         </div>
                         <div class="col-md-4 text-center">
