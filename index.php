@@ -1,5 +1,19 @@
+<?php 
+require_once("system/connections/conexion.php"); 
+mysql_select_db($database, $conectar);
+
+$row_articulo = mysql_query("SELECT * FROM articulo ORDER BY fecha_registro DESC LIMIT 1", $conectar);
+$articulo = mysql_fetch_assoc($row_articulo);
+
+$row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC LIMIT 1", $conectar);
+$sitios = mysql_fetch_assoc($row_sitios);
+
+$row_biblioteca = mysql_query("SELECT * FROM biblioteca ORDER BY fecha_registro DESC LIMIT 1", $conectar);
+$biblioteca = mysql_fetch_assoc($row_biblioteca);
+
+
+ ?>
 <!-- === BEGIN HEADER === -->
-<!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
@@ -53,10 +67,10 @@
                             <div class="visible-lg">
                                 <ul id="hornavmenu" class="nav navbar-nav" >
                                     <li class="hidden-xs hidden-sm">
-                                        <a href="index.html" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
+                                        <a href="index.php" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
                                     </li>
                                     <li class="visible-xs visible-sm">
-                                        <a href="index.html">Inicio</a>
+                                        <a href="index.php">Inicio</a>
                                     </li>
                                     <li>
                                         <a href="nosotros.html"><span class="fa-gears ">Nosotros</span></a>
@@ -156,19 +170,34 @@
                     <div class="row padding-vert-60">
                         <!-- Icons -->
                         <div class="col-md-4 text-center">
-                            <img src="assets/img/blog/image2.jpg" class="img-thumbnail animate fadeIn" alt="">
                             <h2 class="padding-top-10 animate fadeIn">Artículos</h2>
-                            <p class="animate fadeIn">Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer.</p>
+                            <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><img src="system/administrador/<?php echo $articulo['img']; ?>" class="animate fadeIn" style="height:200px;" alt="<?php echo $articulo['descripcion_img']; ?>"></a>
+                            <p class="text-justify animate fadeIn"><?php echo substr($articulo['contenido'], 0,200)." ...[<b><a href='articulo.php?articulo=$articulo[idarticulo]'>Leer Más</a></b>]"; ?></p>
+                            <a class="btn btn-primary" href="articulos.php">Consultar Más Artículos</a>
                         </div>
                         <div class="col-md-4 text-center">
-                            <img src="assets/img/blog/image2.jpg" class="img-thumbnail animate fadeIn" alt="">
                             <h2 class="padding-top-10 animate fadeIn">Sitios de Interés</h2>
-                            <p class="animate fadeIn">Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer.</p>
+                            <?php 
+                            if(empty($sitios['img'])){
+                            ?>
+                                <img src="assets/img/logo.png" class="img-thumbnail animate fadeIn" style="height:200px;" alt="">
+                            <?php
+                            }else{
+                            ?>
+                                <img src="system/adminitrador/<?php echo $sitios['img']; ?>" class="animate fadeIn" alt="">
+                            <?php
+                            }
+                             ?>
+                            <p class="text-justify animate fadeIn"><?php echo substr($sitios['descripcion'], 0,200); ?></p>
+                            <div class="col-md-6"><a href="<?php echo $sitios['url']; ?>" target="_new"><u>Visitar el Sitio Web</u></a></div>
+                            <div class="col-md-6"><a class="btn btn-green" href="sitios_interes.php">Consultar Más Sitios</a></div>
                         </div>
                         <div class="col-md-4 text-center">
-                            <img src="assets/img/blog/image2.jpg" class="img-thumbnail animate fadeIn" alt="">
                             <h2 class="padding-top-10 animate fadeIn">Biblioteca</h2>
-                            <p class="animate fadeIn">Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer.</p>
+                            <img src="assets/img/logo.png" class="img-thumbnail animate fadeIn" style="height:200px;" alt="">
+                            <p class="text-justify animate fadeIn"><?php echo $biblioteca['descripcion']; ?></p>
+                            <div class="col-md-6"><u><a href="system/administrador/<?php echo $biblioteca['archivo']; ?>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Descargar</a></u></div>
+                            <duv class="col-md-6"><u><a class="btn btn-primary" href="biblioteca.php"><i class="glyphicon glyphicon-book"></i> Consultar Más</a></u></duv>
                         </div>
                         <!-- End Icons -->
                     </div>
@@ -338,7 +367,7 @@
                             <h3 class="margin-bottom-10">Menu</h3>
                             <ul class="menu">
                                 <li>
-                                    <a class="fa-tasks" href="index.html">Inicio</a>
+                                    <a class="fa-tasks" href="index.php">Inicio</a>
                                 </li>
                                 <li>
                                     <a class="fa-users" href="nosotros.html">Nosotros</a>

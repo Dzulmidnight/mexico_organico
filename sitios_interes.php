@@ -1,5 +1,11 @@
+<?php 
+require_once("system/connections/conexion.php"); 
+mysql_select_db($database, $conectar);
+
+$row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $conectar);
+
+ ?>
 <!-- === BEGIN HEADER === -->
-<!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
@@ -38,10 +44,10 @@
                             <div class="visible-lg">
                                 <ul id="hornavmenu" class="nav navbar-nav" >
                                     <li class="hidden-xs hidden-sm">
-                                        <a href="index.html" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
+                                        <a href="index.php" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
                                     </li>
                                     <li class="visible-xs visible-sm">
-                                        <a href="index.html">Inicio</a>
+                                        <a href="index.php">Inicio</a>
                                     </li>
                                     <li>
                                         <a href="nosotros.html"><span class="fa-gears ">Nosotros</span></a>
@@ -96,21 +102,26 @@
                         <div class="col-md-12">
                             <h2 class="margin-bottom-10">Sitios de Interes</h2>
                             <div class="row margin-bottom-30">
-                                <div class="col-md-3 animate fadeInLeft">
+                                <!--<div class="col-md-3 animate fadeInLeft">
                                     <p>Commodo id natoque malesuada sollicitudin elit suscipit. Curae suspendisse mauris posuere accumsan massa posuere lacus convallis tellus interdum. Amet nullam fringilla nibh nulla convallis ut venenatis purus lobortis.</p>
                                     <p>Lorem Ipsum is simply dummy text of Lorem the printing and typesettings. Aliquam dictum nulla eu varius porta. Maecenas congue dui id posuere fermentum. Sed fringilla sem sed massa ullamcorper, vitae rutrum justo sodales.
                                         Cras sed iaculis enim. Sed aliquet viverra nisl a tristique. Curabitur vitae mauris sem.</p>
                                 </div>
                                 <!-- Person Details -->
+                                <?php 
+                                while($sitio = mysql_fetch_assoc($row_sitios)){
+                                ?>
                                 <div class="col-md-3 col-sm-3 col-xs-6 person-details margin-bottom-30">
                                     <figure>
                                         <figcaption>
-                                            <h3 class="margin-bottom-10">Sitio 1
-                                                <small>- Nombre de la página</small>
-                                            </h3>
-                                            <span>Sed fringilla sem sed massa ullamcorper, vitae rutrum justo sodales. Cras sed iaculis enim. Sed aliquet viverra nisl a tristique.</span>
+                                            <a href="<?php echo $sitio['url'] ?>" target="_new">
+                                                <h3 class="margin-bottom-10"><?php echo $sitio['nombre']; ?>
+                                                    <!--<small>- Nombre de la página</small>-->
+                                                </h3>
+                                            </a>
+                                            <span class="text-justify"><?php echo $sitio['descripcion']; ?></span>
                                         </figcaption>
-                                        <img src="assets/img/theteam/image1.jpg" alt="image1">
+                                        <a href="<?php echo $sitio['url']; ?>" target="_new"><img src="system/administrador/<?php echo $sitio['img']; ?>" style="height:185px;" alt="<?php echo $sitio['nombre']; ?>"></a>
                                         <ul class="list-inline person-details-icons">
                                             <li>
                                                 <a href="#">
@@ -140,6 +151,9 @@
                                         </ul>
                                     </figure>
                                 </div>
+                                <?php
+                                }
+                                 ?>
                                 <!-- //Portfolio Item// -->
                                 <!-- Person Details -->
                                 <div class="col-md-3 col-sm-3 col-xs-6 person-details margin-bottom-30">
@@ -352,7 +366,7 @@
                             <h3 class="margin-bottom-10">Menu</h3>
                             <ul class="menu">
                                 <li>
-                                    <a class="fa-tasks" href="index.html">Inicio</a>
+                                    <a class="fa-tasks" href="index.php">Inicio</a>
                                 </li>
                                 <li>
                                     <a class="fa-users" href="nosotros.html">Nosotros</a>

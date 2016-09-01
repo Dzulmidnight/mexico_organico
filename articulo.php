@@ -53,10 +53,10 @@ mysql_select_db($database, $conectar);
                                 <div class="visible-lg">
                                     <ul id="hornavmenu" class="nav navbar-nav" >
                                         <li class="hidden-xs hidden-sm">
-                                            <a href="index.html" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
+                                            <a href="index.php" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
                                         </li>
                                         <li class="visible-xs visible-sm">
-                                            <a href="index.html">Inicio</a>
+                                            <a href="index.php">Inicio</a>
                                         </li>
                                         <li>
                                             <a href="nosotros.html"><span class="fa-gears ">Nosotros</span></a>
@@ -448,7 +448,7 @@ mysql_select_db($database, $conectar);
                                 <h3 class="margin-bottom-10">Menu</h3>
                                 <ul class="menu">
                                     <li>
-                                        <a class="fa-tasks" href="index.html">Inicio</a>
+                                        <a class="fa-tasks" href="index.php">Inicio</a>
                                     </li>
                                     <li>
                                         <a class="fa-users" href="nosotros.html">Nosotros</a>

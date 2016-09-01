@@ -37,14 +37,14 @@ if (!function_exists("GetSQLValueString")) {
 	$fecha = time();
 
 
-	if(isset($_POST['agregar_articulo']) && $_POST['agregar_articulo'] == 1){
+	if(isset($_POST['agregar_sitio']) && $_POST['agregar_sitio'] == 1){
 
 
-		if(!empty($_FILES['img']['name'])){
-			$ruta_img = "../img/articulos/";
-			$ruta_img = $ruta_img . basename( $_FILES['img']['name']); 
-			if(move_uploaded_file($_FILES['img']['tmp_name'], $ruta_img)){ 
-				//echo "El archivo ". basename( $_FILES['img']['name']). " ha sido subido";
+		if(!empty($_FILES['img_sitio']['name'])){
+			$ruta_img = "../img/sitios/";
+			$ruta_img = $ruta_img . basename( $_FILES['img_sitio']['name']); 
+			if(move_uploaded_file($_FILES['img_sitio']['tmp_name'], $ruta_img)){ 
+				//echo "El archivo ". basename( $_FILES['archivo']['name']). " ha sido subido";
 			} /*else{
 				echo "Ha ocurrido un error, trate de nuevo!";
 			}*/
@@ -56,32 +56,29 @@ if (!function_exists("GetSQLValueString")) {
 		//$fecha_registro = $_POST['fecha'];
 		//$fecha = strtotime($fecha_registro);
 		$idusuario = $_POST['idusuario'];
-		$titulo = $_POST['titulo'];
-		$contenido = $_POST['contenido'];
-		$descripcion_img = $_POST['descripcion_img'];
-		$fuente = $_POST['fuente'];
-		$autor = $_POST['idusuario'];
+		$nombre = $_POST['nombre'];
+		$descripcion = $_POST['descripcion'];
+		$url = $_POST['url'];
 
-		$query = sprintf("INSERT INTO articulo (titulo, contenido, img, descripcion_img, fuente, autor, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s, %s)", 
-           GetSQLValueString($titulo, "text"),
-           GetSQLValueString($contenido, "text"),
-           GetSQLValueString($ruta_img, "text"),
-           GetSQLValueString($descripcion_img, "text"),
-           GetSQLValueString($fuente, "text"),
-           GetSQLValueString($autor, "text"),
-           GetSQLValueString($fecha, "int"));
+		$query = sprintf("INSERT INTO sitios (nombre, descripcion, img, url, idusuario, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
+			GetSQLValueString($nombre, "text"),
+			GetSQLValueString($descripcion, "text"),
+			GetSQLValueString($ruta_img, "text"),
+			GetSQLValueString($url, "text"),
+			GetSQLValueString($idusuario, "int"),
+			GetSQLValueString($fecha, "int"));
 		
 		//$query = "INSERT INTO nota (tipo, fecha, idusuario, descripcion_img, descripcion1, descripcion2, descripcion3, contenido_titulo, contenido_descripcion) VALUES('$tipo_nota', $fecha, $idusuario, '$descripcion_img', '$descripcion1', '$descripcion2', '$descripcion3', '$contenido_titulo', '$contenido_descripcion')";
 		$insertar = mysql_query($query,$conectar) or die(mysql_error()); 
-		$idarticulo = mysql_insert_id($conectar);
+		$idsitio = mysql_insert_id($conectar);
 
 
 
 		if(!empty($_POST['tag_existente'])){
 			foreach($_POST['tag_existente'] as $tag) {
 				//$tag_existente .= $array_alcance." - ";
-				$insertSQL = sprintf("INSERT INTO articulo_tag (idarticulo, idtag) VALUES(%s, %s)",
-					GetSQLValueString($idarticulo, "int"),
+				$insertSQL = sprintf("INSERT INTO articulo_tag (idsitio, idtag) VALUES(%s, %s)",
+					GetSQLValueString($idsitio, "int"),
 					GetSQLValueString($tag, "int"));
 
 				$insertar = mysql_query($insertSQL,$conectar) or die(mysql_error());
@@ -113,8 +110,8 @@ if (!function_exists("GetSQLValueString")) {
 
 				$idtag = mysql_insert_id($conectar);
 
-				$insertSQL = sprintf("INSERT INTO articulo_tag(idarticulo, idtag) VALUES (%s, %s)",
-					GetSQLValueString($idarticulo, "int"),
+				$insertSQL = sprintf("INSERT INTO articulo_tag(idsitio, idtag) VALUES (%s, %s)",
+					GetSQLValueString($idsitio, "int"),
 					GetSQLValueString($idtag, "int"));
 
 				$insertar = mysql_query($insertSQL, $conectar) or die(mysql_error());
@@ -123,55 +120,52 @@ if (!function_exists("GetSQLValueString")) {
 		}
 
 
-
-		$mensaje = "Se ha agregado un nuevo articulo";
+		$mensaje = "Se ha agregado un Nuevo Documento";
 
 
 	}
-	if(isset($_POST['actualizar_articulo']) && $_POST['actualizar_articulo'] == 1){
-		$idarticulo = $_POST['idarticulo'];
-
-		$titulo = $_POST['titulo'];
-		$contenido = $_POST['contenido'];
-		$descripcion_img = $_POST['descripcion_img'];
-		$idarticulo = $_POST['idarticulo'];
-
+	if(isset($_POST['actualizar_sitio']) && $_POST['actualizar_sitio'] == 1){
+		$idsitio = $_POST['idsitio'];
+		$nombre = $_POST['nombre'];
+		$descripcion = $_POST['descripcion'];
+		$url = $_POST['url'];
 
 		if(empty($_FILES['nueva_img']['name'])){
 			$ruta_img = $_POST['img_actual'];
 		}else{		
-			$ruta_img = "../img/articulos/";
+			$ruta_img = "../img/sitios/";
 			$ruta_img = $ruta_img . basename( $_FILES['nueva_img']['name']); 
 			if(move_uploaded_file($_FILES['nueva_img']['tmp_name'], $ruta_img)){ 
 				unlink($_POST['img_actual']);
 			} 
 		}
-
-		$updateSQL = sprintf("UPDATE articulo SET titulo = %s, contenido = %s, img = %s, descripcion_img = %s WHERE idarticulo = %s",
-			GetSQLValueString($titulo, "text"),
-			GetSQLValueString($contenido, "text"),
+		$updateSQL = sprintf("UPDATE sitios SET nombre = %s, descripcion = %s, img = %s, url = %s WHERE idsitio = %s",
+			GetSQLValueString($nombre, "text"),
+			GetSQLValueString($descripcion, "text"),
 			GetSQLValueString($ruta_img, "text"),
-			GetSQLValueString($descripcion_img, "text"),
-			GetSQLValueString($idarticulo, "int"));
+			GetSQLValueString($url, "text"),
+			GetSQLValueString($idsitio, "int"));
 
-		//$query = "UPDATE nota SET tipo = '$tipo_nota', fecha = '$fecha', idusuario = '$idusuario', descripcion_img = '$descripcion_img', descripcion1 = '$descripcion1', descripcion2 = '$descripcion2', descripcion3 = '$descripcion3', contenido_titulo = '$contenido_titulo', contenido_descripcion = '$contenido_descripcion' WHERE idarticulo =  $idarticulo";
+
+		//$query = "UPDATE nota SET tipo = '$tipo_nota', fecha = '$fecha', idusuario = '$idusuario', descripcion_img = '$descripcion_img', descripcion1 = '$descripcion1', descripcion2 = '$descripcion2', descripcion3 = '$descripcion3', contenido_titulo = '$contenido_titulo', contenido_descripcion = '$contenido_descripcion' WHERE idsitio =  $idsitio";
 		$actualizar = mysql_query($updateSQL,$conectar) or die(mysql_error());
-		$mensaje = "Nota Actualizada Correctamente";
+		$mensaje = "Sitio Actualizado Correctamente";
+
 	}
-	if(isset($_POST['eliminar_articulo']) && $_POST['eliminar_articulo'] == 1){
-		$idarticulo = $_POST['idarticulo'];
-		$img = $_POST['img_articulo'];
+	if(isset($_POST['eliminar_sitio']) && $_POST['eliminar_sitio'] == 1){
+		$idsitio = $_POST['idsitio'];
+		$img = $_POST['img_sitio'];
 
 		unlink($img);
-		$deleteSQL = sprintf("DELETE FROM articulo WHERE idarticulo = %s",
-			GetSQLValueString($idarticulo, "int"));		
+		$deleteSQL = sprintf("DELETE FROM sitios WHERE idsitio = %s",
+			GetSQLValueString($idsitio, "int"));		
 		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
 
-		$deleteSQL = sprintf("DELETE FROM articulo_tag WHERE idarticulo = %s",
-			GetSQLValueString($idarticulo, "int"));
+		$deleteSQL = sprintf("DELETE FROM articulo_tag WHERE idsitio = %s",
+			GetSQLValueString($idsitio, "int"));
 		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
 
-		$mensaje = "Articulo Eliminado Correctamente";
+		$mensaje = "Documento Eliminado Correctamente";
 
 	}
 
@@ -193,12 +187,12 @@ if (!function_exists("GetSQLValueString")) {
 
 	<?php 
 	if(isset($_GET['detalle'])){
-		$idarticulo = $_GET['detalle'];
-		$query = "SELECT articulo.*, usuario.username FROM articulo INNER JOIN usuario ON articulo.autor = usuario.idusuario WHERE idarticulo = $idarticulo";
-		$row_articulo = mysql_query($query,$conectar) or die(mysql_error());
-		$articulo = mysql_fetch_assoc($row_articulo);
+		$idsitio = $_GET['detalle'];
+		$query = "SELECT sitios.*, usuario.username FROM sitios INNER JOIN usuario ON sitios.idusuario = usuario.idusuario WHERE idsitio = $idsitio";
+		$row_sitios = mysql_query($query,$conectar) or die(mysql_error());
+		$sitios = mysql_fetch_assoc($row_sitios);
 
-		$fecha = date('Y-m-d', $articulo['fecha_registro']);
+		$fecha = date('Y-m-d', $sitios['fecha_registro']);
 		//$date = str_replace('/', '-', $fecha);
 
 	?>
@@ -207,23 +201,23 @@ if (!function_exists("GetSQLValueString")) {
 			<form action="" method="POST" enctype="multipart/form-data">
 				<div class="panel panel-warning">
 				  <div class="panel-heading">
-				    <h3 class="panel-title">Detalle Articulo</h3>
+				    <h3 class="panel-title">Detalle Sitio</h3>
 				  </div>
 				  <div class="panel-body">
 				  	<div class="col-lg-12">
 						<div class="col-md-6">
-							<p class="alert alert-info" style="padding:7px;">Usuario: <strong style="color:#c0392b"><?php echo $articulo['username']; ?></strong></p>
-							<input type="hidden" name="idusuario" value="<?php echo $articulo['idusuario']; ?>">
+							<p class="alert alert-info" style="padding:7px;">Usuario: <strong style="color:#c0392b"><?php echo $sitios['username']; ?></strong></p>
+							<input type="hidden" name="idusuario" value="<?php echo $sitios['idusuario']; ?>">
 						</div>	
 						<div class="col-md-6">
 							<p class="alert alert-info" style="padding:7px;">Fecha: <strong style="color:#c0392b"><?php echo $fecha; ?></strong></p>
-							<input type="hidden" name="idusuario" value="<?php echo $articulo['idusuario']; ?>">
+							<input type="hidden" name="idusuario" value="<?php echo $sitios['idusuario']; ?>">
 						</div>	
 
 						<div class="col-md-12">
 							<label for="">Tags: </label>
 							<?php 
-							$query_tags = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE articulo_tag.idarticulo = $articulo[idarticulo]";
+							$query_tags = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE articulo_tag.idsitio = $sitios[idsitio]";
 							$row_articulo_tag = mysql_query($query_tags,$conectar) or die(mysql_error());
 							while($tags = mysql_fetch_assoc($row_articulo_tag)){
 								echo "<a  style='margin:1px;' href='#'><span class='label label-success'>".$tags['nombre']."</span></a>";
@@ -232,38 +226,35 @@ if (!function_exists("GetSQLValueString")) {
 						</div>
 
 						<div class="col-md-12">
-							<label for="titulo">Titulo Articulo</label>
-							<input type="text" class="form-control" name="titulo" placeholder="Titulo Articulo" value="<?php echo $articulo['titulo']; ?>">
-						</div>
-						
-						<div class="col-md-2">
-							<p><b>Imagen Actual</b></p>
-							<img style="width:100px;" src="<?php echo $articulo['img']; ?>" alt="" class="img-thumbnail">
-						</div>
-						<div class="col-md-10">
-							<label for="descripcion_img">Descripción Imagen</label>
-							<input type="text" class="form-control" name="descripcion_img" placeholder="Descripción Imagen" value="<?php echo $articulo['descripcion_img']; ?>">
+							<label for="nombre">Nombre del Sitio</label>
+							<input type="text" class="form-control" name="nombre" placeholder="Nombre del Sitio" value="<?php echo $sitios['nombre']; ?>">
 						</div>
 						<div class="col-md-12">
+							<label for="url">URL del Sitio</label>
+							<input type="text" class="form-control" name="url" placeholder="URL del Sitio" value="<?php echo $sitios['url']; ?>">
+						</div>
+						<div class="col-md-12">
+							<label for="descripcion">Descripción</label>
+							<textarea class="form-control" name="descripcion" id="" cols="30" rows="10"><?php echo $sitios['descripcion']; ?></textarea>
+							
+						</div>
+						
+						<div class="col-md-6">
+							<p><b>Imagen Actual</b></p>
+							<img class="img-thumbnail" style="width:100px;" src="<?php echo $sitios['img']; ?>" alt="">
+						</div>
+						<div class="col-md-6">
 							<label for="nueva_img">Cambiar Imagen</label>
 							<input type="file" class="form-control" name="nueva_img">
 						</div>
 
-						<div class="col-md-12">
-							<label for="contenido">Contenido Artículo</label>
-							<textarea class="form-control" name="contenido" id="" rows="10"><?php echo $articulo['contenido']; ?></textarea>
-						</div>
-						<div class="col-md-12">
-							<label for="fuente">Fuente</label>
-							<input type="text" class="form-control" name="fuente" value="<?php echo $articulo['fuente']; ?>" placeholder="Fuente">
-						</div>
 
 						<div class="col-lg-12">
 							<hr>
-							<input type="hidden" name="idarticulo" value="<?php echo $articulo['idarticulo']; ?>">
-							<input type="hidden" name="actualizar_articulo" value="1">
-							<input type="hidden" name="img_actual" value="<?php echo $articulo['img']; ?>">
-							<input class="btn btn-success" type="submit" value="Actualizar Nota">
+							<input type="hidden" name="idsitio" value="<?php echo $sitios['idsitio']; ?>">
+							<input type="hidden" name="actualizar_sitio" value="1">
+							<input type="hidden" name="img_actual" value="<?php echo $sitios['img']; ?>">
+							<input class="btn btn-success" type="submit" value="Actualizar Sitio">
 						</div>
 
 				  	</div>
@@ -278,7 +269,7 @@ if (!function_exists("GetSQLValueString")) {
 			<form action="" method="POST" enctype="multipart/form-data">
 				<div class="panel panel-primary">
 				  <div class="panel-heading">
-				    <h3 class="panel-title">Agregar Articulo</h3>
+				    <h3 class="panel-title">Agregar Nuevo Sitio</h3>
 				  </div>
 				  <div class="panel-body">
 
@@ -292,8 +283,12 @@ if (!function_exists("GetSQLValueString")) {
 						</div>	
 
 						<div class="col-md-12">
-							<label for="titulo">Titulo Articulo</label>
-							<input type="text" class="form-control" name="titulo" placeholder="Titulo Articulo" required>
+							<label for="nombre">Nombre del Sitio <span style="color:#e74c3c">*</span></label>
+							<input type="text" class="form-control" name="nombre" placeholder="Titulo Documento" required>
+						</div>
+						<div class="col-md-12">
+							<label for="url">URL del Sitio <span style="color:#e74c3c">*</span></label>
+							<input type="text" class="form-control" name="url" placeholder="Ej: http://mexorganico.com" required>
 						</div>
 						<div class="col-md-6">
 							<label for="tag_existente">Listado Tags</label>
@@ -329,29 +324,19 @@ if (!function_exists("GetSQLValueString")) {
 								</tr>
 							</table>
 						</div>
-
-						<div class="col-md-6">
-							<label for="img">Imagen</label>
-							<input type="file" class="form-control" name="img" required>
-						</div>
-						<div class="col-md-6">
-							<label for="descripcion_img">Descripción Imagen</label>
-							<textarea class="form-control" name="descripcion_img" id="descripcion_img" rows="4"></textarea>
+						<div class="col-md-12">
+							<label for="descripcion">Descripción del Sitio <span style="color:#e74c3c">*</span></label>
+							<textarea class="form-control" name="descripcion" id=""  rows="10" required></textarea>
 						</div>
 						<div class="col-md-12">
-							<label for="contenido">Contenido Articulo</label>
-							<textarea class="form-control" name="contenido" id=""  rows="10" required></textarea>
+							<label for="img_sitio">Imagen</label>
+							<input type="file" class="form-control" name="img_sitio">
 						</div>
-						<div class="col-md-12">
-							<label for="contenido">Fuente</label>
-							<input type="text" class="form-control" name="fuente" placeholder="fuente">
-						</div>
-
 
 						<div class="col-lg-12">
 							<hr>
-							<input type="hidden" name="agregar_articulo" value="1">
-							<input class="btn btn-success" type="submit" value="Agregar Articulo">
+							<input type="hidden" name="agregar_sitio" value="1">
+							<input class="btn btn-success" type="submit" value="Agregar Sitio">
 						</div>
 
 				  	</div>
@@ -394,8 +379,8 @@ if (!function_exists("GetSQLValueString")) {
 
 						<div class="col-lg-12">
 							<hr>
-							<input type="hidden" name="agregar_articulo" value="1">
-							<input class="btn btn-success" type="submit" value="Agregar Articulo">
+							<input type="hidden" name="agregar_sitio" value="1">
+							<input class="btn btn-success" type="submit" value="Agregar sitios">
 						</div>
 				  	</div> 29/08-->
 				  </div>
@@ -409,35 +394,35 @@ if (!function_exists("GetSQLValueString")) {
 		<form action="" method="POST">
 			<div class="panel panel-primary">
 				<div class="panel-heading">
-				    <h3 class="panel-title">Listado Articulos</h3>
+				    <h3 class="panel-title">Listado Sitios</h3>
 				</div>
 				<div class="panel-body">
 					<table class="table table-condensed table-hover" style="font-size:12px;">
 						<thead>
 							<tr>
 								<th class="text-center">Id</th>
-								<th class="text-center">Titulo</th>
+								<th class="text-center">Nombre</th>
 								<th class="text-center">Tags</th>
 							</tr>
 						</thead>
 						<tbody>
 						<?php 
-						$query = "SELECT * FROM articulo";
-						$row_articulo = mysql_query($query,$conectar) or die(mysql_error());
+						$query = "SELECT * FROM sitios";
+						$row_sitios = mysql_query($query,$conectar) or die(mysql_error());
 
-						while($articulo = mysql_fetch_assoc($row_articulo)){
+						while($sitios = mysql_fetch_assoc($row_sitios)){
 						?>
-							<tr <?php if($articulo['idarticulo'] == isset($_GET['detalle'])){ echo "class='info'";} ?>>
+							<tr <?php if($sitios['idsitio'] == isset($_GET['detalle'])){ echo "class='info'"; } ?>>
 								<td>
 									<?php 
-									echo $articulo['idarticulo']; 
+									echo $sitios['idsitio']; 
 									?>
-									<input type="hidden" name="idarticulo" value="<?php echo $articulo['idarticulo']; ?>">
+									<input type="hidden" name="idsitio" value="<?php echo $sitios['idsitio']; ?>">
 								</td>
-								<td><?php echo $articulo['titulo']; ?></td>
+								<td><?php echo $sitios['nombre']; ?></td>
 								<td>
 								<?php 
-								$consultar_tags = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE idarticulo = $articulo[idarticulo]";
+								$consultar_tags = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE idsitio = $sitios[idsitio]";
 								$row_tag = mysql_query($consultar_tags,$conectar) or die(mysql_error());
 								while($tags = mysql_fetch_assoc($row_tag)){
 									echo "<a  style='margin:1px;' href='#'><span class='label label-success'>".$tags['nombre']."</span></a>";
@@ -445,13 +430,13 @@ if (!function_exists("GetSQLValueString")) {
 								?>
 								</td>	
 								<td>
-									<!-- EDITAR ARTICULO -->
-									<a class="btn btn-sm btn-warning" data-toggle="tooltip" title="Visualizar | Editar" href="?menu=articulo&add_articulo&detalle=<?php echo $articulo['idarticulo']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+									<!-- EDITAR sitios -->
+									<a class="btn btn-sm btn-warning" data-toggle="tooltip" title="Visualizar | Editar" href="?menu=sitios&add_sitio&detalle=<?php echo $sitios['idsitio']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 									<!-- ELIMINAR NOTA -->
 
-									<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Articulo" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_articulo" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+									<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Sitio" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_sitio" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
 									<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
-									<input type="hidden" name="img_articulo" value="<?php echo $articulo['img']; ?>">
+									<input type="hidden" name="img_sitio" value="<?php echo $sitios['img']; ?>">
 								</td>
 							</tr>
 						<?php
