@@ -121,7 +121,7 @@ $(function () {
             <li <?php if($menu == "correo"){ echo 'class="active"';} ?>><a href="?menu=correo">Correo</a></li>
             <?php if($clase_usuario == 'adm'){ ?><li <?php if($menu == "usuarios"){ echo 'class="active"';}?> ><a href="?menu=usuarios">Usuarios</a></li><?php } ?>
             <li <?php if($menu == "cuenta"){ echo 'class="active"';} ?>><a href="?menu=cuenta">Mi Cuenta</a></li>
-            <li><a href="../../connections/salir.php">Cerrar Sesión</a></li>
+            <li><a href="../connections/salir.php">Cerrar Sesión</a></li>
           </ul>
 
         </div>

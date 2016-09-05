@@ -127,14 +127,14 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                                 <div class="col-md-3 col-sm-3 col-xs-6 person-details margin-bottom-30">
                                     <figure>
                                         <figcaption>
-                                            <a href="//<?php echo $sitio['url'] ?>" target="_new">
+                                            <a href="<?php echo $sitio['url'] ?>" target="_new">
                                                 <h3 class="margin-bottom-10"><?php echo $sitio['nombre']; ?>
                                                     <!--<small>- Nombre de la página</small>-->
                                                 </h3>
                                             </a>
                                             <span class="text-justify"><?php echo $sitio['descripcion']; ?></span>
                                         </figcaption>
-                                        <a href="//<?php echo $sitio['url']; ?>" target="_new"><img src="system/administrador/<?php echo $sitio['img']; ?>" style="height:185px;" alt="<?php echo $sitio['nombre']; ?>"></a>
+                                        <a href="<?php echo $sitio['url']; ?>" target="_new"><img src="system/administrador/<?php echo $sitio['img']; ?>" style="height:185px;" alt="<?php echo $sitio['nombre']; ?>"></a>
                                         <ul class="list-inline person-details-icons">
                                             <li>
                                                 <a href="#">

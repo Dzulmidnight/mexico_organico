@@ -190,7 +190,7 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                             }
                              ?>
                             <p class="text-justify animate fadeIn"><?php echo substr($sitios['descripcion'], 0,200); ?></p>
-                            <div class="col-md-6"><a href="//<?php echo $sitios['url']; ?>" target="_blank"><u>Visitar el Sitio Web</u></a></div>
+                            <div class="col-md-6"><a href="<?php echo $sitios['url']; ?>" target="_blank"><u>Visitar el Sitio Web</u></a></div>
                             <div class="col-md-6"><a class="btn btn-primary" href="sitios_interes.php">Consultar Más Sitios</a></div>
                         </div>
                         <div class="col-md-4 text-center">
