@@ -21,7 +21,9 @@ switch ($menu) {
 	case 'correo':
 		include("correo.php");
 		break;
-
+	case 'pagina':
+		include("sitio_web.php");
+		break;
 	case 'organizacion':
 		include("organizacion/index.php");
 		break;

@@ -73,7 +73,7 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
                                         <a style="hover:white" href="index.php">Inicio</a>
                                     </li>
                                     <li>
-                                        <a href="nosotros.html"><span class="fa-gears ">Nosotros</span></a>
+                                        <a href="nosotros.php"><span class="fa-gears ">Nosotros</span></a>
                                     </li>
 
                                     <li>
@@ -331,76 +331,10 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
             <!-- End Portfolio -->
             <!-- === END CONTENT === -->
             <!-- === BEGIN FOOTER === -->
-            <div id="base">
-                <div class="container bottom-border padding-vert-30">
-                    <div class="row">
-                        <!-- Disclaimer -->
-                        <div class="col-md-4">
-                            <h3 class="class margin-bottom-10">Declaración</h3>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                                cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                            </p>
-                        </div>
-                        <!-- End Disclaimer -->
-                        <!-- Contact Details -->
-                        <div class="col-md-4 margin-bottom-20">
-                            <h3 class="margin-bottom-10">Detalles de Contacto</h3>
-                            <p>
-                                <span class="fa-phone">Teléfono:</span>1-800-123-4567
-                                <br>
-                                <span class="fa-envelope">Email:</span>
-                                <a href="mailto:info@example.com">info@example.com</a>
-                                <br>
-                                <span class="fa-link">Sitio Web:</span>
-                                <a href="http://mexorganico.com/">www.mexorganico.com</a>
-                            </p>
-                            <p>The Dunes, Top Road,
-                                <br>Strandhill,
-                                <br>Co. Sligo,
-                                <br>Ireland</p>
-                        </div>
-                        <!-- End Contact Details -->
-                        <!-- Sample Menu -->
-                        <div class="col-md-4 margin-bottom-20">
-                            <h3 class="margin-bottom-10">Menu</h3>
-                            <ul class="menu">
-                                <li>
-                                    <a class="fa-tasks" href="index.php">Inicio</a>
-                                </li>
-                                <li>
-                                    <a class="fa-users" href="nosotros.html">Nosotros</a>
-                                </li>
-                                <li>
-                                    <a class="fa-comments" href="articulos.php">Articulos</a>
-                                </li>
-                                <li>
-                                    <a class="fa-coffee" href="sitios_interes.html">Sitios de Interes</a>
-                                </li>
-                                <li>
-                                    <a class="fa-cloud" href="biblioteca.html">Biblioteca</a>
-                                </li>
-                                <li>
-                                    <a class="fa-envelope" href="contact.html">Contactanos</a>
-                                </li>
+            <?php 
+            include("footer.php");
+             ?>
 
-
-                            </ul>
-                            <div class="clearfix"></div>
-                        </div>
-                        <!-- End Sample Menu -->
-                    </div>
-                </div>
-            </div>
             <!-- Footer -->
             <div id="footer" class="background-grey">
                 <div class="container">

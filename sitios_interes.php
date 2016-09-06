@@ -50,7 +50,7 @@ $row_sitios = mysql_query("SELECT * FROM sitios ORDER BY fecha_registro DESC", $
                                         <a href="index.php">Inicio</a>
                                     </li>
                                     <li>
-                                        <a href="nosotros.html"><span class="fa-gears ">Nosotros</span></a>
+                                        <a href="nosotros.php"><span class="fa-gears ">Nosotros</span></a>
                                     </li>
 
                                     <li>
