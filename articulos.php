@@ -31,62 +31,7 @@ mysql_select_db($database, $conectar);
 
             <!-- End Header -->
             <!-- Top Menu -->
-            <div id="hornav" class="bottom-border-shadow">
-                <div class="container no-padding border-bottom">
-                    <div class="row">
-                        <div class="col-md-9 no-padding">
-                            <div class="visible-lg">
-                                <ul id="hornavmenu" class="nav navbar-nav" >
-                                    <li class="hidden-xs hidden-sm">
-                                        <a href="index.php" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
-                                    </li>
-                                    <li class="visible-xs visible-sm">
-                                        <a href="index.php">Inicio</a>
-                                    </li>
-                                    <li>
-                                        <a href="nosotros.php"><span class="fa-gears ">Nosotros</span></a>
-                                    </li>
-
-                                    <li>
-                                        <a class="active" href="articulos.php"><span class="fa-copy ">Articulos</span></a>
-                                    </li>
-
-                                    <li>
-                                        <a href="sitios_interes.php"><span class="fa-th ">Sitios de Interes</span></a>
-                                    </li>
-
-                                    <li>
-                                        <a href="biblioteca.php"><span class="fa-font ">Biblioteca</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="contact.php" class="fa-comment ">Contactanos</a>
-                                    </li>
-                                    <li>
-                                        <a href="login.php" class="fa-comment ">Login</a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-3 no-padding">
-                            <ul class="social-icons rounded color pull-right">
-                                <li class="social-rss">
-                                    <a href="#" target="_blank" title="RSS"></a>
-                                </li>
-                                <li class="social-twitter">
-                                    <a href="#" target="_blank" title="Twitter"></a>
-                                </li>
-                                <li class="social-facebook">
-                                    <a href="https://www.facebook.com/MexicOrganico" target="_blank" title="Facebook"></a>
-                                </li>
-                                <li class="social-googleplus">
-                                    <a href="#" target="_blank" title="Google+"></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php include('top_menu.php'); ?>
             <!-- End Top Menu -->
             <!-- === END HEADER === -->
             <!-- === BEGIN CONTENT === -->
@@ -117,87 +62,97 @@ mysql_select_db($database, $conectar);
                             while($articulo = mysql_fetch_assoc($row_articulo)){
                             ?>
                                 <div class="blog-post padding-bottom-20">
-                                
-                                    <!-- Blog Item Header -->
-                                    <div class="blog-item-header">
-                                        <div class="row">
-                                            <!-- Title -->
-                                            <div class="col-md-10">
-                                                <h2>
-                                                    <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><?php echo $articulo['titulo']; ?></a>
-                                                </h2>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                            <!-- End Title -->
-                                        </div>
-                                        <!-- Date -->
-                                        <div class="blog-post-date">
-                                            <div class="row">
-                                                <div class="col-md-2">
-                                                    <a href="#"><?php echo date('d/m/Y', $articulo['fecha_registro']); ?></a>    
-                                                </div>  
-                                            </div>              
-                                        </div>
-                                        <!-- End Date -->
-                                    </div>
-                                    <!-- End Blog Item Header -->
-                                    <!-- Blog Item Details -->
-                                    <div class="blog-post-details">
-                                        <!-- Author Name -->
-                                        <div class="blog-post-details-item blog-post-details-item-left">
-                                            <i class="fa fa-user color-gray-light"></i>
-                                            <a href="#"><?php echo $articulo['username']; ?></a>
-                                        </div>
-                                        <!-- End Author Name -->
-                                        <!-- Tags -->
-                                        <div class="blog-post-details-item blog-post-details-item-left blog-post-details-tags">
-                                            <i class="fa fa-tag color-gray-light"></i>
-                                            <?php 
-                                            $query_tag = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE articulo_tag.idarticulo = $articulo[idarticulo]";
-                                            $row_tag = mysql_query($query_tag,$conectar) or die(mysql_error());
-                                            $numero = mysql_num_rows($row_tag);
-                                            $contador = 1;
 
-                                            while($tag = mysql_fetch_assoc($row_tag)){
-                                                echo "<a href='#'>$tag[nombre]</a>";
-                                                if($contador < $numero){
-                                                    echo ",";
-                                                }
-                                                $contador++;
-                                            }
-                                             ?>
-                                        </div>
-                                        <!-- End Tags -->
-                                        <!-- # of Comments -->
-                                        <div class="blog-post-details-item blog-post-details-item-left blog-post-details-item-last">
-                                            <a href="">
-                                                <i class="fa fa-comments color-gray-light"></i>
-                                                2 Comentarios
-                                            </a>
-                                        </div>
-                                        <!-- End # of Comments -->
-                                    </div>
-                                    <!-- End Blog Item Details -->
-                                    <!-- Blog Item Body -->
-                                    <div class="blog">
-                                        <div class="clearfix"></div>
-                                        <div class="blog-post-body row margin-top-15">
-                                            <div class="col-md-5">
-                                                <img class="margin-bottom-20" style="width:300px;" src="system/administrador/<?php echo $articulo['img']; ?>" alt="thumb1">
+                                    <div class="row"><!-- inicia row -->
+
+                                        <div class="col-lg-4"><!-- inicia col-lg-4 -->
+                                            <!-- Inician Tags -->
+                                            <div class="blog-post-details">
+                                                <!-- Tags -->
+                                                <div class="blog-post-details-item blog-post-details-item-left blog-post-details-tags">
+                                                    <i class="fa fa-tag color-gray-light"></i>
+                                                    <?php 
+                                                    $query_tag = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE articulo_tag.idarticulo = $articulo[idarticulo]";
+                                                    $row_tag = mysql_query($query_tag,$conectar) or die(mysql_error());
+                                                    $numero = mysql_num_rows($row_tag);
+                                                    $contador = 1;
+
+                                                    while($tag = mysql_fetch_assoc($row_tag)){
+                                                        echo "<a href='#'>$tag[nombre]</a>";
+                                                        if($contador < $numero){
+                                                            echo ",";
+                                                        }
+                                                        $contador++;
+                                                    }
+                                                     ?>
+                                                </div>
+                                                <!-- Terminan Tags -->
+                                                <!-- # de comentarios -->
+                                                <!--<div class="blog-post-details-item blog-post-details-item-left blog-post-details-item-last">
+                                                    <a href="">
+                                                        <i class="fa fa-comments color-gray-light"></i>
+                                                        2 Comentarios
+                                                    </a>
+                                                </div>-->
+                                                <!-- Termina # de comentarios -->
                                             </div>
-                                            <div class="col-md-7">
-                                                <p>
-                                                    <?php echo substr($articulo['contenido'], 0,300)." ..."; ?>
-                                                </p>
-                                                <!-- Read More -->
-                                                <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>" class="btn btn-primary">
-                                                    Leer Más
-                                                    <i class="icon-chevron-right readmore-icon"></i>
-                                                </a>
-                                                <!-- End Read More -->
+                                            <img class="margin-bottom-20" style="width:300px;" src="system/administrador/<?php echo $articulo['img']; ?>" alt="thumb1">
+                                            <!-- Terminan Tags -->
+                                        </div><!-- termina col-lg-4 -->
+
+                                        <div class="col-lg-8"><!-- inicia col-lg-8 -->
+                                            <!-- INICIA TITULO DEL ARTICULO -->
+                                            <div class="blog-item-header">
+                                                <div class="row">
+                                                    <!-- titulo -->
+                                                    <div class="col-md-10">
+                                                        <h2>
+                                                            <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>"><?php echo $articulo['titulo']; ?></a>
+                                                        </h2>
+                                                    </div>
+                                                    <div class="clearfix"></div>
+                                                    <!-- Termina titulo -->
+                                                </div>
+                                                <!-- fecha -->
+                                                <div class="blog-post-date">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <a href="#"><?php echo date('d/m/Y', $articulo['fecha_registro']); ?></a>    
+                                                        </div>  
+                                                    </div>              
+                                                </div>
+
+                                                <!-- Nombre del admin -->
+                                                <div class="blog-post-details-item blog-post-details-item-left">
+                                                    <i class="fa fa-user color-gray-light"></i>
+                                                    <a href="#"><?php echo $articulo['username']; ?></a>
+                                                </div>
+                                                <!-- Termina nombre admin -->
+
+                                                <!-- Termina fecha -->
                                             </div>
-                                        </div>
-                                    </div>
+                                            <!-- TERMINA TITULO DEL ARTICULO -->
+                                            <!-- INICIA CUERPO DEL ARTICULO -->
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <p>
+                                                        <?php echo substr($articulo['contenido'], 0,300)." ..."; ?>
+                                                    </p>
+                                                    <!-- Read More -->
+                                                    <a href="articulo.php?articulo=<?php echo $articulo['idarticulo']; ?>" class="btn btn-primary">
+                                                        Leer Más
+                                                        <i class="icon-chevron-right readmore-icon"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- TERMINA CUERPO DEL ARTICULO -->                                        
+                                        </div><!-- termina col-lg-8 -->
+
+                                    </div><!-- termina row -->
+
+
+
+
                                     <!-- End Blog Item Body -->
                                 </div>
                             <?php
@@ -207,204 +162,6 @@ mysql_select_db($database, $conectar);
 
 
                             <!-- End Blog Item -->
-                            <!-- Blog Post -->
-                            <div class="blog-post padding-bottom-20">
-                                <!-- Blog Item Header -->
-                                <div class="blog-item-header">
-                                    <!-- Title -->
-                                    <h2>
-                                        <a href="#">
-                                            Ejemplo Título 3</a>
-                                    </h2>
-                                    <div class="clearfix"></div>
-                                    <!-- End Title -->
-                                    <!-- Date -->
-                                    <div class="blog-post-date">
-                                        <a href="#">22nd Apr, 2014</a>
-                                    </div>
-                                    <!-- End Date -->
-                                </div>
-                                <!-- End Blog Item Header -->
-                                <!-- Blog Item Details -->
-                                <div class="blog-post-details">
-                                    <!-- Author Name -->
-                                    <div class="blog-post-details-item blog-post-details-item-left">
-                                        <i class="fa fa-user color-gray-light"></i>
-                                        <a href="#">Admin</a>
-                                    </div>
-                                    <!-- End Author Name -->
-                                    <!-- Tags -->
-                                    <div class="blog-post-details-item blog-post-details-item-left blog-post-details-tags">
-                                        <i class="fa fa-tag color-gray-light"></i>
-                                        <a href="#">PHP</a>,
-                                        <a href="#">Ruby</a>,
-                                        <a href="#">Javascript</a>
-                                    </div>
-                                    <!-- End Tags -->
-                                    <!-- # of Comments -->
-                                    <div class="blog-post-details-item blog-post-details-item-left blog-post-details-item-last">
-                                        <a href="">
-                                            <i class="fa fa-comments color-gray-light"></i>
-                                            3 Comments
-                                        </a>
-                                    </div>
-                                    <!-- End # of Comments -->
-                                </div>
-                                <!-- End Blog Item Details -->
-                                <!-- Blog Item Body -->
-                                <div class="blog">
-                                    <div class="clearfix"></div>
-                                    <div class="blog-post-body row margin-top-15">
-                                        <div class="col-md-5">
-                                            <img class="margin-bottom-20" src="assets/img/blog/image2.jpg" alt="thumb2">
-                                        </div>
-                                        <div class="col-md-7">
-                                            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                                                Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</p>
-                                            <!-- Read More -->
-                                            <a href="#" class="btn btn-primary">
-                                                Read More
-                                                <i class="icon-chevron-right readmore-icon"></i>
-                                            </a>
-                                            <!-- End Read More -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Blog Item Body -->
-                            </div>
-                            <!-- End Blog Item -->
-                            <!-- Blog Post -->
-                            <div class="blog-post padding-bottom-20">
-                                <!-- Blog Item Header -->
-                                <div class="blog-item-header">
-                                    <!-- Title -->
-                                    <h2>
-                                        <a href="#">
-                                            Ejemplo Título 4</a>
-                                    </h2>
-                                    <div class="clearfix"></div>
-                                    <!-- End Title -->
-                                    <!-- Date -->
-                                    <div class="blog-post-date">
-                                        <a href="#">22nd Apr, 2014</a>
-                                    </div>
-                                    <!-- End Date -->
-                                </div>
-                                <!-- End Blog Item Header -->
-                                <!-- Blog Item Details -->
-                                <div class="blog-post-details">
-                                    <!-- Author Name -->
-                                    <div class="blog-post-details-item blog-post-details-item-left">
-                                        <i class="fa fa-user color-gray-light"></i>
-                                        <a href="#">Admin</a>
-                                    </div>
-                                    <!-- End Author Name -->
-                                    <!-- Tags -->
-                                    <div class="blog-post-details-item blog-post-details-item-left blog-post-details-tags">
-                                        <i class="fa fa-tag color-gray-light"></i>
-                                        <a href="#">jQuery</a>,
-                                        <a href="#">HTML</a>,
-                                        <a href="#">Grunt</a>
-                                    </div>
-                                    <!-- End Tags -->
-                                    <!-- # of Comments -->
-                                    <div class="blog-post-details-item blog-post-details-item-left blog-post-details-item-last">
-                                        <a href="">
-                                            <i class="fa fa-comments color-gray-light"></i>
-                                            1 Comments
-                                        </a>
-                                    </div>
-                                    <!-- End # of Comments -->
-                                </div>
-                                <!-- End Blog Item Details -->
-                                <!-- Blog Item Body -->
-                                <div class="blog">
-                                    <div class="clearfix"></div>
-                                    <div class="blog-post-body row margin-top-15">
-                                        <div class="col-md-5">
-                                            <img class="margin-bottom-20" src="assets/img/blog/image3.jpg" alt="thumb3">
-                                        </div>
-                                        <div class="col-md-7">
-                                            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                                                Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</p>
-                                            <!-- Read More -->
-                                            <a href="#" class="btn btn-primary">
-                                                Read More
-                                                <i class="icon-chevron-right readmore-icon"></i>
-                                            </a>
-                                            <!-- End Read More -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Blog Item Body -->
-                            </div>
-                            <!-- End Blog Item -->
-                            <!-- Blog Post -->
-                            <div class="blog-post padding-bottom-20">
-                                <!-- Blog Item Header -->
-                                <div class="blog-item-header">
-                                    <!-- Title -->
-                                    <h2>
-                                        <a href="#">
-                                            Ejemplo Título 5</a>
-                                    </h2>
-                                    <div class="clearfix"></div>
-                                    <!-- End Title -->
-                                    <!-- Date -->
-                                    <div class="blog-post-date">
-                                        <a href="#">22nd Apr, 2014</a>
-                                    </div>
-                                    <!-- End Date -->
-                                </div>
-                                <!-- End Blog Item Header -->
-                                <!-- Blog Item Details -->
-                                <div class="blog-post-details">
-                                    <!-- Author Name -->
-                                    <div class="blog-post-details-item blog-post-details-item-left">
-                                        <i class="fa fa-user color-gray-light"></i>
-                                        <a href="#">Admin</a>
-                                    </div>
-                                    <!-- End Author Name -->
-                                    <!-- Tags -->
-                                    <div class="blog-post-details-item blog-post-details-item-left blog-post-details-tags">
-                                        <i class="fa fa-tag color-gray-light"></i>
-                                        <a href="#">HTML</a>,
-                                        <a href="#">HTML5</a>,
-                                        <a href="#">CSS3</a>
-                                    </div>
-                                    <!-- End Tags -->
-                                    <!-- # of Comments -->
-                                    <div class="blog-post-details-item blog-post-details-item-left blog-post-details-item-last">
-                                        <a href="">
-                                            <i class="fa fa-comments color-gray-light"></i>
-                                            5 Comments
-                                        </a>
-                                    </div>
-                                    <!-- End # of Comments -->
-                                </div>
-                                <!-- End Blog Item Details -->
-                                <!-- Blog Item Body -->
-                                <div class="blog">
-                                    <div class="clearfix"></div>
-                                    <div class="blog-post-body row margin-top-15">
-                                        <div class="col-md-5">
-                                            <img class="margin-bottom-20" src="assets/img/blog/image4.jpg" alt="thumb4">
-                                        </div>
-                                        <div class="col-md-7">
-                                            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.
-                                                Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr.</p>
-                                            <!-- Read More -->
-                                            <a href="#" class="btn btn-primary">
-                                                Read More
-                                                <i class="icon-chevron-right readmore-icon"></i>
-                                            </a>
-                                            <!-- End Read More -->
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Blog Item Body -->
-                            </div>
-                            <!-- End Blog Item -->
                             <!-- Pagination -->
                             <ul class="pagination">
                                 <li>
@@ -413,7 +170,7 @@ mysql_select_db($database, $conectar);
                                 <li class="active">
                                     <a href="#">1</a>
                                 </li>
-                                <li>
+                                <!--<li>
                                     <a href="#">2</a>
                                 </li>
                                 <li>
@@ -424,7 +181,7 @@ mysql_select_db($database, $conectar);
                                 </li>
                                 <li>
                                     <a href="#">5</a>
-                                </li>
+                                </li>-->
                                 <li>
                                     <a href="#">&raquo;</a>
                                 </li>
@@ -451,34 +208,6 @@ mysql_select_db($database, $conectar);
                                     <?php
                                     }
                                      ?>
-
-                                    <!--<li>
-                                        <a href="#" class="blog-tag">CSS</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">JavaScript</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">jQuery</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">PHP</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">Ruby</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">CoffeeScript</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">Grunt</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">Bootstrap</a>
-                                    </li>
-                                    <li>
-                                        <a href="#" class="blog-tag">HTML5</a>
-                                    </li>-->
                                 </ul>
                             </div>
                             <!-- End Blog Tags -->
@@ -508,45 +237,6 @@ mysql_select_db($database, $conectar);
                                     }
                                      ?>
 
-                                    <li>
-                                        <div class="recent-post">
-                                            <a href="">
-                                                <img class="pull-left" src="assets/img/blog/thumbs/thumb2.jpg" alt="thumb2">
-                                            </a>
-                                            <a href="#" class="posts-list-title">Título</a>
-                                            <br>
-                                            <span class="recent-post-date">
-                                                Fecha
-                                            </span>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </li>
-                                    <li>
-                                        <div class="recent-post">
-                                            <a href="">
-                                                <img class="pull-left" src="assets/img/blog/thumbs/thumb3.jpg" alt="thumb3">
-                                            </a>
-                                            <a href="#" class="posts-list-title">Título</a>
-                                            <br>
-                                            <span class="recent-post-date">
-                                                Fecha
-                                            </span>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </li>
-                                    <li>
-                                        <div class="recent-post">
-                                            <a href="">
-                                                <img class="pull-left" src="assets/img/blog/thumbs/thumb4.jpg" alt="thumb4">
-                                            </a>
-                                            <a href="#" class="posts-list-title">Título</a>
-                                            <br>
-                                            <span class="recent-post-date">
-                                                Fecha
-                                            </span>
-                                        </div>
-                                        <div class="clearfix"></div>
-                                    </li>
                                 </ul>
                             </div>
                             <!-- End Recent Posts -->
@@ -560,37 +250,7 @@ mysql_select_db($database, $conectar);
             <?php 
             include("footer.php");
              ?>
-            <!-- Footer -->
-            <div id="footer" class="background-grey">
-                <div class="container">
-                    <div class="row">
-                        <!-- Footer Menu -->
-                        <div id="footermenu" class="col-md-8">
-                            <ul class="list-unstyled list-inline">
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Menu -->
-                        <!-- Copyright -->
-                        <div id="copyright" class="col-md-4">
-                            <p class="pull-right">Copyright © MÉXICO ORGÁNICO, ASESORÍA Y CAPACITACIÓN S.C | Design by <a href="http://inforganic.net/">Inforganic.net</a></p>
-                        </div>
-                        <!-- End Copyright -->
-                    </div>
-                </div>
-            </div>
-            <!-- End Footer -->
+
             <!-- JS -->
             <script type="text/javascript" src="assets/js/jquery.min.js" type="text/javascript"></script>
             <script type="text/javascript" src="assets/js/bootstrap.min.js" type="text/javascript"></script>

@@ -17,6 +17,13 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
 <!--[if !IE]><!-->
+
+<?php
+    $host= $_SERVER["HTTP_HOST"];
+    $url= $_SERVER["REQUEST_URI"];
+?>
+
+
 <html lang="es">
     <!--<![endif]-->
     <head>
@@ -60,62 +67,7 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
 
             <!-- End Header -->
             <!-- Top Menu -->
-            <div id="hornav" class="bottom-border-shadow">
-                <div class="container no-padding border-bottom">
-                    <div class="row">
-                        <div class="col-md-9 no-padding">
-                            <div class="visible-lg">
-                                <ul id="hornavmenu" class="nav navbar-nav" >
-                                    <li class="hidden-xs hidden-sm">
-                                        <a href="index.php" style="padding-top:0px;padding-bottom:0px;"><img src="assets/img/menu.png" alt=""></a>
-                                    </li>
-                                    <li class="visible-xs visible-sm">
-                                        <a style="hover:white" href="index.php">Inicio</a>
-                                    </li>
-                                    <li>
-                                        <a href="nosotros.php"><span class="fa-gears ">Nosotros</span></a>
-                                    </li>
-
-                                    <li>
-                                        <a href="articulos.php"><span class="fa-copy ">Articulos</span></a>
-                                    </li>
-
-                                    <li>
-                                        <a href="sitios_interes.php"><span class="fa-th ">Sitios de Interes</span></a>
-                                    </li>
-
-                                    <li>
-                                        <a href="biblioteca.php"><span class="fa-font ">Biblioteca</span></a>
-                                    </li>
-                                    <li>
-                                        <a href="contact.php" class="fa-comment ">Contactanos</a>
-                                    </li>
-                                    <li>
-                                        <a href="login.php" class="fa-comment ">Login</a>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-md-3 no-padding">
-                            <ul class="social-icons rounded color pull-right">
-                                <li class="social-rss">
-                                    <a href="#" target="_blank" title="RSS"></a>
-                                </li>
-                                <li class="social-twitter">
-                                    <a href="#" target="_blank" title="Twitter"></a>
-                                </li>
-                                <li class="social-facebook">
-                                    <a href="https://www.facebook.com/MexicOrganico" target="_blank" title="Facebook"></a>
-                                </li>
-                                <li class="social-googleplus">
-                                    <a href="#" target="_blank" title="Google+"></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php include('top_menu.php'); ?>
             <!-- End Top Menu -->
             <!-- === END HEADER === -->
             <!-- === BEGIN CONTENT === -->
@@ -334,38 +286,6 @@ $biblioteca = mysql_fetch_assoc($row_biblioteca);
             <?php 
             include("footer.php");
              ?>
-
-            <!-- Footer -->
-            <div id="footer" class="background-grey">
-                <div class="container">
-                    <div class="row">
-                        <!-- Footer Menu -->
-                        <div id="footermenu" class="col-md-8">
-                            <ul class="list-unstyled list-inline">
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                                <li>
-                                    <a href="#" target="_blank">Link</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- End Footer Menu -->
-                        <!-- Copyright -->
-                        <div id="copyright" class="col-md-4">
-                            <p class="pull-right">Copyright © MÉXICO ORGÁNICO, ASESORÍA Y CAPACITACIÓN S.C | Design by <a href="http://inforganic.net/">Inforganic.net</a></p>
-                        </div>
-                        <!-- End Copyright -->
-                    </div>
-                </div>
-            </div>
-            <!-- End Footer -->
 
             <!-- JS -->
             <script type="text/javascript" src="assets/js/jquery.min.js" type="text/javascript"></script>

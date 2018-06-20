@@ -10,19 +10,12 @@ $informacion_web = mysql_fetch_assoc($row_informacion);
         <div class="row">
             <!-- Disclaimer -->
             <div class="col-md-4">
-                <h3 class="class margin-bottom-10">Declaración</h3>
+                <h2>MÉXICO ORGÁNICO S.C</h2>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-                    proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    MEXICO ORGÁNICO, ASESORÍA Y CAPACITACIÓN, es una “SOCIEDAD CIVIL” integrada por profesionistas con una amplia experiencia en los temas de producción orgánica y temas afines, para poder apoyar a cualquier interesado a lograr un desarrollo integral tanto en sus actividades productivas como organizativas y comerciales.
                 </p>
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    MEXICO ORGÁNICO, ASESORÍA Y CAPACITACIÓN, está constituida de manera legal en la ciudad de Oaxaca de Juárez, el 1 de abril del 2016.
                 </p>
             </div>
             <!-- End Disclaimer -->
@@ -76,3 +69,22 @@ $informacion_web = mysql_fetch_assoc($row_informacion);
         </div>
     </div>
 </div>
+
+<!-- Footer -->
+<div id="footer" class="background-grey">
+    <div class="container">
+        <div class="row">
+            <!-- Copyright -->
+            <div class="col-md-8">
+                <p class="pull-left">
+                    Copyright © MÉXICO ORGÁNICO, ASESORÍA Y CAPACITACIÓN S.C
+                </p>
+            </div>
+            <div id="copyright" class="col-md-4">
+                <p class="pull-right">Design by <a href="http://inforganic.net/">Inforganic.net</a></p>
+            </div>
+            <!-- End Copyright -->
+        </div>
+    </div>
+</div>
+<!-- End Footer -->
