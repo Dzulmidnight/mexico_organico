@@ -39,6 +39,7 @@ if (!function_exists("GetSQLValueString")) {
 
 	if(isset($_POST['agregar_documento']) && $_POST['agregar_documento'] == 1){
 
+		$tipo_documento = $_POST['tipo_documento'];
 
 		if(!empty($_FILES['archivo']['name'])){
 			$ruta_documento = "../img/biblioteca/";
@@ -60,10 +61,11 @@ if (!function_exists("GetSQLValueString")) {
 		$descripcion = $_POST['descripcion'];
 		$idusuario = $_POST['idusuario'];
 
-		$query = sprintf("INSERT INTO biblioteca (titulo, descripcion, archivo, idusuario, fecha_registro) VALUES (%s, %s, %s, %s, %s)",
+		$query = sprintf("INSERT INTO biblioteca (titulo, descripcion, archivo, tipo_documento, idusuario, fecha_registro) VALUES (%s, %s, %s, %s, %s, %s)",
 			GetSQLValueString($titulo, "text"),
 			GetSQLValueString($descripcion, "text"),
 			GetSQLValueString($ruta_documento, "text"),
+			GetSQLValueString($tipo_documento, "text"),
 			GetSQLValueString($idusuario, "int"),
 			GetSQLValueString($fecha, "int"));
 
@@ -125,14 +127,17 @@ if (!function_exists("GetSQLValueString")) {
 
 
 	}
+
 	if(isset($_POST['actualizar_documento']) && $_POST['actualizar_documento'] == 1){
+		$fecha_actualizada = time();
 		$idbiblioteca = $_POST['idbiblioteca'];
 		$titulo = $_POST['titulo'];
 		$descripcion = $_POST['descripcion'];
+		$tipo_documento = $_POST['tipo_documento'];
 
 		if(empty($_FILES['nuevo_archivo']['name'])){
 			$ruta_documento = $_POST['archivo_actual'];
-		}else{		
+		}else{
 			$ruta_documento = "../img/biblioteca/";
 			$ruta_documento = $ruta_documento . basename( $_FILES['nuevo_archivo']['name']); 
 			if(move_uploaded_file($_FILES['nuevo_archivo']['tmp_name'], $ruta_documento)){ 
@@ -140,10 +145,12 @@ if (!function_exists("GetSQLValueString")) {
 			} 
 		}
 
-		$updateSQL = sprintf("UPDATE biblioteca SET titulo = %s, descripcion = %s, archivo = %s WHERE idbiblioteca = %s",
+		$updateSQL = sprintf("UPDATE biblioteca SET titulo = %s, tipo_documento = %s, descripcion = %s, archivo = %s, fecha_actualizada = %s WHERE idbiblioteca = %s",
 			GetSQLValueString($titulo, "text"),
+			GetSQLValueString($tipo_documento, "text"),
 			GetSQLValueString($descripcion, "text"),
 			GetSQLValueString($ruta_documento, "text"),
+			GetSQLValueString($fecha_actualizada, "int"),
 			GetSQLValueString($idbiblioteca, "int"));
 
 
@@ -195,70 +202,7 @@ if (!function_exists("GetSQLValueString")) {
 		$fecha = date('Y-m-d', $biblioteca['fecha_registro']);
 		//$date = str_replace('/', '-', $fecha);
 
-	?>
-
-		<div class="col-lg-8" style="padding:0px;">
-			<form action="" method="POST" enctype="multipart/form-data">
-				<div class="panel panel-warning">
-				  <div class="panel-heading">
-				    <h3 class="panel-title">Detalle Documento</h3>
-				  </div>
-				  <div class="panel-body">
-				  	<div class="col-lg-12">
-						<div class="col-md-6">
-							<p class="alert alert-info" style="padding:7px;">Usuario: <strong style="color:#c0392b"><?php echo $biblioteca['username']; ?></strong></p>
-							<input type="hidden" name="idusuario" value="<?php echo $biblioteca['idusuario']; ?>">
-						</div>	
-						<div class="col-md-6">
-							<p class="alert alert-info" style="padding:7px;">Fecha: <strong style="color:#c0392b"><?php echo $fecha; ?></strong></p>
-							<input type="hidden" name="idusuario" value="<?php echo $biblioteca['idusuario']; ?>">
-						</div>	
-
-						<div class="col-md-12">
-							<label for="">Tags: </label>
-							<?php 
-							$query_tags = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE articulo_tag.idbiblioteca = $biblioteca[idbiblioteca]";
-							$row_articulo_tag = mysql_query($query_tags,$conectar) or die(mysql_error());
-							while($tags = mysql_fetch_assoc($row_articulo_tag)){
-								echo "<a  style='margin:1px;' href='#'><span class='label label-success'>".$tags['nombre']."</span></a>";
-							}
-							?>
-						</div>
-
-						<div class="col-md-12">
-							<label for="titulo">Titulo Documento</label>
-							<input type="text" class="form-control" name="titulo" placeholder="Titulo biblioteca" value="<?php echo $biblioteca['titulo']; ?>">
-						</div>
-						
-						<div class="col-md-2">
-							<p><b>Archivo</b></p>
-							<a class="btn btn-success" href="<?php echo $biblioteca['archivo']; ?>">Descargar Archivo</a>
-						</div>
-						<div class="col-md-10">
-							<label for="descripcion">Descripción</label>
-							<textarea class="form-control" name="descripcion" id="" cols="30" rows="10"><?php echo $biblioteca['descripcion']; ?></textarea>
-							
-						</div>
-						<div class="col-md-12">
-							<label for="nuevo_archivo">Cambiar Archivo</label>
-							<input type="file" class="form-control" name="nuevo_archivo">
-						</div>
-
-
-						<div class="col-lg-12">
-							<hr>
-							<input type="hidden" name="idbiblioteca" value="<?php echo $biblioteca['idbiblioteca']; ?>">
-							<input type="hidden" name="actualizar_documento" value="1">
-							<input type="hidden" name="archivo_actual" value="<?php echo $biblioteca['archivo']; ?>">
-							<input class="btn btn-success" type="submit" value="Actualizar Documento">
-						</div>
-
-				  	</div>
-				  </div>
-				</div>
-			</form>
-		</div>
-	<?php
+		include('editar.php');
 	}else{
 	?>
 		<div class="col-lg-8" style="padding:0px;">
@@ -278,9 +222,18 @@ if (!function_exists("GetSQLValueString")) {
 							<p class="alert alert-info" style="padding:7px;">Fecha: <strong style="color:#c0392b"><?php echo date('d/m/Y', time()); ?></strong></p>
 						</div>	
 
-						<div class="col-md-12">
+						<div class="col-md-8">
 							<label for="titulo">Titulo Documento</label>
 							<input type="text" class="form-control" name="titulo" placeholder="Titulo Documento" required>
+						</div>
+						<div class="col-md-4">
+							<label for="tipo_documento">Tipo</label>
+							<select class="form-control" name="tipo_documento" id="tipo_documento" required>
+								<option value="">Tipo de documento</option>
+								<option value="BIBLIOTECA">BIBLIOTECA</option>
+								<option value="NORMA">NORMA</option>
+								<option value="REGLAMENTO">REGLAMENTO</option>
+							</select>
 						</div>
 						<div class="col-md-6">
 							<label for="tag_existente">Listado Tags</label>
@@ -318,7 +271,7 @@ if (!function_exists("GetSQLValueString")) {
 						</div>
 						<div class="col-md-12">
 							<label for="descripcion">Descripción</label>
-							<textarea class="form-control" name="descripcion" id=""  rows="10" required></textarea>
+							<textarea class="form-control" name="descripcion" id=""  rows="5" required></textarea>
 						</div>
 						<div class="col-md-12">
 							<label for="archivo">Archivo</label>

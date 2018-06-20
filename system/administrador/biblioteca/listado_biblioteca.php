@@ -47,7 +47,7 @@ if (!function_exists("GetSQLValueString")) {
 
 	}
 
-$query  = "SELECT biblioteca.*, usuario.username FROM biblioteca INNER JOIN usuario ON biblioteca.idusuario = usuario.idusuario";
+$query  = "SELECT biblioteca.*, usuario.username FROM biblioteca INNER JOIN usuario ON biblioteca.idusuario = usuario.idusuario ORDER BY fecha_registro DESC";
 $row_biblioteca = mysql_query($query,$conectar) or die(mysql_error());
 $total_biblioteca = mysql_num_rows($row_biblioteca);
 
@@ -57,6 +57,7 @@ $total_biblioteca = mysql_num_rows($row_biblioteca);
 	<thead>
 		<tr class="success">
 			<th class="text-center">ID</th>
+			<th class="text-center">Tipo</th>
 			<th class="text-center">Titulo</th>
 			<th class="text-center">Descripción</th>
 			<th class="text-center">Archivo</th>
@@ -76,12 +77,41 @@ $total_biblioteca = mysql_num_rows($row_biblioteca);
 			while($biblioteca = mysql_fetch_assoc($row_biblioteca)){
 			?>
 				<tr>
-					<td><?php echo $biblioteca['idbiblioteca']; ?></td>
-					<td><?php echo $biblioteca['titulo']; ?></td>
-					<td><?php echo $biblioteca['descripcion']; ?></td>
-					<td><a class="btn btn-primary" href="<?php echo $biblioteca['archivo']; ?>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Descargar</a></td>
-					<td><?php echo $biblioteca['username']; ?></td>
-					<td><?php echo date('d/m/Y', $biblioteca['fecha_registro']); ?></td>
+					<!-- id del documento -->
+					<td>
+						<?php echo $biblioteca['idbiblioteca']; ?>		
+					</td>
+					<!-- tipo de documento -->
+					<td>
+						<?php echo $biblioteca['tipo_documento']; ?>
+					</td>
+					<!-- titulo del archivo -->
+					<td>
+						<?php echo $biblioteca['titulo']; ?>		
+					</td>
+					<!-- descripción del archivo -->
+					<td>
+						<?php echo $biblioteca['descripcion']; ?>		
+					</td>
+					<!-- boton para descargar -->
+					<td>
+						<a class="btn btn-primary" href="<?php echo $biblioteca['archivo']; ?>"><span class="glyphicon glyphicon-book" aria-hidden="true"></span> Descargar</a>		
+					</td>
+					<!-- nombre administrador -->
+					<td>
+						<?php echo $biblioteca['username']; ?>		
+					</td>
+					<!-- fecha de registro -->
+					<td>
+						<?php 
+						if(isset($biblioteca['fecha_actualizada'])){
+							echo date('d/m/Y', $biblioteca['fecha_actualizada']);
+						}else{
+							echo date('d/m/Y', $biblioteca['fecha_registro']);
+						}
+						?>	
+					</td>
+					<!-- botones accioens -->
 					<td>
 						<!-- EDITAR ARTICULO -->
 						<a class="btn btn-sm btn-warning"  data-toggle="tooltip" title="Visualizar | Editar" href="?menu=biblioteca&add_documento&detalle=<?php echo $biblioteca['idbiblioteca']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>

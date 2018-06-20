@@ -1,3 +1,11 @@
+<?php 
+require_once("system/connections/conexion.php"); 
+mysql_select_db($database, $conectar);
+
+$row_informacion = mysql_query("SELECT * FROM informacion_web", $conectar) or die(mysql_error());
+$informacion_web = mysql_fetch_assoc($row_informacion);
+ ?>
+
 <!-- === BEGIN HEADER === -->
 <!DOCTYPE html>
 <!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
@@ -82,8 +90,7 @@
                                 <div class="panel-heading">
                                     <h3 class="panel-title">Información de Contacto</h3>
                                 </div>
-                                <div class="panel-body">
-
+                                <!--<div class="panel-body">
                                     <ul class="list-unstyled">
                                         <li>
                                             <i class="fa-phone color-primary"></i>+353-44-55-66</li>
@@ -100,6 +107,22 @@
                                         <li>
                                             <strong class="color-primary">Domingos:</strong>Cerrado</li>
                                     </ul>
+                                </div>-->
+                                <div class="panel-body">
+                                    <p>
+                                        <span class="fa-phone">Teléfono:</span> <?php echo $informacion_web['telefono']; ?>
+                                        <br>
+                                        <span class="fa-envelope">Email:</span>
+                                        <a href="mailto:<?php echo $informacion_web['email']; ?>"><?php echo $informacion_web['email']; ?></a>
+                                        <br>
+                                        <span class="fa-link">Sitio Web:</span>
+                                        <a href="http://mexorganico.com/">www.mexorganico.com</a>
+                                    </p>
+                                    <p>
+                                        <?php
+                                        echo nl2br($informacion_web['direccion_oficina']);
+                                         ?>
+                                    </p>
                                 </div>
                             </div>
                             <!-- End recent Posts -->

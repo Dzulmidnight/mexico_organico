@@ -117,7 +117,7 @@ $informacion_web = mysql_fetch_assoc($consultar);
 			</div>
 		</form>
 
-		<form action="" method="POST" enctype="multipart/form-data">
+		<!--<form action="" method="POST" enctype="multipart/form-data">
 			<div class="panel panel-primary">
 			  <div class="panel-heading">
 			    <h3 class="panel-title">Slide Imagenes</h3>
@@ -141,7 +141,7 @@ $informacion_web = mysql_fetch_assoc($consultar);
 				</tr>
 			  </table>
 			</div>
-		</form>
+		</form>-->
 
 	</div>
 </div>
