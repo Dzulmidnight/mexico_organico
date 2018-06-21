@@ -12,6 +12,9 @@ switch ($menu) {
 	case 'articulo':
 		include("articulo/articulo.php");
 		break;
+	case 'capacitacion':
+		include("capacitacion/capacitacion.php");
+		break;
 	case 'biblioteca':
 		include("biblioteca/biblioteca.php");
 		break;

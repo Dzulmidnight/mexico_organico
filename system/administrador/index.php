@@ -46,8 +46,8 @@
     
     <link rel="stylesheet" href="../chosen/chosen.css">
 
-
-    
+<link rel="stylesheet" href="../../assets/dist/summernote.css">
+        
 
 
 
@@ -97,6 +97,7 @@ $(function () {
             <li><a href="#">Usuario: <strong style="color:#c0392b"><?php echo $_SESSION['username'];?></strong></a></li>
             <li <?php if(empty($menu)){ echo 'class="active"';} ?>><a href="index.php">Inicio</span></a></li>
             <li <?php if($menu == "articulo"){ echo 'class="active"';} ?>><a href="?menu=articulo&listado">Articulos</a></li>
+            <li <?php if($menu == "capacitacion"){ echo 'class="active"';} ?>><a href="?menu=capacitacion&listado">Capacitación</a></li>
             <li <?php if($menu == "biblioteca"){ echo 'class="active"';} ?>><a href="?menu=biblioteca&listado">Biblioteca</a></li>
             <li <?php if($menu == "sitios"){ echo 'class="active"';} ?>><a href="?menu=sitios&listado">Sitios de Interes</a></li>
             <li <?php if($menu == "pagina"){ echo 'class="active"';} ?>><a href="?menu=pagina">Página Web</a></li>            
@@ -119,6 +120,7 @@ $(function () {
             <li class="disabled"><a href="#">Usuario: <strong style="color:#c0392b"><?php echo $_SESSION['username'];?></strong></a></li>
             <li <?php if(empty($menu)){ echo 'class="active"';} ?>><a href="index.php">Inicio</span></a></li>
             <li <?php if($menu == "articulo"){ echo 'class="active"';} ?>><a href="?menu=articulo&listado">Articulos</a></li>
+            <li <?php if($menu == "capacitacion"){ echo 'class="active"';} ?>><a href="?menu=capacitacion&listado">Capacitación</a></li>
             <li <?php if($menu == "biblioteca"){ echo 'class="active"';} ?>><a href="?menu=biblioteca&listado">Biblioteca</a></li>
             <li <?php if($menu == "sitios"){ echo 'class="active"';} ?>><a href="?menu=sitios&listado">Sitios de Interes</a></li>
             <li <?php if($menu == "correo"){ echo 'class="active"';} ?>><a href="?menu=correo">Correo</a></li>
@@ -131,6 +133,8 @@ $(function () {
         </div>
       	<!------------------------ TERMINA SECCIÓN MENÚ OPCIONES ------------------------------>
 
+
+        </div>
       	<!------------------------ INICIA SECCIÓN MENÚ SISTEMA ------------------------------>
         <div style="padding:10px;" class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
         <?php 
@@ -147,8 +151,18 @@ $(function () {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
 
+
+
 <!--  <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js" type="text/javascript"></script>-->
   <script src="../chosen/chosen.jquery.js" type="text/javascript"></script>
+  <script src="../../assets/dist/summernote.js"></script>
+<script>
+$(document).ready(function() {
+  $('.summernote').summernote();
+});
+
+</script>
+
   <script type="text/javascript">
     var config = {
       '.chosen-select'           : {},
