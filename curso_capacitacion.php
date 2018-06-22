@@ -31,7 +31,10 @@ if (!function_exists("GetSQLValueString")) {
 }
 
 if(isset($_GET['curso']) && !empty($_GET['curso'])){
+
 require_once("system/connections/conexion.php"); 
+require_once("system/connections/mail.php"); 
+
 mysql_select_db($database, $conectar);
     $id_capacitacion = $_GET['curso'];
 
@@ -78,71 +81,82 @@ mysql_select_db($database, $conectar);
         $insertar = mysql_query($query, $conectar) or die(mysql_error());
 
         //// ENVIAMOS CORREO DE REGISTRO AL CURSO
+        function codigo($length = 8) {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        }
+        $elcodigo = codigo();
+
         $destinatario = $_POST['correo_electronico'];
-        
+        $correo_capacitacion = $_POST['correo_capacitacion'];
+        $telefono_capacitacion = $_POST['telefono_capacitacion'];
+
         $asunto = 'Información del Curso: '.$nombre_curso; 
 
         $cuerpo = '
         <html>
         <head>
         <meta charset="utf-8">
+
+        <style>
+          table, td, th {    
+              border: 1px solid #ddd;
+              text-align: left;
+          }
+
+          table {
+              border-collapse: collapse;
+              width: 100%;
+          }
+
+          th, td {
+              padding: 15px;
+          }
+        </style>
+
         </head>
         <body>
 
             <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #797979;" border="0" width="650px">
               <thead>
                 <tr>
-                  <th rowspan="7" scope="col" align="center" valign="middle" width="170"><img src="http://d-spp.org/img/mailFUNDEPPO.jpg" alt="Simbolo de Pequeños Productores." width="120" height="120" /></th>
-                  <th scope="col" align="left" width="280"><strong style="color:#27ae60;">Nuevo Registro / New Register</strong></th>
+                  <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
+                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                  </th>
+                  <th>
+                    <h3>
+                      Datos de registro al Curso: <span style="color: #27ae60">Nombre del Curso</span>
+                    </h3>
+                  </th>
                 </tr>
               </thead>
               <tbody>
                     <tr>
-                      <td colspan="2" style="text-align:justify;padding-top:10px;"><i>Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>#SPP y su contraseña, necesarios para poder iniciar sesión</b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, una vez que haya iniciado sesión se le recomienda cambiar su contraseña en la sección Información OPP, en dicha sección se encuentran sus datos los cuales pueden ser modificados en caso de ser necesario.</td>
+                      <td colspan="2" style="text-align:justify;padding-top:30px;">
+                        Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>Codigo de usuario</b> y las instrucciones para poder cargar el comprobante de pago del curso.
+                      </td>
                     </tr>
                     <tr>
                       <td colspan="2">
-                        <h4 style="color:red">Ahora debe de ingresar a su cuenta dentro del sistema D-SPP para poder completar su Solicitud de Certificación para Organizaciones de Pequeños Productores, esto realizando los siguientes pasos:</h4>
+                        <h4 style="color:red">
+                          Instrucciones para cargar el comprobante de pago
+                        </h4>
                         <ol>
-                          <li>Ingresar en la dirección http://d-spp.org/ .</li>
+                          <li>#Codigo: <b>'.$elcodigo.'</b></li>
+                          <li>Debe ingresar a la dirección: </li>
                           <li>Seleccionar el idioma en el que desea utilizar el sistema.</li>
-                          <li>Después de seleccionar el idioma, debe seleccionar la opción "Organización de Pequeños Productores"(OPP) o dar clic en el siguiente link <a href="http://d-spp.org/esp/?OPP">Español</a> o en <a href="http://d-spp.org/en/?OPP">Ingles</a> </li>
-                          <li>Debe de iniciar sesión con su usuario(#SPP): <span style="color:#27ae60;">'.$spp.'</span> y su contraseña: <span style="color:#27ae60;">'.$psswd.'</span> </li>
-                          <li>Una vez que ha iniciado sesión debe seleccionar la opción "Solicitudes" > "Nueva Solicitud"</li>
-                          <li>Después de realizar esos pasos se mostrara la Solicitud electronica donde deberá completar la información correspondiente y al finalizar dar clic en “Enviar Solicitud”.</li>
-                          <li>Después de enviar la solicitud, el Organismo de Certificación correspondiente le enviara la cotización por medio del sistema, la cual también le llegara a los correos dados de alta en la solicitud.</li>
                         </ol>
                       </td>
                     </tr>
-                    <!--<tr>
-                      <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, once you have logged you are advised to change your password on the Information OPP section, in that section are data which can be modified if be necessary.</td>
-                    </tr>-->
-
                 <tr>
-                  <td colspan="2" align="left">
-                    <b style="color:red">
-                      Para poder ingresar en el sistema D-SPP debes seleccionar "Organización de Pequeños Productores(OPP)" / To join the system you must select "Small Producers\' Organization (SPO)"
-                    </b>
-                    <br>
-                    <p>
-                      <h4>Información del registro</h4>
-                    </p>
-                    <p>
-                      Pais / Country: <span style="color:#27ae60;">'.$_POST['pais'].'</span>
-                    </p>
-                    <p>
-                    <p>
-                      Nombre / Name: <span style="color:#27ae60;">'.$_POST['nombre'].'</span>
-                    </p>
-                    <p>
-                      Abreviación / Short name: <span style="color:#27ae60;">'.$_POST['abreviacion'].'</span>
-                    </p>
-                    <hr>
+                  <td colspan="2">
+                    Cualquier duda o pregunta puede ponerse en contacto al correo: <b>'.$correo_capacitacion.'</b> o Telefono: <b>'.$telefono_capacitacion.'</b>
                   </td>
-                </tr>
-
-                <tr>
-                  <td colspan="2">Cualquier duda escribir a / Any questions write to : <u style="color:#27ae60;">cert@spp.coop</u></td>
                 </tr>
               </tbody>
             </table>
@@ -151,15 +165,15 @@ mysql_select_db($database, $conectar);
         </html>
     ';
       $mail->AddAddress($destinatario);
-      $mail->AddBCC($administrador);
+      //$mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
-      $mail->Subject = utf8_decode($asunto_usuario);
+      $mail->Subject = utf8_decode($asunto);
       $mail->Body = utf8_decode($cuerpo);
       $mail->MsgHTML(utf8_decode($cuerpo));
       $mail->Send();
       $mail->ClearAddresses();
-      $mensaje = "<strong>Datos Registrados Correctamente, por favor revisa tu bandeja de correo electronico, si no encuentras tus datos revisa tu bandeja de spam</strong>";
+      //$mensaje = "<strong>Datos Registrados Correctamente, por favor revisa tu bandeja de correo electronico, si no encuentras tus datos revisa tu bandeja de spam</strong>";
 
 
     }
@@ -467,9 +481,11 @@ mysql_select_db($database, $conectar);
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <input type="text" name="fecha_registro" value="<?php echo time() ?>">
-                                    <input type="text" name="id_capacitacion" value="<?php echo $_GET['curso']; ?>">
-                                    <input type="text" name="titulo" value="<?php echo $capacitacion['titulo']; ?>">
+                                    <input type="text" name="correo_capacitacion" value="<?php echo $capacitacion['correo_capacitacion']; ?>">
+                                    <input type="text" name="telefono_capacitacion" value="<?php echo $capacitacion['telefono_capacitacion']; ?>">
+                                    <input type="hidden" name="fecha_registro" value="<?php echo time() ?>">
+                                    <input type="hidden" name="id_capacitacion" value="<?php echo $_GET['curso']; ?>">
+                                    <input type="hidden" name="titulo" value="<?php echo $capacitacion['titulo']; ?>">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                                     <button type="submit" name="crear_registro" value="1" class="btn btn-primary">Crear registro</button>
                                 </div>
