@@ -42,23 +42,22 @@
 
 
      <!---LIBRERIAS DE Bootstrap File Input-->
-
-    
     <link rel="stylesheet" href="../chosen/chosen.css">
-
-<link rel="stylesheet" href="../../assets/dist/summernote.css">
+    <link rel="stylesheet" href="../../assets/dist/summernote.css">
         
+    <!-- data-tables -->
+<link rel="stylesheet" type="text/css" href="../../assets/DataTables/datatables.css"/>
+ 
 
 
 
     <script type="text/javascript">
-$(function () {
-  $('[data-toggle="popover"]').popover()
-})
-
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip()
-})
+      $(function () {
+        $('[data-toggle="popover"]').popover()
+      })
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
     </script>
 
   </head>
@@ -156,12 +155,20 @@ $(function () {
 <!--  <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js" type="text/javascript"></script>-->
   <script src="../chosen/chosen.jquery.js" type="text/javascript"></script>
   <script src="../../assets/dist/summernote.js"></script>
-<script>
-$(document).ready(function() {
-  $('.summernote').summernote();
-});
-
-</script>
+  <script src="../../assets/DataTables/datatables.js"></script>
+  <!-- SUMMERNOTE -->
+  <script>
+    $(document).ready(function() {
+      $('.summernote').summernote();
+    });
+  </script>
+    
+  <!-- DATA TABLE -->
+  <script>
+    $(document).ready( function () {
+        $('#my_table').DataTable();
+    } );
+  </script>
 
   <script type="text/javascript">
     var config = {

@@ -22,7 +22,7 @@
                                         <a <?php if(strpos($url, 'articulos.php') !== FALSE){ echo 'class="active"'; } ?> href="articulos.php">Articulos</a>
                                     </li>
                                     <li>
-                                        <a <?php if(strpos($url, 'capacitacion.php') !== FALSE){ echo 'class="active"'; } ?> href="#">Capacitación</a>
+                                        <a <?php if(strpos($url, 'capacitacion.php') !== FALSE){ echo 'class="active"'; } ?> href="capacitacion.php">Capacitación</a>
                                     </li>
 
                                     <li>

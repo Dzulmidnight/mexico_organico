@@ -37,6 +37,8 @@
 			include("add_capacitacion.php");
 		}else if(isset($_GET['add_segmento'])){
 			include("add_segmento.php");
+		}else if(isset($_GET['lista_asistentes'])){
+			include("lista_asistentes.php");
 		}else{
 			include("listado_capacitacion.php");
 		}

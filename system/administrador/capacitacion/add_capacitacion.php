@@ -56,13 +56,15 @@ if (!function_exists("GetSQLValueString")) {
 		//// CREAMOS LA CAPACITACIÓN
 		$idusuario = $_POST['idusuario'];
 		$titulo = $_POST['titulo'];
+		$descripcion = $_POST['descripcion'];
 		$contenido = $_POST['contenido'];
 		$correo_capacitacion = $_POST['correo_capacitacion'];
 		$telefono_capacitacion = $_POST['telefono_capacitacion'];
-		$estatus = 'ACTIVA';
+		$estatus = 'ACTIVO';
 
-		$query = sprintf("INSERT INTO capacitacion (titulo, contenido, img, correo_capacitacion, telefono_capacitacion, fk_id_usuario, fecha_registro, estatus) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", 
+		$query = sprintf("INSERT INTO capacitacion (titulo, descripcion, contenido, img, correo_capacitacion, telefono_capacitacion, fk_id_usuario, fecha_registro, estatus) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", 
            GetSQLValueString($titulo, "text"),
+           GetSQLValueString($descripcion, "text"),
            GetSQLValueString($contenido, "text"),
            GetSQLValueString($ruta_img, "text"),
            GetSQLValueString($correo_capacitacion, "text"),
@@ -372,6 +374,11 @@ if (!function_exists("GetSQLValueString")) {
 									<td><input type="text" class="form-control" name="nuevo_tag[0]" id="exampleInputEmail1" placeholder="Agregar Palabra"></td>
 								</tr>
 							</table>
+						</div>
+
+						<div class="col-sm-12" style="margin-top:20px;">
+							<label for="descripcion">* Descripción del Curso / Capacitación</label>
+							<textarea class="form-control campoObligatorio" name="descripcion" id="descripcion" rows="3" placeholder="Breve descripción sobre el curso / capacitación" required></textarea>
 						</div>
 
 						<div class="col-md-12" style="margin-top:1.5em;">
