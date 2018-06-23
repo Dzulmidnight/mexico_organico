@@ -141,6 +141,18 @@ if (!function_exists("GetSQLValueString")) {
 		}else{
 			while($capacitacion = mysql_fetch_assoc($row_capacitacion)){
 				$fecha = date('d/m/Y',$capacitacion['fecha_registro']);
+
+				$query = "SELECT COUNT(fk_id_participante) AS 'total_participantes' FROM capacitacion_participante WHERE fk_id_capacitacion = $capacitacion[id_capacitacion]";
+				$consultar = mysql_query($query, $conectar) or die(mysql_error());
+				$total = mysql_fetch_assoc($consultar);
+
+				$query = "SELECT COUNT(fk_id_participante) AS 'total_participantes' FROM capacitacion_participante WHERE fk_id_capacitacion = $capacitacion[id_capacitacion] AND estatus = 'VERIFICADO'";
+				$consultar = mysql_query($query, $conectar) or die(mysql_error());
+				$total_verificado = mysql_fetch_assoc($consultar);
+
+
+				$limite_participantes = $total['total_participantes'].' / '.$capacitacion['cupo'].'(<b style="color: #27ae60">'.$total_verificado['total_participantes'].'</b>)';
+
 			?>
 				<tr>
 					<!-- tipo de la capacitación -->
@@ -164,7 +176,7 @@ if (!function_exists("GetSQLValueString")) {
 							<span class="glyphicon glyphicon-th-list"></span> Ver lista
 						</a>
 						<p>
-							0 / <?php echo $capacitacion['cupo']; ?>
+							<?php echo $limite_participantes; ?>
 						</p>
 					</td>
 

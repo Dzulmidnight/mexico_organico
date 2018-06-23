@@ -152,6 +152,12 @@ mysql_select_db($database, $conectar);
                                                         Leer Más
                                                         <i class="icon-chevron-right readmore-icon"></i>
                                                     </a>
+                                                    <a href="#" data-toggle="modal" data-target="#modalCargarComprobante" class="pull-right">
+                                                        Cargar comprobante
+                                                    </a>
+
+
+                                                    
                                                 </div>
                                             </div>
                                             <!-- TERMINA CUERPO DEL ARTICULO -->                                        

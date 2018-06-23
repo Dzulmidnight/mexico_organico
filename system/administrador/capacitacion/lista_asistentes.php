@@ -1,4 +1,4 @@
-<?php 
+<?php
 if (!function_exists("GetSQLValueString")) {
   function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
   {
@@ -29,14 +29,18 @@ if (!function_exists("GetSQLValueString")) {
     return $theValue;
   }
 }
+
+	$id_administrador = $_SESSION['idusuario'];
 	$id_capacitacion = $_GET['lista_asistentes'];
 
 
 	if(isset($_POST['cargar_comprobante']) && $_POST['cargar_comprobante'] == 1){
-		if(!empty($_FILES['img']['name'])){
+		/// INSERTAMOS EL COMPROBANTE DE PAGO
+
+		if(!empty($_FILES['comprobante_pago']['name'])){
 			$ruta_img = "../img/comprobantes/";
-			$ruta_img = $ruta_img . basename( $_FILES['img']['name']); 
-			if(move_uploaded_file($_FILES['img']['tmp_name'], $ruta_img)){ 
+			$ruta_img = $ruta_img . basename( $_FILES['comprobante_pago']['name']); 
+			if(move_uploaded_file($_FILES['comprobante_pago']['tmp_name'], $ruta_img)){ 
 				//echo "El archivo ". basename( $_FILES['img']['name']). " ha sido subido";
 			} /*else{
 				echo "Ha ocurrido un error, trate de nuevo!";
@@ -44,6 +48,33 @@ if (!function_exists("GetSQLValueString")) {
 		}else{
 			$ruta_img = '';
 		}
+		$fk_id_participante = $_POST['fk_id_participante'];
+		$archivo = $ruta_img;
+		$estatus = 'AUTORIZADO';
+		$aprobado_por = $id_administrador;
+		$fecha_registro = $_POST['fecha_registro'];
+		$id_capacitacion_participante = $_POST['id_capacitacion_participante'];
+
+
+		$query = sprintf("INSERT INTO comprobante_pago(fk_id_participante, archivo, estatus, aprobado_por, fecha_registro, fecha_aprobacion) VALUES (%s, %s, %s, %s, %s, %s)", 
+           GetSQLValueString($fk_id_participante, "text"),
+           GetSQLValueString($archivo, "text"),
+           GetSQLValueString($estatus, "text"),
+           GetSQLValueString($aprobado_por, "int"),
+           GetSQLValueString($fecha_registro, "int"),
+           GetSQLValueString($fecha_registro, "text"));
+
+		$insertar = mysql_query($query,$conectar) or die(mysql_error()); 
+
+		$id_comprobante_pago = mysql_insert_id($conectar);
+		$estatus = 'VERIFICADO';
+
+		/// ACTUALIZAMOS LA TABLA capacitacion_participante
+		$query = sprintf("UPDATE capacitacion_participante SET fk_id_comprobante_pago = %s, estatus = %s WHERE id_capacitacion_participante = %s",
+			GetSQLValueString($id_comprobante_pago, "int"),
+			GetSQLValueString($estatus, "text"),
+			GetSQLValueString($id_capacitacion_participante, "int"));
+		$actualizar = mysql_query($query, $conectar) or die(mysql_error());
 
 	}
 
@@ -55,7 +86,7 @@ if (!function_exists("GetSQLValueString")) {
 	/// consultamos el cupo de participantes al curso
 	$limite_participantes = '';
 
-	$query = "SELECT COUNT(fk_id_participante) AS 'total_participantes' FROM capacitacion_participante WHERE fk_id_capacitacion = $id_capacitacion";
+	$query = "SELECT COUNT(fk_id_participante) AS 'total_participantes' FROM capacitacion_participante WHERE fk_id_capacitacion = $id_capacitacion AND estatus = 'VERIFICADO'";
 	$consultar = mysql_query($query, $conectar) or die(mysql_error());
 	$total = mysql_fetch_assoc($consultar);
 
@@ -104,7 +135,7 @@ if (!function_exists("GetSQLValueString")) {
 	}
  
 	/// CONSULTAR LISTADO DE ASISTENTES
-	$query = "SELECT capacitacion_participante.id_capacitacion_participante, capacitacion_participante.fk_id_participante, capacitacion_participante.fk_id_comprobante_pago, capacitacion_participante.estatus, participante.nombre, participante.apellido_paterno, participante.apellido_materno, participante.empresa, participante.comentario, contacto_participante.correo_electronico, contacto_participante.telefono FROM capacitacion_participante INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante WHERE capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
+	$query = "SELECT capacitacion_participante.id_capacitacion_participante, capacitacion_participante.fk_id_participante, capacitacion_participante.fk_id_comprobante_pago, capacitacion_participante.estatus, participante.nombre, participante.apellido_paterno, participante.apellido_materno, participante.empresa, participante.comentario, contacto_participante.correo_electronico, contacto_participante.telefono, comprobante_pago.estatus AS 'estatus_comprobante', comprobante_pago.archivo FROM capacitacion_participante INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante LEFT JOIN comprobante_pago ON capacitacion_participante.fk_id_comprobante_pago = comprobante_pago.id_comprobante_pago WHERE capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
 	$row_lista = mysql_query($query, $conectar) or die(mysql_error());
 
  ?>
@@ -209,17 +240,79 @@ if (!function_exists("GetSQLValueString")) {
 	            <!-- comprobante de pago -->
 	            <td>
 				<?php 
-				if(!empty($lista['fk_id_comprobante_pago'])){
+				if(!empty($lista['fk_id_comprobante_pago']) && $lista['estatus_comprobante'] != 'AUTORIZADO'){
 				?>
-	            	<button class="btn btn-xs btn-info" style="width: 100%" data-toggle="modal" data-target="#modalComprobantePago">
+	            	<button class="btn btn-xs btn-info" style="width: 100%" data-toggle="modal" data-target="<?php echo '#modalComprobantePago'.$lista['fk_id_participante']; ?>">
 	            		En espera
 	            	</button>
+
+					<div class="modal fade" id="<?php echo 'modalComprobantePago'.$lista['fk_id_participante']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<form action="" method="post" enctype="multipart/form-data">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="myModalLabel">Comprobante de pago: <span style="color:red"><?php echo $lista['nombre']; ?></span></h4>
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											<div class="col-md-12">
+												<h4>Comprobante de pago</h4>
+												<input type="file" class="form-control" name="comprobante_pago" id="comprobante_pago">
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<input type="hidden" name="fecha_registro" value="<?php echo time(); ?>">
+										<input type="hidden" name="fk_id_participante" value="<?php echo $lista['fk_id_participante']; ?>">
+										<input type="hidden" name="id_capacitacion_participante" value="<?php echo $lista['id_capacitacion_participante']; ?>">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+										<button type="submit" name="cargar_comprobante" value="1" class="btn btn-primary">Guardar</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+				<?php
+				}else if($lista['estatus_comprobante'] == 'AUTORIZADO'){
+				?>
+					<a href="<?php echo $lista['archivo']; ?>" target="_new" class="btn btn-xs btn-success" style="width:100%">Autorizado</a>
 				<?php
 				}else{
 				?>
-	            	<button class="btn btn-xs btn-default" style="width: 100%" data-toggle="modal" data-target="#modalComprobantePago" <?php echo 'onclick="llamarModal('.$lista['id_capacitacion_participante'].')"' ?>>
+	            	<button class="btn btn-xs btn-default" style="width: 100%" data-toggle="modal" data-target="<?php echo '#comprobantePago'.$lista['fk_id_participante']; ?>">
 	            		Consultar
 	            	</button>
+
+					<div class="modal fade" id="<?php echo 'comprobantePago'.$lista['fk_id_participante']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<form action="" method="post" enctype="multipart/form-data">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="myModalLabel">Comprobante de pago: <span style="color:red"><?php echo $lista['nombre']; ?></span></h4>
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											<div class="col-md-12">
+												<label for="comprobante_pago">Cargar Comprobante</label>
+												<input type="file" class="form-control" name="comprobante_pago" id="comprobante_pago">
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<input type="hidden" name="fecha_registro" value="<?php echo time(); ?>">
+										<input type="hidden" name="fk_id_participante" value="<?php echo $lista['fk_id_participante']; ?>">
+										<input type="hidden" name="id_capacitacion_participante" value="<?php echo $lista['id_capacitacion_participante']; ?>">
+										<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+										<button type="submit" name="cargar_comprobante" value="1" class="btn btn-primary">Guardar</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
 				<?php
 				}
 				 ?>
@@ -268,43 +361,3 @@ if (!function_exists("GetSQLValueString")) {
 </table>
 
 
-<!-- Modal -->
-<?php 
-echo '<script>';
-	echo 'var id;';
-	echo 'var id2;';
-	echo 'function llamarModal(id){';
-		echo 'var id2 = id';
-		echo 'return id2';
-	echo '}';
-
-echo '</script>';
-$variablePHP = "<script> document.write(id2) </script>";
- ?>
-
-	<div class="modal fade" id="modalComprobantePago" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<form action="" method="post" enctype="multipart/form-data">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="myModalLabel">Comprobante de pago</h4>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-md-12">
-								<?php echo $variablePHP; ?>
-								<label for="comprobante_pago">Cargar Comprobante</label>
-								<input type="file" class="form-control" name="comprobante_pago" id="comprobante_pago">
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<input type="text" name="fecha_registro" value="<?php echo time(); ?>">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-						<button type="button" class="btn btn-primary">Guardar</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
