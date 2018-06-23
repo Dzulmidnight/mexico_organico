@@ -137,7 +137,7 @@ if (!function_exists("GetSQLValueString")) {
 	<tbody>
 		<?php 
 		if($total_capacitacion == 0){
-			echo "<tr class='info text-center'><td colspan='7'>No se encontraron capacitaciones</td></tr>";
+			echo "<tr class='info text-center'><td colspan='9'>No se encontraron capacitaciones</td></tr>";
 		}else{
 			while($capacitacion = mysql_fetch_assoc($row_capacitacion)){
 				$fecha = date('d/m/Y',$capacitacion['fecha_registro']);
