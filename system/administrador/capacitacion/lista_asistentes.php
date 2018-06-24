@@ -33,7 +33,7 @@ if (!function_exists("GetSQLValueString")) {
 	$id_administrador = $_SESSION['idusuario'];
 	$id_capacitacion = $_GET['lista_asistentes'];
 
-
+	/// SE CARGA EL COMPROBANTE POR UN ADMINISTRADOR
 	if(isset($_POST['cargar_comprobante']) && $_POST['cargar_comprobante'] == 1){
 		/// INSERTAMOS EL COMPROBANTE DE PAGO
 
@@ -77,6 +77,38 @@ if (!function_exists("GetSQLValueString")) {
 		$actualizar = mysql_query($query, $conectar) or die(mysql_error());
 
 	}
+
+	// SE APRUEBA UN COMPROBANTE CARGADO
+	if(isset($_POST['aprobar_comprobante']) && $_POST['aprobar_comprobante'] == 1){
+		/// INSERTAMOS EL COMPROBANTE DE PAGO
+
+		$id_capacitacion_participante = $_POST['id_capacitacion_participante'];
+		$id_comprobante_pago = $_POST['id_comprobante_pago'];
+		$estatus = 'AUTORIZADO';
+		$aprobado_por = $id_administrador;
+		$fecha_aprobacion = $_POST['fecha_aprobacion'];
+		$id_capacitacion_participante = $_POST['id_capacitacion_participante'];
+		$monto_depositado = $_POST['monto_depositado'];
+
+		$query = sprintf("UPDATE comprobante_pago SET estatus = %s, monto_depositado = %s, aprobado_por = %s, fecha_aprobacion = %s WHERE id_comprobante_pago = %s", 
+           GetSQLValueString($estatus, "text"),
+           GetSQLValueString($monto_depositado, "int"),
+           GetSQLValueString($aprobado_por, "int"),
+           GetSQLValueString($fecha_aprobacion, "int"),
+           GetSQLValueString($id_comprobante_pago, "text"));
+
+		$actualizar = mysql_query($query,$conectar) or die(mysql_error()); 
+
+		$estatus = 'VERIFICADO';
+
+		/// ACTUALIZAMOS LA TABLA capacitacion_participante
+		$query = sprintf("UPDATE capacitacion_participante SET estatus = %s WHERE id_capacitacion_participante = %s",
+			GetSQLValueString($estatus, "text"),
+			GetSQLValueString($id_capacitacion_participante, "int"));
+		$actualizar = mysql_query($query, $conectar) or die(mysql_error());
+
+	}
+
 
 	$query = "SELECT capacitacion.titulo, detalle_capacitacion.cupo FROM capacitacion INNER JOIN detalle_capacitacion ON capacitacion.id_capacitacion = detalle_capacitacion.fk_id_capacitacion WHERE capacitacion.id_capacitacion = $id_capacitacion";
 
@@ -135,7 +167,7 @@ if (!function_exists("GetSQLValueString")) {
 	}
  
 	/// CONSULTAR LISTADO DE ASISTENTES
-	$query = "SELECT capacitacion_participante.id_capacitacion_participante, capacitacion_participante.fk_id_participante, capacitacion_participante.fk_id_comprobante_pago, capacitacion_participante.estatus, participante.nombre, participante.apellido_paterno, participante.apellido_materno, participante.empresa, participante.comentario, contacto_participante.correo_electronico, contacto_participante.telefono, comprobante_pago.estatus AS 'estatus_comprobante', comprobante_pago.archivo FROM capacitacion_participante INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante LEFT JOIN comprobante_pago ON capacitacion_participante.fk_id_comprobante_pago = comprobante_pago.id_comprobante_pago WHERE capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
+	$query = "SELECT capacitacion_participante.id_capacitacion_participante, capacitacion_participante.fk_id_participante, capacitacion_participante.fk_id_comprobante_pago, capacitacion_participante.estatus, detalle_capacitacion.costo, participante.nombre, participante.apellido_paterno, participante.apellido_materno, participante.empresa, participante.comentario, contacto_participante.correo_electronico, contacto_participante.telefono, comprobante_pago.estatus AS 'estatus_comprobante', comprobante_pago.archivo FROM capacitacion_participante INNER JOIN detalle_capacitacion ON capacitacion_participante.fk_id_capacitacion = detalle_capacitacion.fk_id_capacitacion INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante LEFT JOIN comprobante_pago ON capacitacion_participante.fk_id_comprobante_pago = comprobante_pago.id_comprobante_pago WHERE capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
 	$row_lista = mysql_query($query, $conectar) or die(mysql_error());
 
  ?>
@@ -256,18 +288,32 @@ if (!function_exists("GetSQLValueString")) {
 									</div>
 									<div class="modal-body">
 										<div class="row">
-											<div class="col-md-12">
-												<h4>Comprobante de pago</h4>
-												<input type="file" class="form-control" name="comprobante_pago" id="comprobante_pago">
+											<div class="col-md-6">
+												<p>Archivo comprobante</p>
+												<a href="../../<?php echo $lista['archivo']; ?>" target="_new" class="btn btn-primary">Consultar comprobante</a>
+											</div>
+											<div class="col-md-3">
+												<p>Precio por persona</p>
+												<p class="alert alert-success" style="padding:7px;">
+													$ <?php echo number_format($lista['costo']); ?>
+												</p>
+											</div>
+											<div class="col-md-3">
+												<p>Cantidad depositada</p>
+												<div class="input-group">
+													<span class="input-group-addon">$</span>
+												  	<input type="number" class="form-control" name="monto_depositado" id="monto_depositado" placeholder="Cantidad depositada" required>
+												</div>
 											</div>
 										</div>
 									</div>
 									<div class="modal-footer">
-										<input type="hidden" name="fecha_registro" value="<?php echo time(); ?>">
+										<input type="hidden" name="fecha_aprobacion" value="<?php echo time(); ?>">
+										<input type="text" name="id_capacitacion_participante" value="<?php echo $lista['id_capacitacion_participante']; ?>">
 										<input type="hidden" name="fk_id_participante" value="<?php echo $lista['fk_id_participante']; ?>">
-										<input type="hidden" name="id_capacitacion_participante" value="<?php echo $lista['id_capacitacion_participante']; ?>">
+										<input type="text" name="id_comprobante_pago" value="<?php echo $lista['fk_id_comprobante_pago']; ?>">
 										<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-										<button type="submit" name="cargar_comprobante" value="1" class="btn btn-primary">Guardar</button>
+										<button type="submit" name="aprobar_comprobante" value="1" class="btn btn-success">Aprobar comprobante</button>
 									</div>
 								</form>
 							</div>
@@ -306,7 +352,7 @@ if (!function_exists("GetSQLValueString")) {
 										<input type="hidden" name="fk_id_participante" value="<?php echo $lista['fk_id_participante']; ?>">
 										<input type="hidden" name="id_capacitacion_participante" value="<?php echo $lista['id_capacitacion_participante']; ?>">
 										<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-										<button type="submit" name="cargar_comprobante" value="1" class="btn btn-primary">Guardar</button>
+										<button type="submit" name="cargar_comprobante" value="1" class="btn btn-success">Aprobar comprobante</button>
 									</div>
 								</form>
 							</div>

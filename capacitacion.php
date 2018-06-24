@@ -128,8 +128,9 @@ mysql_select_db($database, $conectar);
 
                                                         <!-- Nombre del admin -->
                                                         <div class="blog-post-details-item blog-post-details-item-left">
-                                                            <i class="fa fa-user color-gray-light"></i>
-                                                            <a href="#"><?php echo $capacitacion['username']; ?></a>
+                                                            <i class="fa fa-user " style="color: #d35400"></i>
+                                                            <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
+                                                            <a href="#" style="color: #d35400">Cupo: <?php echo $capacitacion['cupo']; ?></a>
                                                         </div>
                                                         <!-- Termina nombre admin -->
 
@@ -147,11 +148,6 @@ mysql_select_db($database, $conectar);
                                                                 Leer Más
                                                                 <i class="icon-chevron-right readmore-icon"></i>
                                                             </a>
-                                                            <a href="#" data-toggle="modal" data-target="#modalCargarComprobante" class="pull-right">
-                                                                Cargar comprobante
-                                                            </a>
-
-
                                                             
                                                         </div>
                                                     </div>

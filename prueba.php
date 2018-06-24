@@ -29,36 +29,33 @@
                   </th>
                   <th>
                     <h3>
-                      Datos de registro al Curso: <span style="color: #27ae60">Nombre del Curso</span>
+                      Comprobante de pago del Curso: <span style="color: #27ae60">'.$titulo.'</span>
                     </h3>
                   </th>
                 </tr>
               </thead>
               <tbody>
-                    <tr>
-                      <td colspan="2" style="text-align:justify;padding-top:30px;">
-                        Felicidades, se han registrado sus datos correctamente. A continuación se muestra su <b>Codigo de usuario</b> y las instrucciones para poder cargar el comprobante de pago del curso.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <h4 style="color:red">
-                          Instrucciones para cargar el comprobante de pago
-                        </h4>
-                        <ol>
-                          <li>#Codigo: <b><?php echo $codigo ?></b></li>
-                          <li>Debe ingresar a la dirección: </li>
-                          <li>Seleccionar el idioma en el que desea utilizar el sistema.</li>
-                        </ol>
-                      </td>
-                    </tr>
-
-                    <!--<tr>
-                      <td style="text-align:justify;padding-top:10px;"><i>Congratulations , your data have been recorded correctly. Below is your <b>#SPP and password needed to log in </b>: <a href="http://d-spp.org/?OPP" target="_new">www.d-spp.org/?OPP</a></i>, once you have logged you are advised to change your password on the Information OPP section, in that section are data which can be modified if be necessary.</td>
-                    </tr>-->
-                <tr>
                   <td colspan="2">
-                    Cualquier duda o pregunta puede ponerse en contacto al correo: soporte@d-spp.org o Telefono: 2342343
+                    <h4>
+                      Se ha cargado un comprobante de pago de curso:
+                    </h4>
+                    <h4 style="color:red">
+                      Información acerca del participante:
+                    </h4>
+                    <ul>
+                      <li>
+                        <b>Nombre:</b> 
+                      </li>
+                      <li>
+                        <b>Apellidos:</b> 
+                      </li>
+                      <li>
+                        <b>Correo Electrónico:</b>
+                      </li>
+                      <li>
+                        <b>Teléfono:</b>
+                      </li>
+                    </ul>
                   </td>
                 </tr>
               </tbody>

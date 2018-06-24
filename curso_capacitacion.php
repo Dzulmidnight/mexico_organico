@@ -42,7 +42,7 @@ mysql_select_db($database, $conectar);
     if(isset($_POST['asdf']) && $_POST['asdf'] == 1){
         $fecha_registro = $_POST['fecha_registro'];
         $id_capacitacion = $_POST['id_capacitacion'];
-        $nombre_curso = $_POST['titulo'];
+        $titulo = $_POST['titulo'];
 
         $correo_electronico = $_POST['correo_electronico'];
         $lada = $_POST['lada'];
@@ -97,7 +97,7 @@ mysql_select_db($database, $conectar);
         $correo_capacitacion = $_POST['correo_capacitacion'];
         $telefono_capacitacion = $_POST['telefono_capacitacion'];
 
-        $asunto = 'Información del Curso: '.$nombre_curso; 
+        $asunto = 'Información del Curso: '.$titulo; 
 
         $cuerpo = '
         <html>
@@ -131,7 +131,7 @@ mysql_select_db($database, $conectar);
                   </th>
                   <th>
                     <h3>
-                      Datos de registro al Curso: <span style="color: #27ae60">'.$nombre_curso.'</span>
+                      Datos de registro al Curso: <span style="color: #27ae60">'.$titulo.'</span>
                     </h3>
                   </th>
                 </tr>
@@ -183,6 +183,7 @@ mysql_select_db($database, $conectar);
       $id_capacitacion = $_POST['id_capacitacion'];
       $codigo = $_POST['codigo'];
       $correo_electronico = $_POST['correo_electronico'];
+      $titulo = $_POST['titulo'];
 
       //verificamos la información
       $query = "SELECT participante.id_participante FROM participante INNER JOIN contacto_participante ON participante.id_participante = contacto_participante.fk_id_participante WHERE participante.codigo = '$codigo' && contacto_participante.correo_electronico = '$correo_electronico'";
@@ -235,6 +236,99 @@ mysql_select_db($database, $conectar);
           GetSQLValueString($estatus, "text"),
           GetSQLValueString($id_capacitacion_participante, "int"));
         $actualizar = mysql_query($query, $conectar) or die(mysql_error());
+
+        //// enviamos correo para notificar que se ha cargado un comprobante de pago
+        // consultamos la información del participante
+          $query = "SELECT participante.nombre, participante.apellido_paterno, participante.apellido_materno, contacto_participante.correo_electronico, contacto_participante.telefono, capacitacion.correo_capacitacion FROM capacitacion_participante INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante INNER JOIN capacitacion ON capacitacion_participante.fk_id_capacitacion = capacitacion.id_capacitacion WHERE capacitacion_participante.fk_id_participante = $fk_id_participante AND capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
+          $row_participante = mysql_query($query, $conectar) or die(mysql_error());
+          $participante = mysql_fetch_assoc($row_participante);
+
+          $nombre = $participante['nombre'];
+          $apellidos = $participante['apellido_paterno'].' '.$participante['apellido_materno'];
+          $correo = $participante['correo_electronico'];
+          $telefono = $participante['telefono'];
+
+        $asunto = 'Comprobante de pago del Curso: '.$titulo; 
+
+        $cuerpo = '
+        <html>
+        <head>
+        <meta charset="utf-8">
+
+        <style>
+          table, td, th {    
+              border: 1px solid #ddd;
+              text-align: left;
+          }
+
+          table {
+              border-collapse: collapse;
+              width: 100%;
+          }
+
+          th, td {
+              padding: 15px;
+          }
+        </style>
+
+        </head>
+        <body>
+
+            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #2c3e50">
+              <thead>
+                <tr>
+                  <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
+                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                  </th>
+                  <th>
+                    <h3>
+                      Comprobante de pago del Curso: <span style="color: #27ae60">'.$titulo.'</span>
+                    </h3>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                  <td colspan="2">
+                    <h4>
+                      Se ha cargado un comprobante de pago de curso: '.$titulo.'
+                    </h4>
+                    <h4 style="color:red">
+                      Información acerca del participante:
+                    </h4>
+                    <ul>
+                      <li>
+                        <b>Nombre:</b> '.$nombre.'
+                      </li>
+                      <li>
+                        <b>Apellidos:</b> '.$apellidos.'
+                      </li>
+                      <li>
+                        <b>Correo Electrónico:</b> '.$correo_electronico.'
+                      </li>
+                      <li>
+                        <b>Teléfono:</b> '.$telefono.'
+                      </li>
+                    </ul>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+        </body>
+        </html>
+    ';
+      $mail->AddAddress($participante['correo_capacitacion']);
+      $mail->AddAttachment($archivo);
+      //$mail->AddBCC($administrador);
+      //$mail->Username = "soporte@d-spp.org";
+      //$mail->Password = "/aung5l6tZ";
+      $mail->Subject = utf8_decode($asunto);
+      $mail->Body = utf8_decode($cuerpo);
+      $mail->MsgHTML(utf8_decode($cuerpo));
+      $mail->Send();
+      $mail->ClearAddresses();
+
+      echo '<script>alert("Comprobante de pago enviado");</script>';
 
       }else{
         echo '<script>alert("Datos incorrectos")</script>';
@@ -384,7 +478,7 @@ mysql_select_db($database, $conectar);
                                                 </p>
                                             </div>-->
                                             <div class="col-md-12" style="border-bottom: 3px solid #27ae60">
-                                                <h4>
+                                                <h4 style="color: #2c3e50">
                                                     Detalles del Curso / Capacitación
                                                 </h4>
                                                 <div class="row">
@@ -408,7 +502,7 @@ mysql_select_db($database, $conectar);
                                                         Telefono: <span class="informacion"><?php echo $capacitacion['telefono_capacitacion']; ?></span>
                                                     </div>
                                                     <div class="col-sm-6" style="margin-top:20px;">
-                                                        Dirección sdfgsd: <span><?php echo $capacitacion['lugar']; ?></span>
+                                                        Dirección: <span><?php echo $capacitacion['lugar']; ?></span>
                                                     </div>
                                                     <div class="col-sm-6" style="margin-top:3em;">
                                                       <?php 
@@ -431,7 +525,7 @@ mysql_select_db($database, $conectar);
                                             </div>
 
                                             <div class="col-md-12">
-                                                <h2 class="text-center">CONTENIDO</h2>
+                                                <h2 class="text-center" style="margin-top:20px;">CONTENIDO</h2>
                                                 <p>
                                                     <?php echo nl2br($capacitacion['contenido']); ?>
                                                 </p>
