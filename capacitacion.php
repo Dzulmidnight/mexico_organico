@@ -103,6 +103,7 @@ mysql_select_db($database, $conectar);
                                                         <div class="row">
                                                             <!-- titulo -->
                                                             <div class="col-md-12">
+                                                                <hr>
                                                                 <h2>
                                                                     <a href="curso_capacitacion.php?curso=<?php echo $capacitacion['id_capacitacion']; ?>"><?php echo $capacitacion['titulo']; ?></a>
                                                                 </h2>
@@ -113,7 +114,8 @@ mysql_select_db($database, $conectar);
                                                         <!-- fecha -->
                                                         <div class="blog-post-date">
                                                             <div class="row">
-                                                                <div class="col-md-12">
+                                                                <div class="col-md-12" style="color:#d35400">
+                                                                    <span>FECHA(S):</span>
                                                                     <?php 
                                                                     if(isset($capacitacion['fecha_inicio']) && $capacitacion['fecha_fin']){
                                                                         echo '<span>'.$fecha_inicio.' al '.$fecha_fin.'</span>';

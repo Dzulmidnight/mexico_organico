@@ -198,9 +198,10 @@ if (!function_exists("GetSQLValueString")) {
 	}
  ?>
 <div class="row">
-	<div class="col-md-12">
+	<div class="col-md-2">
 		Estatus: <span class="verificado glyphicon glyphicon-ok" data-toggle="tooltip" title="VERIFICADO"></span> <span class="enEspera glyphicon glyphicon-time" data-toggle="tooltip" title="EN ESPERA"></span> <span class="cancelado glyphicon glyphicon-ban-circle" data-toggle="tooltip" title="CANCELADO"></span>
 	</div>
+
 </div>
 
  <table id="my_table" class="table table-bordered table-condensed" style="font-size:12px;">
@@ -395,9 +396,19 @@ if (!function_exists("GetSQLValueString")) {
 
 				<!-- acciones -->
 				<td>
-					<button class="btn btn-sm btn-danger">
-						<span class="glyphicon glyphicon-remove"></span>
-					</button>
+					<div class="dropdown">
+						<button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Acciones <span class="caret"></span>
+						</button>
+							<ul class="dropdown-menu" aria-labelledby="dLabel">
+								<li>
+									<a href="">Editar</a>
+								</li>
+								<li>
+									<a href="">Eliminar</a>
+								</li>
+							</ul>
+					</div>
 				</td>
 	        </tr>
     	<?php

@@ -156,7 +156,7 @@ mysql_select_db($database, $conectar);
                     </tr>
                 <tr>
                   <td colspan="2">
-                    Cualquier duda o pregunta puede ponerse en contacto al correo: <b>'.$correo_capacitacion.'</b> o Telefono: <b>'.$telefono_capacitacion.'</b>
+                    Cualquier duda o pregunta puede ponerse en contacto al correo: <b>'.$correo_capacitacion.'</b> o al Telefono: <b>'.$telefono_capacitacion.'</b>
                   </td>
                 </tr>
               </tbody>
@@ -342,7 +342,7 @@ mysql_select_db($database, $conectar);
     $capacitacion = mysql_fetch_assoc($row_capacitacion);
 
 
-    $query_tag = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE id_capacitacion = $capacitacion[id_capacitacion]";
+    $query_tag = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE id_capacitacion = $id_capacitacion";
     $row_tag = mysql_query($query_tag,$conectar) or die(mysql_error());
     $row_tag2 = mysql_query($query_tag,$conectar) or die(mysql_error());
 
@@ -408,6 +408,9 @@ mysql_select_db($database, $conectar);
     .informacion{
         color: #27ae60;
     }
+    .resaltar{
+      color:#d35400;
+    }
 </style>
 
         </head>
@@ -429,18 +432,25 @@ mysql_select_db($database, $conectar);
                             <div class="col-md-9">
                                 <div class="blog-post">
                                     <div class="blog-item-header">
-                                        <h2>
-                                            <a href="#">
-                                                <?php echo $capacitacion['titulo']; ?>
-                                            </a>
-                                        </h2>
-                                        <!-- Date -->
-                                        <div class="blog-post-date">
-                                            <?php 
-                                            echo '<span>'.$fechas.'</span>';
-                                             ?>
+                                      <div class="row">
+                                        <div class="col-sm-12">
+                                          <h2>
+                                              <a href="#">
+                                                  <?php echo $capacitacion['titulo']; ?>
+                                              </a>
+
+                                          </h2>
                                         </div>
-                                        <!-- End Date -->
+                                        <div class="col-sm-12">
+                                          <!-- Date -->
+                                          <div class="blog-post-date">
+                                              <?php 
+                                              echo '<span>'.$fechas.'</span>';
+                                               ?>
+                                          </div>
+                                          <!-- End Date -->
+                                        </div>
+                                      </div>
                                     </div>
                                     <div class="blog-post-details">
                                         <!-- Author Name -->
@@ -483,28 +493,28 @@ mysql_select_db($database, $conectar);
                                                 </h4>
                                                 <div class="row">
                                                     <div class="col-sm-4">
-                                                        Fecha: <span class="informacion"><?php echo $fechas; ?></span>
+                                                        <span class="resaltar">Fecha:</span> <span class="informacion"><?php echo $fechas; ?></span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        Costo: $ <span class="informacion"><?php echo number_format($capacitacion['costo']); ?></span>
+                                                        <span class="resaltar">Costo: $</span> <span class="informacion"><?php echo number_format($capacitacion['costo']); ?></span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        Cupo: <span class="informacion"><?php echo $capacitacion['cupo']; ?></span>
+                                                        <span class="resaltar">Cupo:</span> <span class="informacion"><?php echo $capacitacion['cupo']; ?></span>
                                                     </div>
 
                                                     <div class="col-sm-4">
-                                                        Tipo de curso: <span class="informacion"><?php echo $capacitacion['tipo_curso']; ?></span>
+                                                        <span class="resaltar">Tipo de curso:</span> <span class="informacion"><?php echo $capacitacion['tipo_curso']; ?></span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        Correo electronico: <span class="informacion"><?php echo $capacitacion['correo_capacitacion']; ?></span>
+                                                        <span class="resaltar">Correo electronico:</span> <span class="informacion"><?php echo $capacitacion['correo_capacitacion']; ?></span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        Telefono: <span class="informacion"><?php echo $capacitacion['telefono_capacitacion']; ?></span>
+                                                        <span class="resaltar">Telefono:</span> <span class="informacion"><?php echo $capacitacion['telefono_capacitacion']; ?></span>
                                                     </div>
-                                                    <div class="col-sm-6" style="margin-top:20px;">
-                                                        Dirección: <span><?php echo $capacitacion['lugar']; ?></span>
+                                                    <div class="col-sm-6" style="margin-top:20px">
+                                                        <span class="resaltar">Dirección:</span> <span><?php echo $capacitacion['lugar']; ?></span>
                                                     </div>
-                                                    <div class="col-sm-6" style="margin-top:3em;">
+                                                    <div class="col-sm-6" style="margin-top:3em;padding-right: 0px;">
                                                       <?php 
                                                       if($asistentes['num_asistentes'] < $capacitacion['cupo']){
                                                       ?>
@@ -568,24 +578,32 @@ mysql_select_db($database, $conectar);
                                     ?>
                                         <li>
                                             <div class="recent-post">
-                                                <a href="articulo.php?articulo=<?php echo $last_articulos['id_capacitacion']; ?>">
-                                                    <img class="pull-left" style="width:54px;" src="system/administrador/<?php echo $last_articulos['img']; ?>" alt="thumb1">
-                                                </a>
-                                                <a href="articulo.php?articulo=<?php echo $last_articulos['id_capacitacion']; ?>" class="posts-list-title"><?php echo $last_articulos['titulo']; ?></a>
-                                                <br>
-                                                <span class="recent-post-date">
-                                                    <?php 
-                                                    if(!empty($last_articulos['fecha_inicio']) && !empty($last_articulos['fecha_fin'])){
-                                                        echo '<span>'.date('d/m/Y',$last_articulos['fecha_inicio']).' al '.date('d/m/Y',$last_articulos['fecha_fin']).'</span>';
-                                                    }else{
-                                                        if(!empty($last_articulos['fecha_inicio'])){
-                                                            echo '<span>'.date('d/m/Y',$last_articulos['fecha_inicio']).'</span>';
-                                                        }else{
-                                                            echo '<span>'.date('d/m/Y',$last_articulos['fecha_fin']).'</span>';
-                                                        }
-                                                    }
-                                                     ?>
-                                                </span>
+                                              <div class="row">
+                                                <div class="col-sm-12">
+                                                  <span class="recent-post-date">
+                                                      <?php 
+                                                      if(!empty($last_articulos['fecha_inicio']) && !empty($last_articulos['fecha_fin'])){
+                                                          echo '<span>'.date('d/m/Y',$last_articulos['fecha_inicio']).' al '.date('d/m/Y',$last_articulos['fecha_fin']).'</span>';
+                                                      }else{
+                                                          if(!empty($last_articulos['fecha_inicio'])){
+                                                              echo '<span>'.date('d/m/Y',$last_articulos['fecha_inicio']).'</span>';
+                                                          }else{
+                                                              echo '<span>'.date('d/m/Y',$last_articulos['fecha_fin']).'</span>';
+                                                          }
+                                                      }
+                                                       ?>
+                                                  </span>
+                                                </div>
+
+                                                <div class="col-sm-12">
+                                                  <a href="articulo.php?articulo=<?php echo $last_articulos['id_capacitacion']; ?>">
+                                                      <img class="pull-left" src="system/administrador/<?php echo $last_articulos['img']; ?>" alt="thumb1">
+                                                  </a>
+                                                </div>
+                                                <div class="col-sm-12">
+                                                  <a href="articulo.php?articulo=<?php echo $last_articulos['id_capacitacion']; ?>" class="posts-list-title"><?php echo $last_articulos['titulo']; ?></a>
+                                                </div>
+                                              </div>
                                             </div>
                                             <div class="clearfix"></div>
                                         </li>
@@ -785,7 +803,7 @@ mysql_select_db($database, $conectar);
                           'empresa': $('#empresa').val(),
                           'comentario': $('#comentario').val(),
                           'correo_capacitacion': $('#correo_capacitacion').val(),
-                          'telefono_capacitacion': $('#correo_electronico').val(),
+                          'telefono_capacitacion': $('#telefono_capacitacion').val(),
                           'fecha_registro': $('#fecha_registro').val(),
                           'id_capacitacion': $('#id_capacitacion').val(),
                           'titulo': $('#titulo').val()

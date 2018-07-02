@@ -400,13 +400,13 @@ if (!function_exists("GetSQLValueString")) {
 									<select class="form-control campoObligatorio" name="tipo_curso" id="tipo_curso" required>
 										<option value="">Modo de presentación</option>
 										<option value="Presencial">Presencial</option>
-										<option value="En linea">En linea</option>
+										<option value="En linea">En línea</option>
 									</select>
 								</div>
 								<div class="col-sm-4">
 									<div class="input-group">
 										<span class="input-group-addon">$</span>
-									  	<input type="text" class="form-control campoObligatorio" name="costo" id="costo" placeholder="Precio por asistente" required>
+									  	<input type="number" class="form-control campoObligatorio" name="costo" id="costo" placeholder="Precio por asistente" required>
 									</div>
 								</div>
 
