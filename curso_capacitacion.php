@@ -127,7 +127,7 @@ mysql_select_db($database, $conectar);
               <thead>
                 <tr>
                   <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
-                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Mexico Organico." width="120" height="120" />
                   </th>
                   <th>
                     <h3>
@@ -148,8 +148,11 @@ mysql_select_db($database, $conectar);
                           Instrucciones para cargar el comprobante de pago
                         </h4>
                         <ol>
+                          <li>Debe ingresar a la pagina web <a href="http://mexorganico.com/index.php">Mexico Organico</a></li>
+                          <li>Seleccione la pestaña <a href="http://mexorganico.com/capacitacion.php">"Capacitación"</a></li>
+                          <li>Localicé su curso y de clic en leer más, una vez realizado esto podra visualizar el boton(rojo) para "Cargar el Comprobante" </li>
                           <li>#Codigo: <b>'.$elcodigo.'</b></li>
-                          <li>Debe ingresar a la dirección: </li>
+                          <li>: </li>
                           <li>Seleccionar el idioma en el que desea utilizar el sistema.</li>
                         </ol>
                       </td>
@@ -278,7 +281,7 @@ mysql_select_db($database, $conectar);
               <thead>
                 <tr>
                   <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
-                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Mexico Organico" width="120" height="120" />
                   </th>
                   <th>
                     <h3>
@@ -360,7 +363,7 @@ mysql_select_db($database, $conectar);
     }
 
     /// consultamos el numero de asistentes
-    $query_asistentes = "SELECT COUNT(fk_id_participante) AS 'num_asistentes' FROM capacitacion_participante WHERE fk_id_capacitacion = $id_capacitacion AND estatus = 'VALIDADO'";
+    $query_asistentes = "SELECT COUNT(fk_id_participante) AS 'num_asistentes' FROM capacitacion_participante WHERE fk_id_capacitacion = $id_capacitacion AND estatus = 'VERIFICADO'";
     $row_asistentes = mysql_query($query_asistentes, $conectar) or die(mysql_error());
     $asistentes = mysql_fetch_assoc($row_asistentes);
 ?>
@@ -435,10 +438,7 @@ mysql_select_db($database, $conectar);
                                       <div class="row">
                                         <div class="col-sm-12">
                                           <h2>
-                                              <a href="#">
-                                                  <?php echo $capacitacion['titulo']; ?>
-                                              </a>
-
+                                            <?php echo $capacitacion['titulo']; ?>
                                           </h2>
                                         </div>
                                         <div class="col-sm-12">
@@ -479,9 +479,9 @@ mysql_select_db($database, $conectar);
                                     <div class="blog-item">
                                         <div class="clearfix"></div>
                                         <div class="blog-post-body row margin-top-15">
-                                            <div class="col-md-12 text-center">
+                                            <!--<div class="col-md-12 text-center">
                                                 <img class="margin-bottom-20"  src="system/administrador/<?php echo $capacitacion['img']; ?>" alt="image1">
-                                            </div>
+                                            </div>-->
                                             <!--<div class="col-md-7">
                                                 <p>
                                                     <?php echo nl2br(substr($capacitacion['descripcion'], 0,300))." ..."; ?>
@@ -493,23 +493,23 @@ mysql_select_db($database, $conectar);
                                                 </h4>
                                                 <div class="row">
                                                     <div class="col-sm-4">
-                                                        <span class="resaltar">Fecha:</span> <span class="informacion"><?php echo $fechas; ?></span>
+                                                        <span class="glyphicon glyphicon-calendar"></span> <span class="resaltar">Fecha: </span> <span class="informacion"><?php echo $fechas; ?></span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <span class="resaltar">Costo: $</span> <span class="informacion"><?php echo number_format($capacitacion['costo']); ?></span>
+                                                        <span class="glyphicon glyphicon-usd"></span> <span class="resaltar">Costo: </span><span class="informacion"><?php echo number_format($capacitacion['costo']); ?></span> <span class="resaltar">MXN</span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <span class="resaltar">Cupo:</span> <span class="informacion"><?php echo $capacitacion['cupo']; ?></span>
+                                                        <span class="glyphicon glyphicon-user"></span> <span class="resaltar">Cupo: </span> <span class="informacion"><?php echo $capacitacion['cupo']; ?></span>
                                                     </div>
 
                                                     <div class="col-sm-4">
-                                                        <span class="resaltar">Tipo de curso:</span> <span class="informacion"><?php echo $capacitacion['tipo_curso']; ?></span>
+                                                        <span class="glyphicon glyphicon-education"></span> <span class="resaltar">Tipo de curso: </span><span class="informacion"><?php echo $capacitacion['tipo_curso']; ?></span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <span class="resaltar">Correo electronico:</span> <span class="informacion"><?php echo $capacitacion['correo_capacitacion']; ?></span>
+                                                        <span class="glyphicon glyphicon-envelope"></span> <span class="resaltar">Email: </span><span class="informacion"><?php echo $capacitacion['correo_capacitacion']; ?></span>
                                                     </div>
                                                     <div class="col-sm-4">
-                                                        <span class="resaltar">Telefono:</span> <span class="informacion"><?php echo $capacitacion['telefono_capacitacion']; ?></span>
+                                                        <span class="glyphicon glyphicon-phone-alt"></span> <span class="resaltar">Teléfono: </span><span class="informacion"><?php echo $capacitacion['telefono_capacitacion']; ?></span>
                                                     </div>
                                                     <div class="col-sm-6" style="margin-top:20px">
                                                         <span class="resaltar">Dirección:</span> <span><?php echo $capacitacion['lugar']; ?></span>
@@ -597,7 +597,7 @@ mysql_select_db($database, $conectar);
 
                                                 <div class="col-sm-12">
                                                   <a href="articulo.php?articulo=<?php echo $last_articulos['id_capacitacion']; ?>">
-                                                      <img class="pull-left" src="system/administrador/<?php echo $last_articulos['img']; ?>" alt="thumb1">
+                                                      <img style="height:100px;" class="pull-left" src="system/administrador/<?php echo $last_articulos['img']; ?>" alt="thumb1">
                                                   </a>
                                                 </div>
                                                 <div class="col-sm-12">
@@ -829,7 +829,7 @@ mysql_select_db($database, $conectar);
                                 })
                             }else{
                               $('#divMostrar').html('<p class="alert alert-danger">Este correo ya ha sido utilizado, por favor usar otro.</p>');
-                              $( "#divMostrar" ).delay( 1500 ).slideUp( 400 );
+                             
 
                             }
                           }

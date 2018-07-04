@@ -49,9 +49,10 @@ if (!function_exists("GetSQLValueString")) {
 			GetSQLValueString($id_capacitacion, "int"));
 		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
 
-		$mensaje = "Articulo Eliminado Correctamente";
+		$mensaje = "Curso eliminado";
 
 	}
+	$fecha_actual = time();
 	//$query = "SELECT nota.*,  usuario.username FROM nota INNER JOIN usuario ON nota.idusuario = usuario.idusuario";
 	//$query = "SELECT articulo.*, usuario.username FROM articulo INNER JOIN usuario ON articulo.autor = usuario.idusuario";
 
@@ -72,6 +73,22 @@ if (!function_exists("GetSQLValueString")) {
 	.Suspendido{
 		color: #e67e22;
 	}
+   
+    .bio-row{
+        width: 50%;
+        float: left;
+        margin-bottom: 10px;
+        padding: 0 15px;
+
+    }
+    .bio-row span{
+        color: #89817e;;
+    }
+    .bio-row p span{
+        width: 100px;
+        display: inline-block;
+    }
+
 </style>
 
 <h3>Listado de Capacitaciones</h3>
@@ -83,7 +100,7 @@ if (!function_exists("GetSQLValueString")) {
 			$color = 'activo';
 		}else if($estatus == 'SUSPENDIDO'){
 			$color = 'suspendido';
-		}else if($estatus == 'CANCELADO'){
+		}else if($estatus == 'FINALIZADO'){
 			$color = 'cancelado';
 		}
 		echo "
@@ -101,7 +118,7 @@ if (!function_exists("GetSQLValueString")) {
 		<tr>
 			<th colspan="9">
 				<b>
-					Estatus: <span class="activo glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Activo"></span> <span class="suspendido glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Suspendido"></span> <span class="cancelado glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Cancelado"></span>
+					Estatus: <span class="activo glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Activo"></span> <span class="suspendido glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Suspendido"></span> <span class="cancelado glyphicon glyphicon-bookmark" data-toggle="tooltip" title="Finalizado"></span>
 				</b>
 			</th>
 		</tr>
@@ -118,16 +135,16 @@ if (!function_exists("GetSQLValueString")) {
 			<th class="text-center">
 				Titulo
 			</th>
-			<th class="text-center">
+			<th class="text-center" style="width:500px;">
 				Descripción
 			</th>
 			<th class="text-center">
 				Contenido
 			</th>
 
-			<th class="text-center">
+			<!--<th class="text-center">
 				Tag(s)
-			</th>
+			</th>-->
 			<th class="text-center">
 				Adm
 			</th>
@@ -140,6 +157,19 @@ if (!function_exists("GetSQLValueString")) {
 			echo "<tr class='info text-center'><td colspan='9'>No se encontraron capacitaciones</td></tr>";
 		}else{
 			while($capacitacion = mysql_fetch_assoc($row_capacitacion)){
+				/// ha finalizado el curso
+				if($fecha_actual > $capacitacion['fecha_fin']){
+					$estatus = "FINALIZADO";
+
+					$query = sprintf("UPDATE capacitacion SET estatus = %s WHERE id_capacitacion = %s",
+					           GetSQLValueString($estatus, "text"),
+					           GetSQLValueString($capacitacion['id_capacitacion'], "int"));
+					$update = mysql_query($query,$conectar) or die(mysql_error());
+
+				}else{ /// el curso aun esta vigente
+
+				}
+
 				$fecha = date('d/m/Y',$capacitacion['fecha_registro']);
 
 				$query = "SELECT COUNT(fk_id_participante) AS 'total_participantes' FROM capacitacion_participante WHERE fk_id_capacitacion = $capacitacion[id_capacitacion]";
@@ -185,7 +215,7 @@ if (!function_exists("GetSQLValueString")) {
 						<?php echo $capacitacion['titulo']; ?>
 					</td>
 					<!-- descripción de la capacitación -->
-					<td>
+					<td style="width:500px;">
 						<?php echo substr($capacitacion['descripcion'], 0,200); ?>
 					</td>
 					<!-- contenido de la capacitacion -->
@@ -195,7 +225,7 @@ if (!function_exists("GetSQLValueString")) {
 
 
 					<!-- tags de la capacitación -->
-					<td>
+					<!--<td>
 						<?php 
 						$query_tags = "SELECT articulo_tag.*, tags.nombre FROM articulo_tag INNER JOIN tags ON articulo_tag.idtag = tags.idtag WHERE id_capacitacion = $capacitacion[id_capacitacion]";
 						$row_tags = mysql_query($query_tags,$conectar) or die(mysql_error());
@@ -203,28 +233,55 @@ if (!function_exists("GetSQLValueString")) {
 							echo "<a  style='margin:1px;' href='#'><span class='label label-success'>".$tags['nombre']."</span></a>";
 						}
 						 ?>
-					</td>
+					</td>-->
 					<!-- nombre administrador -->
 					<td>
 						<?php echo $capacitacion['username']; ?>
 					</td>
 					<!-- botones de acciones -->
 					<td>
-						<!-- EDITAR ARTICULO -->
-						<a class="btn btn-sm btn-warning" data-toggle="tooltip" title="Visualizar | Editar" href="?menu=articulo&add_articulo&detalle=<?php echo $capacitacion['id_capacitacion']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-						<!-- ELIMINAR NOTA -->
-						<form action="" method="POST">
-							<button class="btn btn-sm btn-danger" data-toggle="tooltip" title="Eliminar Articulo" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_capacitacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
-							<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
-							<input type="hidden" name="id_capacitacion" value="<?php echo $capacitacion['id_capacitacion']; ?>">
-							<input type="hidden" name="img_capacitacion" value="<?php echo $capacitacion['img']; ?>">
-						</form>
+						<div class="dropdown">
+							<button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Acciones <span class="caret"></span>
+							</button>
+								<ul class="dropdown-menu" aria-labelledby="dLabel">
+									<li>
+										<a class="" data-toggle="modal" data-target="#modalInformacion<?php echo $capacitacion['id_capacitacion']; ?>" href="#"><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Información</a>									
+									</li>
+									<li>
+										<a class="" data-toggle="tooltip" title="Editar información" href="?menu=capacitacion&listado&detalle_capacitacion=<?php echo $capacitacion['id_capacitacion']; ?>"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Editar</a>									
+									</li>
+									<li>
+										<form action="" method="POST">
+											<button class="btn btn-link" data-toggle="tooltip" title="Eliminar curso" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_capacitacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Eliminar</button>
+											<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
+											<input type="hidden" name="id_capacitacion" value="<?php echo $capacitacion['id_capacitacion']; ?>">
+											<input type="hidden" name="img_capacitacion" value="<?php echo $capacitacion['img']; ?>">
+										</form>
+									</li>
+									<li class="divider"></li>
+									<form action="">
+										<li>
+											<button class="btn btn-link" data-toggle="tooltip" title="Eliminar curso" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_capacitacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Suspender</button>
+											<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
+											<input type="hidden" name="id_capacitacion" value="<?php echo $capacitacion['id_capacitacion']; ?>">
+											<input type="hidden" name="img_capacitacion" value="<?php echo $capacitacion['img']; ?>">
+										</li>
+										<li>
+											<button class="btn btn-link" data-toggle="tooltip" title="Eliminar curso" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_capacitacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Cancelar</button>
+											<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
+											<input type="hidden" name="id_capacitacion" value="<?php echo $capacitacion['id_capacitacion']; ?>">
+											<input type="hidden" name="img_capacitacion" value="<?php echo $capacitacion['img']; ?>">
+										</li>
+									</form>
+								</ul>
+						</div>
 					</td>
 
 				</tr>
 
 
-				<!-- Modal -->
+				<!-- Modal contenido curso-->
 				<div class="modal fade" id="myModal<?php echo $capacitacion['id_capacitacion'];?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 				  <div class="modal-dialog modal-lg" role="document">
 				    <div class="modal-content">
@@ -262,6 +319,71 @@ if (!function_exists("GetSQLValueString")) {
 				    </div>
 				  </div>
 				</div>
+
+				<!-- Modal consultar información-->
+				<div class="modal fade" id="modalInformacion<?php echo $capacitacion['id_capacitacion'];?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				  <div class="modal-dialog modal-lg" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title text-center" id="myModalLabel" style="color:#2c3e50">
+				        	Información del curso <span style="color:red"><?php echo $capacitacion['titulo']; ?></span>
+				        </h4>
+				      </div>
+				      <div class="modal-body" style="color:#34495e">
+                    <div class="row">
+                        <div class="bio-row">
+                            <p>
+                                <span>Tipo de curso: </span>
+                                <?php echo $capacitacion['tipo_curso']; ?>
+                            </p>
+                        </div>
+                        <div class="bio-row">
+                            <p>
+                                <span>Creador: </span>
+                                <?php echo $capacitacion['username']; ?>
+                            </p>
+                        </div>
+
+                        <div class="bio-row">
+                            <p>
+                                <span>Cupo: </span>
+                                <?php echo $capacitacion['cupo']; ?>
+                            </p>
+                        </div>
+                        <div class="bio-row">
+                            <p>
+                                <span>Costo por persona: </span>
+                                $ <?php echo $capacitacion['costo']; ?> MXN
+                            </p>
+                        </div>
+                        <div class="bio-row">
+                            <p>
+                                <span>Correo de contacto: </span>
+                                <?php echo $capacitacion['correo_capacitacion']; ?>
+                            </p>
+                        </div>
+                        <div class="bio-row">
+                            <p>
+                                <span>Telefono de contacto: </span>
+                                <?php echo $capacitacion['telefono_capacitacion']; ?>
+                            </p>
+                        </div>
+                        <div class="bio-row">
+                            <p>
+                                <span>Dirección: </span>
+                                <?php echo $capacitacion['lugar']; ?>
+                            </p>
+                        </div>
+                    </div>
+				      </div>
+				      <div class=" modal-footer">
+				        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
 			<?php
 			}
 		}

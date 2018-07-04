@@ -35,8 +35,8 @@
 		<?php 
 		if(isset($_GET['add_capacitacion'])){
 			include("add_capacitacion.php");
-		}else if(isset($_GET['add_segmento'])){
-			include("add_segmento.php");
+		}else if(isset($_GET['detalle_capacitacion'])){
+			include("detalle_capacitacion.php");
 		}else if(isset($_GET['lista_asistentes'])){
 			include("lista_asistentes.php");
 		}else{

@@ -36,7 +36,7 @@ mysql_select_db($database, $conectar);
             <!-- === END HEADER === -->
             <!-- === BEGIN CONTENT === -->
             <?php 
-            $query = "SELECT capacitacion.id_capacitacion, capacitacion.titulo, capacitacion.descripcion, capacitacion.contenido, capacitacion.img, capacitacion.fecha_registro, detalle_capacitacion.costo, detalle_capacitacion.cupo, detalle_capacitacion.fecha_inicio, detalle_capacitacion.fecha_fin, usuario.username FROM capacitacion INNER JOIN detalle_capacitacion ON capacitacion.id_capacitacion = detalle_capacitacion.fk_id_capacitacion INNER JOIN usuario ON capacitacion.fk_id_usuario = usuario.idusuario WHERE capacitacion.estatus = 'ACTIVO' GROUP BY capacitacion.id_capacitacion";
+            $query = "SELECT capacitacion.id_capacitacion, capacitacion.titulo, capacitacion.descripcion, capacitacion.contenido, capacitacion.img, capacitacion.fecha_registro, detalle_capacitacion.costo, detalle_capacitacion.cupo, detalle_capacitacion.fecha_inicio, detalle_capacitacion.fecha_fin, usuario.username FROM capacitacion INNER JOIN detalle_capacitacion ON capacitacion.id_capacitacion = detalle_capacitacion.fk_id_capacitacion INNER JOIN usuario ON capacitacion.fk_id_usuario = usuario.idusuario WHERE capacitacion.estatus = 'ACTIVO' GROUP BY detalle_capacitacion.fecha_inicio DESC";
             $row_capacitacion = mysql_query($query,$conectar) or die(mysql_error());
             $total_capacitaciones = mysql_num_rows($row_capacitacion);
              ?>
@@ -72,7 +72,7 @@ mysql_select_db($database, $conectar);
 
                                                 <div class="col-lg-4"><!-- inicia col-lg-4 -->
                                                     <!-- Inician Tags -->
-                                                    <div class="blog-post-details">
+                                                    <div class="col-md-12 blog-post-details">
                                                         <!-- Tags -->
                                                         <div class="blog-post-details-item blog-post-details-item-left blog-post-details-tags">
                                                             <i class="fa fa-tag color-gray-light"></i>
@@ -93,7 +93,9 @@ mysql_select_db($database, $conectar);
                                                         </div>
 
                                                     </div>
-                                                    <img class="margin-bottom-20" style="width:100%;" src="system/administrador/<?php echo $capacitacion['img']; ?>" alt="thumb1">
+                                                    <div class="col-md-12">
+                                                        <img class="margin-bottom-20" style="height:240px;widht:100%;"  src="system/administrador/<?php echo $capacitacion['img']; ?>" alt="thumb1">    
+                                                    </div>
                                                     <!-- Terminan Tags -->
                                                 </div><!-- termina col-lg-4 -->
 
@@ -129,11 +131,29 @@ mysql_select_db($database, $conectar);
                                                         </div>
 
                                                         <!-- Nombre del admin -->
-                                                        <div class="blog-post-details-item blog-post-details-item-left">
-                                                            <i class="fa fa-user " style="color: #d35400"></i>
-                                                            <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
-                                                            <a href="#" style="color: #d35400">Cupo: <?php echo $capacitacion['cupo']; ?></a>
-                                                        </div>
+                                                        <?php 
+                                                        /// consultamos el numero de asistentes
+                                                        $query_asistentes = "SELECT COUNT(fk_id_participante) AS 'num_asistentes' FROM capacitacion_participante WHERE fk_id_capacitacion = $capacitacion[id_capacitacion] AND estatus = 'VERIFICADO'";
+                                                        $row_asistentes = mysql_query($query_asistentes, $conectar) or die(mysql_error());
+                                                        $asistentes = mysql_fetch_assoc($row_asistentes);
+                                                        
+                                                        if($asistentes['num_asistentes'] < $capacitacion['cupo']){
+                                                        ?>
+                                                            <div class="blog-post-details-item blog-post-details-item-left">
+                                                                <i class="fa fa-user " style="color: #d35400"></i>
+                                                                <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
+                                                                <b style="color: #d35400">Cupo: <?php echo $capacitacion['cupo']; ?></b>
+                                                            </div>
+                                                        <?php
+                                                        }else{
+                                                        ?>
+                                                            <div class="blog-post-details-item blog-post-details-item-left" style="background:#e74c3c;color:white">
+                                                                <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
+                                                                <b style="color:#fff">CUPO AGOTADO</b>
+                                                            </div>
+                                                        <?php
+                                                        }
+                                                         ?>
                                                         <!-- Termina nombre admin -->
 
                                                         <!-- Termina fecha -->

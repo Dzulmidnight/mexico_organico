@@ -1,10 +1,8 @@
 <?php
-session_start(); 
-
-require_once("system/connections/conexion.php"); 
-require_once("system/connections/mail.php"); 
-
-mysql_select_db($database, $conectar); 
+session_start();
+require_once("system/connections/conexion.php");
+require_once("system/connections/mail.php");
+mysql_select_db($database, $conectar);
 
 if (!function_exists("GetSQLValueString")) {
   function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
@@ -40,7 +38,7 @@ if (!function_exists("GetSQLValueString")) {
 	$correo_electronico = $_POST['correo_electronico'];
 	$id_capacitacion = $_POST['id_capacitacion'];
  
- 	$query = "SELECT contacto_participante.correo_electronico FROM contacto_participante INNER JOIN participante ON contacto_participante.fk_id_participante = participante.id_participante INNER JOIN capacitacion_participante ON contacto_participante.fk_id_participante = capacitacion_participante.fk_id_participante WHERE correo_electronico = '$correo_electronico' AND capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
+ 	$query = "SELECT contacto_participante.correo_electronico FROM contacto_participante INNER JOIN participante ON contacto_participante.fk_id_participante = participante.id_participante INNER JOIN capacitacion_participante ON contacto_participante.fk_id_participante = capacitacion_participante.fk_id_participante WHERE correo_electronico = '$correo_electronico' AND capacitacion_participante.fk_id_capacitacion = '$id_capacitacion'";
  	$resultado = mysql_query($query, $conectar) or die(mysql_error());
  	$fila = mysql_num_rows($resultado);
 
@@ -126,10 +124,11 @@ if (!function_exists("GetSQLValueString")) {
 
         $id_participante = mysql_insert_id($conectar);
         /// creamos los datos de contacto del participante
-        $query = sprintf("INSERT INTO contacto_participante (fk_id_participante, correo_electronico, telefono, fecha_registro) VALUES (%s, %s, %s, %s)", 
+        $query = sprintf("INSERT INTO contacto_participante (fk_id_participante, correo_electronico, lada, telefono, fecha_registro) VALUES (%s, %s, %s, %s, %s)", 
            GetSQLValueString($id_participante, "int"),
            GetSQLValueString($correo_electronico, "text"),
-           GetSQLValueString($telefono_completo, "text"),
+           GetSQLValueString($lada, "text"),
+           GetSQLValueString($telefono, "text"),
            GetSQLValueString($fecha_registro, "int"));
         $insertar = mysql_query($query, $conectar) or die(mysql_error());
         /// creamos la relacion entre la capacitacion y el participante
@@ -138,8 +137,6 @@ if (!function_exists("GetSQLValueString")) {
            GetSQLValueString($id_participante, "int"),
            GetSQLValueString($estatus, "text"));
         $insertar = mysql_query($query, $conectar) or die(mysql_error());
-
-
 
         $destinatario = $correo_electronico;
         if(isset($_POST['correo_capacitacion'])){
@@ -183,7 +180,7 @@ if (!function_exists("GetSQLValueString")) {
               <thead>
                 <tr>
                   <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
-                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Simbolo de Pequeños Productores." width="120" height="120" />
+                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Mexico Organico" width="120" height="120" />
                   </th>
                   <th>
                     <h3>
@@ -204,9 +201,12 @@ if (!function_exists("GetSQLValueString")) {
                           Instrucciones para cargar el comprobante de pago
                         </h4>
                         <ol>
-                          <li>#Codigo: <b>'.$elcodigo.'</b></li>
-                          <li>Debe ingresar a la dirección: </li>
-                          <li>Seleccionar el idioma en el que desea utilizar el sistema.</li>
+                          <li>Debe ingresar a la pagina web <a href="http://mexorganico.com/index.php">Mexico Organico</a></li>
+                          <li>Seleccione la pestaña <a href="http://mexorganico.com/capacitacion.php">"Capacitación"</a></li>
+                          <li>Localicé su curso y de clic en leer más, una vez realizado esto podra visualizar el boton(rojo) para <span style="color:red">"Cargar el Comprobante de pago"</span>. </li>
+                          <li>Debera ingresar el correo electronico con el que dio de alta sus datos e ingresar el siguiente #Codigo: <b>'.$elcodigo.'</b></li>
+                          <li>Tambien debera cargar la imagen del comprobante de pago.</li>
+                          <li>Dicha información sera verificada por los administradores, en caso de no haber ningun problema, recibira un correo de confirmación.</li>
                         </ol>
                       </td>
                     </tr>
@@ -230,10 +230,7 @@ if (!function_exists("GetSQLValueString")) {
       $mail->MsgHTML(utf8_decode($cuerpo));
       $mail->Send();
       $mail->ClearAddresses();
-
-
-
-        echo 1;
+      echo 1;
     }else{
     	echo 0;
     }

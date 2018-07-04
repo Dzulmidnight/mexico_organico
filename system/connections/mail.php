@@ -1,7 +1,7 @@
 <?php 
 include_once("PHPMailer/class.phpmailer.php");
 include_once("PHPMailer/class.smtp.php");
-/*
+
 $mail = new PHPMailer();
 $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";
@@ -18,13 +18,13 @@ $mail->FromName = "CERT - DSPP";
 $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
 
 $correoCert = "cert@spp.coop";
-*/
 
+/*
 
 $mail = new PHPMailer();
 $mail->IsSMTP();
 //$mail->SMTPSecure = "ssl";
-$mail->Host = "mail.cursos@mexorganico.com";
+$mail->Host = "mail.mexorganico.com";
 //$mail->Port = 25;
 $mail->Port = 587;
 $mail->SMTPAuth = true;
@@ -35,8 +35,6 @@ $mail->SMTPDebug = 1;
 $mail->From = "cursos@mexorganico.com";
 $mail->FromName = "Cursos México Organico";
 $mail->AddBCC("yasser.midnight@gmail.com", "correo Oculto");
-
-$correoCert = "cert@spp.coop";
-
+*/
  ?>
 
