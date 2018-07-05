@@ -170,7 +170,17 @@ if (!function_exists("GetSQLValueString")) {
         </body>
         </html>
     ';
-      $mail->AddAddress($participante['correo_capacitacion']);
+
+      if(!empty($participante['correo_capacitacion'])){
+        //$mail->AddAddress($informacion['contacto1_email']);
+        $token = strtok($participante['correo_capacitacion'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
       $mail->AddAttachment($archivo);
       //$mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";

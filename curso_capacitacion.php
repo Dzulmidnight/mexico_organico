@@ -168,7 +168,18 @@ mysql_select_db($database, $conectar);
         </body>
         </html>
     ';
-      $mail->AddAddress($destinatario);
+
+      if(!empty($destinatario)){
+        //$mail->AddAddress($informacion['contacto1_email']);
+        $token = strtok($destinatario, "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+
       //$mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
       //$mail->Password = "/aung5l6tZ";
@@ -320,7 +331,18 @@ mysql_select_db($database, $conectar);
         </body>
         </html>
     ';
-      $mail->AddAddress($participante['correo_capacitacion']);
+
+      if(!empty($participante['correo_capacitacion'])){
+        //$mail->AddAddress($informacion['contacto1_email']);
+        $token = strtok($participante['correo_capacitacion'], "\/\,\;");
+        while ($token !== false)
+        {
+          $mail->AddAddress($token);
+          $token = strtok('\/\,\;');
+        }
+
+      }
+
       $mail->AddAttachment($archivo);
       //$mail->AddBCC($administrador);
       //$mail->Username = "soporte@d-spp.org";
