@@ -35,6 +35,7 @@ if (!function_exists("GetSQLValueString")) {
 	*/
 
 	$fecha = time();
+	$id_usuario = $_SESSION['idusuario'];
 	$id_capacitacion = $_GET['detalle_capacitacion'];
 
 
@@ -177,6 +178,7 @@ if (!function_exists("GetSQLValueString")) {
 		$actualizar = mysql_query($updateSQL,$conectar) or die(mysql_error());
 		$mensaje = "Nota Actualizada Correctamente";
 	}
+
 	if(isset($_POST['eliminar_articulo']) && $_POST['eliminar_articulo'] == 1){
 		$idarticulo = $_POST['idarticulo'];
 		$img = $_POST['img_articulo'];
@@ -191,6 +193,49 @@ if (!function_exists("GetSQLValueString")) {
 		$eliminar = mysql_query($deleteSQL,$conectar) or die(mysql_error());
 
 		$mensaje = "Articulo Eliminado Correctamente";
+
+	}
+	/// sección para actualizar los datos del curso
+	if(isset($_POST['actualizar_capacitacion']) && $_POST['actualizar_capacitacion'] == 1){
+		$id_capacitacion = $_POST['id_capacitacion'];
+		$titulo = $_POST['titulo'];
+		$descripcion = $_POST['descripcion'];
+		$contenido = $_POST['contenido'];
+		$correo_capacitacion = $_POST['correo_capacitacion'];
+		$telefono_capacitacion = $_POST['telefono_capacitacion'];
+		$fecha_modificacion = $_POST['fecha_modificacion'];
+		$cupo = $_POST['cupo'];
+		$lugar = $_POST['lugar'];
+		$fecha_inicio = strtotime($_POST['fecha_inicio']);
+		$fecha_fin = strtotime($_POST['fecha_fin']);
+		$tipo_curso = $_POST['tipo_curso'];
+		$costo = $_POST['costo'];
+
+
+		$query = sprintf("UPDATE capacitacion SET titulo = %s, descripcion = %s, contenido = %s, correo_capacitacion = %s, telefono_capacitacion = %s, fecha_modificacion = %s, fk_id_usuario_mod = %s WHERE id_capacitacion = %s",
+			GetSQLValueString($titulo, 'text'),
+			GetSQLValueString($descripcion, 'text'),
+			GetSQLValueString($contenido, 'text'),
+			GetSQLValueString($correo_capacitacion, 'text'),
+			GetSQLValueString($telefono_capacitacion, 'text'),
+			GetSQLValueString($fecha_modificacion, 'int'),
+			GetSQLValueString($id_usuario, 'int'),
+			GetSQLValueString($id_capacitacion, 'int'));
+		$actualizar = mysql_query($query, $conectar) or die(mysql_error());
+
+		$query = sprintf("UPDATE detalle_capacitacion SET cupo = %s, lugar = %s, fecha_inicio = %s, fecha_fin = %s, tipo_curso = %s, costo = %s, fk_id_usuario_mod = %s, fecha_modificacion = %s WHERE fk_id_capacitacion = %s",
+			GetSQLValueString($cupo, 'int'),
+			GetSQLValueString($lugar, 'text'),
+			GetSQLValueString($fecha_inicio, 'int'),
+			GetSQLValueString($fecha_fin, 'int'),
+			GetSQLValueString($tipo_curso, 'text'),
+			GetSQLValueString($costo, 'text'),
+			GetSQLValueString($id_usuario, 'int'),
+			GetSQLValueString($fecha_modificacion, 'int'),
+			GetSQLValueString($id_capacitacion, 'int'));
+		$actualizar = mysql_query($query, $conectar) or die(mysql_error());
+
+		echo '<script>alert("Datos actualizados")</script>';
 
 	}
 
@@ -247,10 +292,10 @@ if (!function_exists("GetSQLValueString")) {
 								<label for="titulo">* Titulo</label>
 								<input type="text" class="form-control campoObligatorio" name="titulo" placeholder="Titulo de la capacitación" value="<?php echo $detalle_capacitacion['titulo']; ?>" required>
 							</div>
-							<div class="col-sm 12">
+							<!--<div class="col-sm 12">
 								<label for="img">* Imagen</label>
-								<input type="file" class="form-control campoObligatorio" name="img" value="<?php echo $detalle_capacitacion['img']; ?>" required>
-							</div>
+								<input type="text" class="form-control campoObligatorio" name="img" value="<?php echo $detalle_capacitacion['img']; ?>">
+							</div>-->
 							<div class="col-sm 12">
 								<label for="correo_capacitacion">* Correo de contacto</label>
 								<input type="text" class="form-control campoObligatorio" name="correo_capacitacion" value="<?php echo $detalle_capacitacion['correo_capacitacion']; ?>" required>
@@ -354,9 +399,11 @@ if (!function_exists("GetSQLValueString")) {
 
 
 					<div style="position:fixed;z-index:1;right:0px;">
-						<input type="hidden" name="fecha" value="<?php echo time(); ?>">
-						<input type="hidden" name="agregar_capacitacion" value="1">
-						<input class="btn btn-warning" type="submit" value="Actualizar datos capacitación">
+						<input type="hidden" name="fecha_modificacion" value="<?php echo time(); ?>">
+						<input type="hidden" name="id_capacitacion" value="<?php echo $_GET['detalle_capacitacion']; ?>">
+						<button class="btn btn-warning" type="submit" name="actualizar_capacitacion" value="1">
+							Actualizar datos de capacitación
+						</button>
 					</div>
 
 

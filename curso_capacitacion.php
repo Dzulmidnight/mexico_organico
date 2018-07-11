@@ -67,10 +67,11 @@ mysql_select_db($database, $conectar);
 
         $id_participante = mysql_insert_id($conectar);
         /// creamos los datos de contacto del participante
-        $query = sprintf("INSERT INTO contacto_participante (fk_id_participante, correo_electronico, telefono, fecha_registro) VALUES (%s, %s, %s, %s)", 
+        $query = sprintf("INSERT INTO contacto_participante (fk_id_participante, correo_electronico, lada, telefono, fecha_registro) VALUES (%s, %s, %s, %s)", 
            GetSQLValueString($id_participante, "int"),
            GetSQLValueString($correo_electronico, "text"),
-           GetSQLValueString($telefono_completo, "text"),
+           GetSQLValueString($lada, "text"),
+           GetSQLValueString($telefono, "text"),
            GetSQLValueString($fecha_registro, "int"));
         $insertar = mysql_query($query, $conectar) or die(mysql_error());
         /// creamos la relacion entre la capacitacion y el participante
@@ -194,171 +195,272 @@ mysql_select_db($database, $conectar);
     }
 
     if(isset($_POST['cargar_comprobante']) && $_POST['cargar_comprobante'] == 1){
-      $id_capacitacion = $_POST['id_capacitacion'];
-      $codigo = $_POST['codigo'];
-      $correo_electronico = $_POST['correo_electronico'];
-      $titulo = $_POST['titulo'];
+        $id_capacitacion = $_POST['id_capacitacion'];
+        $codigo = $_POST['codigo'];
+        $correo_electronico = $_POST['correo_electronico'];
+        $titulo = $_POST['titulo'];
 
-      //verificamos la información
-      $query = "SELECT participante.id_participante FROM participante INNER JOIN contacto_participante ON participante.id_participante = contacto_participante.fk_id_participante WHERE participante.codigo = '$codigo' && contacto_participante.correo_electronico = '$correo_electronico'";
-      $consultar = mysql_query($query, $conectar) or die(mysql_error());
-      $participante = mysql_fetch_assoc($consultar);
-      $total = mysql_num_rows($consultar);
+        //verificamos la información
+        $query = "SELECT participante.id_participante FROM participante INNER JOIN contacto_participante ON participante.id_participante = contacto_participante.fk_id_participante WHERE participante.codigo = '$codigo' && contacto_participante.correo_electronico = '$correo_electronico'";
+        $consultar = mysql_query($query, $conectar) or die(mysql_error());
+        $participante = mysql_fetch_assoc($consultar);
+        $total = mysql_num_rows($consultar);
 
-      // consultamos el id_capacitacion_participante
-      $row_capacitacion = mysql_query("SELECT capacitacion_participante.id_capacitacion_participante FROM capacitacion_participante WHERE fk_id_participante = '$participante[id_participante]' AND fk_id_capacitacion = $id_capacitacion", $conectar) or die(mysql_error());
-      $capacitacion = mysql_fetch_assoc($row_capacitacion);
+        // consultamos el id_capacitacion_participante
+        $row_capacitacion = mysql_query("SELECT capacitacion_participante.id_capacitacion_participante FROM capacitacion_participante WHERE fk_id_participante = '$participante[id_participante]' AND fk_id_capacitacion = $id_capacitacion", $conectar) or die(mysql_error());
+        $capacitacion = mysql_fetch_assoc($row_capacitacion);
 
-      if($total > 0){
-        /// INSERTAMOS EL COMPROBANTE DE PAGO
+        if($total > 0){
+          /// INSERTAMOS EL COMPROBANTE DE PAGO
 
-        if(!empty($_FILES['comprobante_pago']['name'])){
-          $ruta_img = "system/img/comprobantes/";
-          $ruta_img = $ruta_img . basename( $_FILES['comprobante_pago']['name']); 
-          if(move_uploaded_file($_FILES['comprobante_pago']['tmp_name'], $ruta_img)){ 
-            //echo "El archivo ". basename( $_FILES['img']['name']). " ha sido subido";
-          } /*else{
-            echo "Ha ocurrido un error, trate de nuevo!";
-          }*/
+          if(!empty($_FILES['comprobante_pago']['name'])){
+            $ruta_img = "system/img/comprobantes/";
+            $ruta_img = $ruta_img . basename( $_FILES['comprobante_pago']['name']); 
+            if(move_uploaded_file($_FILES['comprobante_pago']['tmp_name'], $ruta_img)){ 
+              //echo "El archivo ". basename( $_FILES['img']['name']). " ha sido subido";
+            } /*else{
+              echo "Ha ocurrido un error, trate de nuevo!";
+            }*/
+          }else{
+            $ruta_img = '';
+          }
+
+          /// creamos la información del comprobante
+          $fk_id_participante = $participante['id_participante'];
+          $archivo = $ruta_img;
+          $estatus = 'EN ESPERA';
+          //$aprobado_por = $id_administrador;
+          $fecha_registro = $_POST['fecha_registro'];
+          $id_capacitacion_participante = $capacitacion['id_capacitacion_participante'];
+
+
+          $query = sprintf("INSERT INTO comprobante_pago(fk_id_participante, archivo, estatus, fecha_registro) VALUES (%s, %s, %s, %s)", 
+                 GetSQLValueString($fk_id_participante, "text"),
+                 GetSQLValueString($archivo, "text"),
+                 GetSQLValueString($estatus, "text"),
+                 GetSQLValueString($fecha_registro, "text"));
+
+          $insertar = mysql_query($query,$conectar) or die(mysql_error()); 
+
+          $id_comprobante_pago = mysql_insert_id($conectar);
+          $estatus = 'EN ESPERA';
+
+          /// ACTUALIZAMOS LA TABLA capacitacion_participante
+          $query = sprintf("UPDATE capacitacion_participante SET fk_id_comprobante_pago = %s, estatus = %s WHERE id_capacitacion_participante = %s",
+            GetSQLValueString($id_comprobante_pago, "int"),
+            GetSQLValueString($estatus, "text"),
+            GetSQLValueString($id_capacitacion_participante, "int"));
+          $actualizar = mysql_query($query, $conectar) or die(mysql_error());
+
+          //// enviamos correo para notificar que se ha cargado un comprobante de pago
+          // consultamos la información del participante
+            $query = "SELECT participante.nombre, participante.apellido_paterno, participante.apellido_materno, contacto_participante.correo_electronico, contacto_participante.telefono, capacitacion.correo_capacitacion FROM capacitacion_participante INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante INNER JOIN capacitacion ON capacitacion_participante.fk_id_capacitacion = capacitacion.id_capacitacion WHERE capacitacion_participante.fk_id_participante = $fk_id_participante AND capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
+            $row_participante = mysql_query($query, $conectar) or die(mysql_error());
+            $participante = mysql_fetch_assoc($row_participante);
+
+            $nombre = $participante['nombre'];
+            $apellidos = $participante['apellido_paterno'].' '.$participante['apellido_materno'];
+            $correo = $participante['correo_electronico'];
+            $telefono = $participante['telefono'];
+
+          $asunto = 'Comprobante de pago del Curso: '.$titulo; 
+
+          $cuerpo = '
+          <html>
+          <head>
+          <meta charset="utf-8">
+
+          <style>
+            table, td, th {    
+                border: 1px solid #ddd;
+                text-align: left;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th, td {
+                padding: 15px;
+            }
+          </style>
+
+          </head>
+          <body>
+
+              <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #2c3e50">
+                <thead>
+                  <tr>
+                    <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
+                      <img src="http://mexorganico.com/assets/img/menu.png" alt="Mexico Organico" width="120" height="120" />
+                    </th>
+                    <th>
+                      <h3>
+                        Comprobante de pago del Curso: <span style="color: #27ae60">'.$titulo.'</span>
+                      </h3>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <td colspan="2">
+                      <h4>
+                        Se ha cargado un comprobante de pago de curso: '.$titulo.'
+                      </h4>
+                      <h4 style="color:red">
+                        Información acerca del participante:
+                      </h4>
+                      <ul>
+                        <li>
+                          <b>Nombre:</b> '.$nombre.'
+                        </li>
+                        <li>
+                          <b>Apellidos:</b> '.$apellidos.'
+                        </li>
+                        <li>
+                          <b>Correo Electrónico:</b> '.$correo_electronico.'
+                        </li>
+                        <li>
+                          <b>Teléfono:</b> '.$telefono.'
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+          </body>
+          </html>
+        ';
+
+        if(!empty($participante['correo_capacitacion'])){
+          //$mail->AddAddress($informacion['contacto1_email']);
+          $token = strtok($participante['correo_capacitacion'], "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
+          }
+
+        }
+
+        $mail->AddAttachment($archivo);
+        //$mail->AddBCC($administrador);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
+
+        echo '<script>alert("Comprobante de pago enviado");</script>';
+
         }else{
-          $ruta_img = '';
+          echo '<script>alert("Datos incorrectos")</script>';
         }
+      
+    } 
+    if(isset($_POST['enviar_recuperacion']) && $_POST['enviar_recuperacion'] == 2){
+        $id_capacitacion = $_POST['id_capacitacion'];
+        $correo_recuperacion = $_POST['correo_recuperacion'];
 
-        /// creamos la información del comprobante
-        $fk_id_participante = $participante['id_participante'];
-        $archivo = $ruta_img;
-        $estatus = 'EN ESPERA';
-        //$aprobado_por = $id_administrador;
-        $fecha_registro = $_POST['fecha_registro'];
-        $id_capacitacion_participante = $capacitacion['id_capacitacion_participante'];
+        //consultamos la información sobre el correo de recupearción
+        $query = "SELECT participante.codigo, participante.nombre, participante.apellido_paterno, participante.apellido_materno FROM capacitacion_participante INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante WHERE capacitacion_participante.fk_id_capacitacion = $id_capacitacion AND contacto_participante.correo_electronico = '$correo_recuperacion'";
+        $consultar = mysql_query($query, $conectar) or die(mysql_error());
+        $total = mysql_num_rows($consultar);
+        $informacion = mysql_fetch_assoc($consultar);
 
+          $asunto = 'Solicitud codigo de usuario'; 
 
-        $query = sprintf("INSERT INTO comprobante_pago(fk_id_participante, archivo, estatus, fecha_registro) VALUES (%s, %s, %s, %s)", 
-               GetSQLValueString($fk_id_participante, "text"),
-               GetSQLValueString($archivo, "text"),
-               GetSQLValueString($estatus, "text"),
-               GetSQLValueString($fecha_registro, "text"));
+          $cuerpo = '
+          <html>
+          <head>
+          <meta charset="utf-8">
 
-        $insertar = mysql_query($query,$conectar) or die(mysql_error()); 
+          <style>
+            table, td, th {    
+                border: 1px solid #ddd;
+                text-align: left;
+            }
 
-        $id_comprobante_pago = mysql_insert_id($conectar);
-        $estatus = 'EN ESPERA';
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
 
-        /// ACTUALIZAMOS LA TABLA capacitacion_participante
-        $query = sprintf("UPDATE capacitacion_participante SET fk_id_comprobante_pago = %s, estatus = %s WHERE id_capacitacion_participante = %s",
-          GetSQLValueString($id_comprobante_pago, "int"),
-          GetSQLValueString($estatus, "text"),
-          GetSQLValueString($id_capacitacion_participante, "int"));
-        $actualizar = mysql_query($query, $conectar) or die(mysql_error());
+            th, td {
+                padding: 15px;
+            }
+          </style>
 
-        //// enviamos correo para notificar que se ha cargado un comprobante de pago
-        // consultamos la información del participante
-          $query = "SELECT participante.nombre, participante.apellido_paterno, participante.apellido_materno, contacto_participante.correo_electronico, contacto_participante.telefono, capacitacion.correo_capacitacion FROM capacitacion_participante INNER JOIN participante ON capacitacion_participante.fk_id_participante = participante.id_participante INNER JOIN contacto_participante ON capacitacion_participante.fk_id_participante = contacto_participante.fk_id_participante INNER JOIN capacitacion ON capacitacion_participante.fk_id_capacitacion = capacitacion.id_capacitacion WHERE capacitacion_participante.fk_id_participante = $fk_id_participante AND capacitacion_participante.fk_id_capacitacion = $id_capacitacion";
-          $row_participante = mysql_query($query, $conectar) or die(mysql_error());
-          $participante = mysql_fetch_assoc($row_participante);
+          </head>
+          <body>
 
-          $nombre = $participante['nombre'];
-          $apellidos = $participante['apellido_paterno'].' '.$participante['apellido_materno'];
-          $correo = $participante['correo_electronico'];
-          $telefono = $participante['telefono'];
+              <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #2c3e50">
+                <thead>
+                  <tr>
+                    <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
+                      <img src="http://mexorganico.com/assets/img/menu.png" alt="Mexico Organico" width="120" height="120" />
+                    </th>
+                    <th>
+                      <h3>
+                        Codigo de usuario
+                      </h3>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    <td colspan="2">
+                      <h4>
+                        Se ha realizado una solicitud de recuperación de codigo de usuario.
+                      </h4>
+                      <h4 style="color:red">
+                        Información acerca del participante:
+                      </h4>
+                      <ul>
+                        <li>
+                          <b>Nombre:</b> '.$informacion['nombre'].'
+                        </li>
+                        <li>
+                          <b>Apellidos:</b> '.$informacion['apellido_paterno'].' '.$informacion['apellido_materno'].'
+                        </li>
+                        <li>
+                          <b>Correo Electrónico:</b> '.$correo_recuperacion.'
+                        </li>
+                        <li>
+                          #Codigo de usuario: <b style="color:red">'.$informacion['codigo'].'</b>
+                        </li>
+                      </ul>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
 
-        $asunto = 'Comprobante de pago del Curso: '.$titulo; 
+          </body>
+          </html>
+        ';
 
-        $cuerpo = '
-        <html>
-        <head>
-        <meta charset="utf-8">
-
-        <style>
-          table, td, th {    
-              border: 1px solid #ddd;
-              text-align: left;
+        if(!empty($correo_recuperacion)){
+          //$mail->AddAddress($informacion['contacto1_email']);
+          $token = strtok($correo_recuperacion, "\/\,\;");
+          while ($token !== false)
+          {
+            $mail->AddAddress($token);
+            $token = strtok('\/\,\;');
           }
 
-          table {
-              border-collapse: collapse;
-              width: 100%;
-          }
-
-          th, td {
-              padding: 15px;
-          }
-        </style>
-
-        </head>
-        <body>
-
-            <table style="font-family: Tahoma, Geneva, sans-serif; font-size: 13px; color: #2c3e50">
-              <thead>
-                <tr>
-                  <th rowspan="7" scope="col" align="center" valign="middle" height="100%">
-                    <img src="http://mexorganico.com/assets/img/menu.png" alt="Mexico Organico" width="120" height="120" />
-                  </th>
-                  <th>
-                    <h3>
-                      Comprobante de pago del Curso: <span style="color: #27ae60">'.$titulo.'</span>
-                    </h3>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                  <td colspan="2">
-                    <h4>
-                      Se ha cargado un comprobante de pago de curso: '.$titulo.'
-                    </h4>
-                    <h4 style="color:red">
-                      Información acerca del participante:
-                    </h4>
-                    <ul>
-                      <li>
-                        <b>Nombre:</b> '.$nombre.'
-                      </li>
-                      <li>
-                        <b>Apellidos:</b> '.$apellidos.'
-                      </li>
-                      <li>
-                        <b>Correo Electrónico:</b> '.$correo_electronico.'
-                      </li>
-                      <li>
-                        <b>Teléfono:</b> '.$telefono.'
-                      </li>
-                    </ul>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-        </body>
-        </html>
-    ';
-
-      if(!empty($participante['correo_capacitacion'])){
-        //$mail->AddAddress($informacion['contacto1_email']);
-        $token = strtok($participante['correo_capacitacion'], "\/\,\;");
-        while ($token !== false)
-        {
-          $mail->AddAddress($token);
-          $token = strtok('\/\,\;');
         }
+        //$mail->AddBCC($administrador);
+        //$mail->Username = "soporte@d-spp.org";
+        //$mail->Password = "/aung5l6tZ";
+        $mail->Subject = utf8_decode($asunto);
+        $mail->Body = utf8_decode($cuerpo);
+        $mail->MsgHTML(utf8_decode($cuerpo));
+        $mail->Send();
+        $mail->ClearAddresses();
 
-      }
-
-      $mail->AddAttachment($archivo);
-      //$mail->AddBCC($administrador);
-      //$mail->Username = "soporte@d-spp.org";
-      //$mail->Password = "/aung5l6tZ";
-      $mail->Subject = utf8_decode($asunto);
-      $mail->Body = utf8_decode($cuerpo);
-      $mail->MsgHTML(utf8_decode($cuerpo));
-      $mail->Send();
-      $mail->ClearAddresses();
-
-      echo '<script>alert("Comprobante de pago enviado");</script>';
-
-      }else{
-        echo '<script>alert("Datos incorrectos")</script>';
-      }
-
+        echo '<script>alert("Se ha enviado el codigo de usuario al correo");</script>';
     }
 
 
@@ -729,7 +831,7 @@ mysql_select_db($database, $conectar);
                 <div class="modal fade" id="modalComprobantePago" tabindex="-1" role="dialog" aria-labelledby="modalRegistro">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
-                            <form id="miForm" action="" method="POST" enctype="multipart/form-data">
+                            <form id="cargarComprobante" action="" method="POST" enctype="multipart/form-data">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                     <h4 class="modal-title"  style="color: #c0392b" id="">Cargar Comprobante de pago</h4>
@@ -737,26 +839,26 @@ mysql_select_db($database, $conectar);
                                 <div class="modal-body">
                                     <div class="row">
                                       <div class="col-md-12" id="divMostrar"></div>
-
-                                        <div class="col-md-12">
-                                            <div class="row">
-                                                <div class="col-sm-4">
-                                                  <label for="codigo">* Codigo de usuario</label>
-                                                    <input type="text" class="form-control" name="codigo" placeholder="#Codigo de usuario" required>
-                                                </div>
-                                                <div class="col-sm-8">
-                                                  <label for="correo_electronico">* Correo Electronico</label>
-                                                   <input type="text" class="form-control" id="correo_electronico" name="correo_electronico" placeholder="Correo electronico" required> 
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label for="comprobante_pago">* Comprobante de pago</label>
-                                            <input type="file" class="form-control" id="comprobante_pago" name="comprobante_pago" required>
-                                        </div>
-
-
+                           
+                                          <div class="col-md-12">
+                                              <div class="row">
+                                                  <div class="col-sm-4">
+                                                    <label for="codigo">* Código de usuario</label>
+                                                      <input type="text" class="form-control" name="codigo" placeholder="#Codigo de usuario" required>
+                                                      <button type="button" class="btn btn-link" onclick="recuperarCodigo();">¿Olvidaste tu código?</button>
+                                                  </div>
+                                                  <div class="col-sm-8">
+                                                    <label for="correo_electronico">* Correo Electronico</label>
+                                                     <input type="text" class="form-control" id="correo_electronico" name="correo_electronico" placeholder="Correo electronico" required> 
+                                                  </div>
+                                              </div>
+                                          </div>
+                                          <div class="col-md-12">
+                                              <label for="comprobante_pago">* Comprobante de pago</label>
+                                              <input type="file" class="form-control" id="comprobante_pago" name="comprobante_pago" required>
+                                          </div>
                                     </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <input type="hidden" id="correo_capacitacion" name="correo_capacitacion" value="<?php echo $capacitacion['correo_capacitacion']; ?>">
@@ -768,6 +870,35 @@ mysql_select_db($database, $conectar);
                                     <button type="submit" id="cargar_comprobante" name="cargar_comprobante" value="1" class="btn btn-primary">Enviar comprobante de pago</button>
                                 </div>
                             </form>
+
+                            <form id="olvideMiCodigo" action="" method="POST" enctype="multipart/form-data" style="display: none">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title"  style="color: #c0392b" id="">Recuperar codigo de usuario</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+
+                                          <div class="col-md-12 margin-bottom-20">
+
+                                            <label for="correo_recuperacion">Ingrese el correo electronico con el cual realizo el registro.</label>
+                                            <input type="text" class="form-control" id="correo_recuperacion" name="correo_recuperacion" placeholder="Correo Electronico">
+                                          </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="hidden" id="correo_capacitacion" name="correo_capacitacion" value="<?php echo $capacitacion['correo_capacitacion']; ?>">
+                                    <input type="hidden" id="telefono_capacitacion" name="telefono_capacitacion" value="<?php echo $capacitacion['telefono_capacitacion']; ?>">
+                                    <input type="hidden" id="fecha_registro" name="fecha_registro" value="<?php echo time() ?>">
+                                    <input type="hidden" id="id_capacitacion" name="id_capacitacion" value="<?php echo $_GET['curso']; ?>">
+                                    <input type="hidden" id="titulo" name="titulo" value="<?php echo $capacitacion['titulo']; ?>">
+                                    <button type="submit" id="enviar_recuperacion" name="enviar_recuperacion" value="2" class="btn btn-primary">Recuperar código</button>
+                                    <button type="button" class="btn btn-default" onclick="cancelarRecuperacion()">Cancelar</button>
+                                </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>
@@ -886,3 +1017,14 @@ mysql_select_db($database, $conectar);
     include('pages-404.html');
 }
  ?>
+
+<script>
+  function recuperarCodigo(){
+    document.getElementById('olvideMiCodigo').style.display = "block";
+    document.getElementById('cargarComprobante').style.display = "none";
+  }
+  function cancelarRecuperacion(){
+    document.getElementById('olvideMiCodigo').style.display = "none";
+    document.getElementById('cargarComprobante').style.display = "block";
+  }
+</script>

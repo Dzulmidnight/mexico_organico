@@ -52,6 +52,37 @@ if (!function_exists("GetSQLValueString")) {
 		$mensaje = "Curso eliminado";
 
 	}
+
+	if(isset($_POST['activar_capacitacion']) && $_POST['activar_capacitacion'] == 1){
+		$estatus = 'ACTIVO';
+		$id_capacitacion = $_POST['id_capacitacion'];
+
+		$updateSQL = sprintf("UPDATE capacitacion SET estatus = %s WHERE id_capacitacion = %s",
+			GetSQLValueString($estatus, 'text'),
+			GetSQLValueString($id_capacitacion, 'int'));
+		$actualizar = mysql_query($updateSQL, $conectar) or die(mysql_error());
+	}
+
+	if(isset($_POST['suspender_capacitacion']) && $_POST['suspender_capacitacion'] == 1){
+		$estatus = 'SUSPENDIDO';
+		$id_capacitacion = $_POST['id_capacitacion'];
+
+		$updateSQL = sprintf("UPDATE capacitacion SET estatus = %s WHERE id_capacitacion = %s",
+			GetSQLValueString($estatus, 'text'),
+			GetSQLValueString($id_capacitacion, 'int'));
+		$actualizar = mysql_query($updateSQL, $conectar) or die(mysql_error());
+	}
+
+	if(isset($_POST['cancelar_capacitacion']) && $_POST['cancelar_capacitacion'] == 1){
+		$estatus = 'FINALIZADO';
+		$id_capacitacion = $_POST['id_capacitacion'];
+
+		$updateSQL = sprintf("UPDATE capacitacion SET estatus = %s WHERE id_capacitacion = %s",
+			GetSQLValueString($estatus, 'text'),
+			GetSQLValueString($id_capacitacion, 'int'));
+		$actualizar = mysql_query($updateSQL, $conectar) or die(mysql_error());
+	}
+
 	$fecha_actual = time();
 	//$query = "SELECT nota.*,  usuario.username FROM nota INNER JOIN usuario ON nota.idusuario = usuario.idusuario";
 	//$query = "SELECT articulo.*, usuario.username FROM articulo INNER JOIN usuario ON articulo.autor = usuario.idusuario";
@@ -260,18 +291,26 @@ if (!function_exists("GetSQLValueString")) {
 										</form>
 									</li>
 									<li class="divider"></li>
-									<form action="">
+									<form action="" method="POST">
+										<?php 
+										if($capacitacion['estatus'] != 'ACTIVO'){
+										?>
+											<li>
+												<button style="color:green" class="btn btn-link" type="submit" name="activar_capacitacion" value="1">
+													Activar
+												</button>
+												<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
+												<input type="hidden" name="id_capacitacion" value="<?php echo $capacitacion['id_capacitacion']; ?>">
+											</li>
+										<?php
+										}
+										 ?>
 										<li>
-											<button class="btn btn-link" data-toggle="tooltip" title="Eliminar curso" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_capacitacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Suspender</button>
+											<button class="btn btn-link" type="submit" name="cancelar_capacitacion" value="1">
+												Cancelar
+											</button>
 											<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
 											<input type="hidden" name="id_capacitacion" value="<?php echo $capacitacion['id_capacitacion']; ?>">
-											<input type="hidden" name="img_capacitacion" value="<?php echo $capacitacion['img']; ?>">
-										</li>
-										<li>
-											<button class="btn btn-link" data-toggle="tooltip" title="Eliminar curso" type="submit" onclick="return confirm('¿Está seguro ?, los datos se eliminaran permanentemente');" name="eliminar_capacitacion" value="1"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Cancelar</button>
-											<!--<a class="btn btn-sm btn-danger" href=""><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>-->
-											<input type="hidden" name="id_capacitacion" value="<?php echo $capacitacion['id_capacitacion']; ?>">
-											<input type="hidden" name="img_capacitacion" value="<?php echo $capacitacion['img']; ?>">
 										</li>
 									</form>
 								</ul>
