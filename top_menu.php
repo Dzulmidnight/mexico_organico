@@ -59,16 +59,16 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-md-1 no-padding">
-                            <ul class="social-icons rounded color pull-right">
+                        <div class="col-md-1 no-padding" >
+                            <ul class="social-icons rounded color pull-right" >
                                 <!--<li class="social-rss">
                                     <a href="#" target="_blank" title="RSS"></a>
                                 </li>-->
-                                <li class="social-twitter">
+                                <!--<li class="social-twitter">
                                     <a href="#" target="_blank" title="Twitter"></a>
-                                </li>
-                                <li class="social-facebook">
-                                    <a href="https://www.facebook.com/MexicOrganico" target="_blank" title="Facebook"></a>
+                                </li>-->
+                                <li class="social-facebook" >
+                                    <a  href="https://www.facebook.com/MexicOrganico" target="_blank" title="Facebook"></a>
                                 </li>
                                 <!--<li class="social-googleplus">
                                     <a href="#" target="_blank" title="Google+"></a>

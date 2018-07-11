@@ -441,6 +441,16 @@ mysql_select_db($database, $conectar);
         </head>
         
         <body>
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v3.0';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
             <div id="body-bg">
                 <!-- Phone/Email -->
 
@@ -562,6 +572,11 @@ mysql_select_db($database, $conectar);
                                                     <?php echo nl2br($capacitacion['contenido']); ?>
                                                 </p>
 
+                                            </div>
+
+                                            <!-- COMENTARIOS DE FACEBOOK -->
+                                            <div class="col-md-12">
+                                              <div class="fb-comments" data-href="http://mexorganico.com/curso_capacitacion.php?curso=<?php echo $id_capacitacion; ?>" data-width="100%" data-numposts="6"></div>
                                             </div>
                                         </div>
   

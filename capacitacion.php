@@ -26,6 +26,15 @@ mysql_select_db($database, $conectar);
         <link href="http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300" rel="stylesheet" type="text/css">
     </head>
     <body>
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v3.0';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
         <div id="body-bg">
             <!-- Phone/Email -->
 
@@ -100,23 +109,13 @@ mysql_select_db($database, $conectar);
                                                 </div><!-- termina col-lg-4 -->
 
                                                 <div class="col-lg-8"><!-- inicia col-lg-8 -->
-                                                    <!-- INICIA TITULO DEL ARTICULO -->
-                                                    <div class="blog-item-header">
-                                                        <div class="row">
-                                                            <!-- titulo -->
-                                                            <div class="col-md-12">
-                                                                <hr>
-                                                                <h2>
-                                                                    <a href="curso_capacitacion.php?curso=<?php echo $capacitacion['id_capacitacion']; ?>"><?php echo $capacitacion['titulo']; ?></a>
-                                                                </h2>
-                                                            </div>
-                                                            <div class="clearfix"></div>
-                                                            <!-- Termina titulo -->
-                                                        </div>
-                                                        <!-- fecha -->
-                                                        <div class="blog-post-date">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
                                                             <div class="row">
-                                                                <div class="col-md-12" style="color:#d35400">
+                                                                <div class="col-sm-6">
+                                                                    <div class="fb-share-button" data-href="http://mexorganico.com/curso_capacitacion.php?curso=<?php echo $capacitacion['id_capacitacion']; ?>" data-layout="button_count" data-size="large" data-mobile-iframe="true"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fmexorganico.com%2Fcapacitacion.php&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Compartir</a></div>
+                                                                </div>
+                                                                <div class="col-sm-6 blog-post-date" style="color:#d35400">
                                                                     <span>FECHA(S):</span>
                                                                     <?php 
                                                                     if(isset($capacitacion['fecha_inicio']) && $capacitacion['fecha_fin']){
@@ -126,43 +125,48 @@ mysql_select_db($database, $conectar);
                                                                         echo "<span>$fecha_fin</span>";
                                                                     }
                                                                      ?>
-                                                                </div>  
-                                                            </div>              
+                                                                </div>
+                                                                <div class="col-md-12">
+                                                                    <hr>
+                                                                </div>
+                                                            </div>
                                                         </div>
+                                                        <div class="col-md-12">
+                                                            <h2>
+                                                                <a href="curso_capacitacion.php?curso=<?php echo $capacitacion['id_capacitacion']; ?>"><?php echo $capacitacion['titulo']; ?></a>
+                                                            </h2>
+                                                        </div>
+                                                        <!-- inicia cupo del curso -->
+                                                        <div class="col-md-12">
+                                                            <?php 
+                                                            /// consultamos el numero de asistentes
+                                                            $query_asistentes = "SELECT COUNT(fk_id_participante) AS 'num_asistentes' FROM capacitacion_participante WHERE fk_id_capacitacion = $capacitacion[id_capacitacion] AND estatus = 'VERIFICADO'";
+                                                            $row_asistentes = mysql_query($query_asistentes, $conectar) or die(mysql_error());
+                                                            $asistentes = mysql_fetch_assoc($row_asistentes);
+                                                            
+                                                            if($asistentes['num_asistentes'] < $capacitacion['cupo']){
+                                                            ?>
+                                                                <div class="blog-post-details-item blog-post-details-item-left">
+                                                                    <i class="fa fa-user " style="color: #d35400"></i>
+                                                                    <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
+                                                                    <b style="color: #d35400">Cupo: <?php echo $capacitacion['cupo']; ?></b>
+                                                                </div>
+                                                            <?php
+                                                            }else{
+                                                            ?>
+                                                                <div class="blog-post-details-item blog-post-details-item-left" style="background:#e74c3c;color:white">
+                                                                    <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
+                                                                    <b style="color:#fff">CUPO AGOTADO</b>
+                                                                </div>
+                                                            <?php
+                                                            }
+                                                             ?>
+                                                        </div>
+                                                        <!-- termina cupo del curso -->
 
-                                                        <!-- Nombre del admin -->
-                                                        <?php 
-                                                        /// consultamos el numero de asistentes
-                                                        $query_asistentes = "SELECT COUNT(fk_id_participante) AS 'num_asistentes' FROM capacitacion_participante WHERE fk_id_capacitacion = $capacitacion[id_capacitacion] AND estatus = 'VERIFICADO'";
-                                                        $row_asistentes = mysql_query($query_asistentes, $conectar) or die(mysql_error());
-                                                        $asistentes = mysql_fetch_assoc($row_asistentes);
-                                                        
-                                                        if($asistentes['num_asistentes'] < $capacitacion['cupo']){
-                                                        ?>
-                                                            <div class="blog-post-details-item blog-post-details-item-left">
-                                                                <i class="fa fa-user " style="color: #d35400"></i>
-                                                                <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
-                                                                <b style="color: #d35400">Cupo: <?php echo $capacitacion['cupo']; ?></b>
-                                                            </div>
-                                                        <?php
-                                                        }else{
-                                                        ?>
-                                                            <div class="blog-post-details-item blog-post-details-item-left" style="background:#e74c3c;color:white">
-                                                                <!--<a href="#"><?php echo $capacitacion['username']; ?></a>-->
-                                                                <b style="color:#fff">CUPO AGOTADO</b>
-                                                            </div>
-                                                        <?php
-                                                        }
-                                                         ?>
-                                                        <!-- Termina nombre admin -->
-
-                                                        <!-- Termina fecha -->
-                                                    </div>
-                                                    <!-- TERMINA TITULO DEL ARTICULO -->
-                                                    <!-- INICIA CUERPO DEL ARTICULO -->
-                                                    <div class="col-sm-12">
-                                                        <div class="row">
-                                                            <p>
+                                                        <!-- inicia descripción contenido del curso -->
+                                                        <div class="col-md-12">
+                                                            <p class="text-justify">
                                                                 <?php echo substr($capacitacion['descripcion'], 0,300)." ..."; ?>
                                                             </p>
                                                             <!-- Read More -->
@@ -170,10 +174,12 @@ mysql_select_db($database, $conectar);
                                                                 Leer Más
                                                                 <i class="icon-chevron-right readmore-icon"></i>
                                                             </a>
-                                                            
                                                         </div>
+                                                        <!-- termina descripción contenido del curso -->
+
                                                     </div>
-                                                    <!-- TERMINA CUERPO DEL ARTICULO -->                                        
+
+                                      
                                                 </div><!-- termina col-lg-8 -->
 
                                             </div><!-- termina row -->
@@ -267,6 +273,11 @@ mysql_select_db($database, $conectar);
                             <?php
                             }
                              ?>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 margin-bottom-30">
+                                <div class="fb-comments" data-href="http://mexorganico.com/capacitacion.php" data-width="100%" data-numposts="6"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
