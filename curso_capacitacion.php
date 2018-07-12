@@ -621,59 +621,97 @@ mysql_select_db($database, $conectar);
                                                     <?php echo nl2br(substr($capacitacion['descripcion'], 0,300))." ..."; ?>
                                                 </p>
                                             </div>-->
-                                            <div class="col-md-12" style="border-bottom: 3px solid #27ae60">
-                                                <h4 style="color: #2c3e50">
-                                                    Detalles del Curso / Capacitación
-                                                </h4>
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                        <span class="glyphicon glyphicon-calendar"></span> <span class="resaltar">Fecha: </span> <span class="informacion"><?php echo $fechas; ?></span>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <span class="glyphicon glyphicon-usd"></span> <span class="resaltar">Costo: </span><span class="informacion"><?php echo number_format($capacitacion['costo']); ?></span> <span class="resaltar">MXN</span>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <span class="glyphicon glyphicon-user"></span> <span class="resaltar">Cupo: </span> <span class="informacion"><?php echo $capacitacion['cupo']; ?></span>
-                                                    </div>
-
-                                                    <div class="col-sm-4">
-                                                        <span class="glyphicon glyphicon-education"></span> <span class="resaltar">Tipo de curso: </span><span class="informacion"><?php echo $capacitacion['tipo_curso']; ?></span>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <span class="glyphicon glyphicon-envelope"></span> <span class="resaltar">Email: </span><span class="informacion"><?php echo $capacitacion['correo_capacitacion']; ?></span>
-                                                    </div>
-                                                    <div class="col-sm-4">
-                                                        <span class="glyphicon glyphicon-phone-alt"></span> <span class="resaltar">Teléfono: </span><span class="informacion"><?php echo $capacitacion['telefono_capacitacion']; ?></span>
-                                                    </div>
-                                                    <div class="col-sm-6" style="margin-top:20px">
-                                                        <span class="resaltar">Dirección:</span> <span><?php echo $capacitacion['lugar']; ?></span>
-                                                    </div>
-                                                    <div class="col-sm-6" style="margin-top:3em;padding-right: 0px;">
-                                                      <?php 
-                                                      if($asistentes['num_asistentes'] < $capacitacion['cupo']){
-                                                      ?>
-                                                        <button class="btn btn-lg btn-success" style="width:100%" data-toggle="modal" data-target="#modalRegistro">
-                                                            <span class="glyphicon glyphicon-list-alt"></span> Registrarse al curso
-                                                        </button>
-                                                      <?php
-                                                      }else{
-                                                      ?>
-                                                        <h4 style="color:#c0392b;font-weight:bold">Lo sentimos, se ha completado el cupo para el curso :(</h4>
-                                                      <?php
-                                                      }
-                                                       ?>
-                                                       <button class="btn btn-danger" data-toggle="modal" data-target="#modalComprobantePago" style="width:100%">Comprobante de pago</button>
-                                                    </div>
-
+                                                <div class="">
+                                                  <div class="col-sm-6 col-md-push-6" style="margin-top:1em;padding-right: 0px;">
+                                                    <?php 
+                                                    if($asistentes['num_asistentes'] < $capacitacion['cupo']){
+                                                    ?>
+                                                      <button class="btn btn-lg btn-success" style="width:100%" data-toggle="modal" data-target="#modalRegistro">
+                                                          <span class="glyphicon glyphicon-list-alt"></span> Registrarse al curso
+                                                      </button>
+                                                    <?php
+                                                    }else{
+                                                    ?>
+                                                      <h4 style="color:#c0392b;font-weight:bold">Lo sentimos, se ha completado el cupo para el curso :(</h4>
+                                                    <?php
+                                                    }
+                                                     ?>
+                                                     <button class="btn btn-danger" data-toggle="modal" data-target="#modalComprobantePago" style="width:100%">Cargar comprobante de pago</button>
+                                                  </div>
                                                 </div>
+
+                                            <div class="col-md-12">
+                                              <hr>
+                                                <h3 style="color: #2c3e50">
+                                                    Detalles del Curso / Capacitación
+                                                </h3>
+                                                <div class="row" style="margin-top:1em;">
+                                                  <div class="col-sm-4">
+                                                    <h4>Información</h4>
+                                                    <ul>
+                                                      <li>
+                                                        <span class="glyphicon glyphicon-education"></span> <span class="resaltar">Tipo de curso: </span><span class="informacion"><?php echo $capacitacion['tipo_curso']; ?></span>
+                                                      </li>
+                                                      <li>
+                                                        <span class="glyphicon glyphicon-calendar"></span> <span class="resaltar">Fecha: </span> <span class="informacion"><?php echo $fechas; ?></span>
+                                                      </li>
+                                                      <li>
+                                                        <span class="glyphicon glyphicon-usd"></span> <span class="resaltar">Costo: </span><span class="informacion"><?php echo number_format($capacitacion['costo']); ?></span> <span class="resaltar">MXN</span>
+                                                      </li>
+                                                      <li>
+                                                        <span class="glyphicon glyphicon-user"></span> <span class="resaltar">Cupo: </span> <span class="informacion"><?php echo $capacitacion['cupo']; ?></span>
+                                                      </li>
+                                                      <li>
+                                                        <span class="glyphicon glyphicon-envelope"></span> <span class="resaltar">Email: </span><span class="informacion"><?php echo $capacitacion['correo_capacitacion']; ?></span>
+                                                      </li>
+                                                      <li>
+                                                        <span class="glyphicon glyphicon-phone-alt"></span> <span class="resaltar">Teléfono: </span><span class="informacion"><?php echo $capacitacion['telefono_capacitacion']; ?></span>
+                                                      </li>
+                                                    </ul>
+                                                  </div>
+                                                  <div class="col-sm-4">
+                                                    <h4>Incluye</h4>
+                                                    <p>
+                                                      <!--<?php echo $capacitacion['incluye']; ?>-->
+                                                    </p>
+                                                  </div>
+
+                                                  <div class="col-sm-4">
+                                                    <h4>Datos bancarios</h4>
+                                                    <p>
+                                                      <!--<?php echo $capacitacion['datos_bancarios']; ?>-->
+                                                    </p>
+                                                    <?php 
+                                                    if(isset($capacitacion['datos_bancarios'])){
+                                                    ?>
+                                                    <p style="font-size:12px;">
+                                                      *Enviar comprobante de pago al correo electrónico <span style="color:#2980b9"><?php echo $capacitacion['correo_capacitacion']; ?></span>, o cargarlo en nuestro <a style="color:#2980b9" href="#" data-toggle="modal" data-target="#modalComprobantePago">sistema de registro</a>.
+                                                    </p>
+                                                    <?php
+                                                    }
+                                                     ?>
+                                                  </div>
+                                                </div>
+                                                <div class="row">
+                                                  <div class="col-sm-6">
+                                                    <h4>Documentación</h4>
+                                                  </div>
+                                                    
+                                                  <div class="col-sm-6">
+                                                    <h4>Dirección</h4>
+                                                    <span><?php echo $capacitacion['lugar']; ?></span>
+                                                  </div>
+                                                </div>
+                                             
                                             </div>
 
                                             <div class="col-md-12">
-                                                <h2 class="text-center" style="margin-top:20px;">CONTENIDO</h2>
-                                                <p>
-                                                    <?php echo nl2br($capacitacion['contenido']); ?>
-                                                </p>
-
+                                              <hr>
+                                                <h2 class="text-center">CONTENIDO</h2>
+                                              <hr>
+                                              <p>
+                                                  <?php echo nl2br($capacitacion['contenido']); ?>
+                                              </p>
                                             </div>
 
                                             <!-- COMENTARIOS DE FACEBOOK -->

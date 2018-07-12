@@ -124,7 +124,7 @@ $informacion_web = mysql_fetch_assoc($row_informacion);
                             	<tbody>
                             		<?php 
                             		if($numero_documentos == 0){
-                            			echo "<tr class='warning'><td colspan='5'>NO SE ENCONTRARON DOCUMENTOS</td></tr>";
+                            			echo "<tr class='warning'><td colspan='6'>NO SE ENCONTRARON DOCUMENTOS</td></tr>";
                             		}else{
 	                            		while($documento = mysql_fetch_assoc($row_biblioteca)){
 	                            		?>
