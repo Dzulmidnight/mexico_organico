@@ -140,7 +140,80 @@ if (!function_exists("GetSQLValueString")) {
 		}
 
 
+		/// AGREGAR LO QUE INCLUYE EL CURSO
+		$fk_id_capacitacion = $id_capacitacion;
+		$incluye = $_POST['incluye'];
 
+		$query = sprintf("INSERT INTO incluye (fk_id_capacitacion, descripcion, fecha_registro) VALUES (%s, %s, %s)", 
+           GetSQLValueString($fk_id_capacitacion, "int"),
+           GetSQLValueString($incluye, "text"),
+           GetSQLValueString($fecha_registro, "int"));
+		$insertar = mysql_query($query, $conectar) or die(mysql_error());
+
+		/// AGREGAMOS LOS DATOS BANCARIOS DEL CURSO
+		$fk_id_capacitacion = $id_capacitacion;
+		$datos_bancarios = $_POST['datos_bancarios'];
+
+		$query = sprintf("INSERT INTO datos_bancarios (fk_id_capacitacion, descripcion, fecha_registro) VALUES (%s, %s, %s)", 
+           GetSQLValueString($fk_id_capacitacion, "int"),
+           GetSQLValueString($datos_bancarios, "text"),
+           GetSQLValueString($fecha_registro, "int"));
+		$insertar = mysql_query($query, $conectar) or die(mysql_error());
+
+
+		/// AGREGAMO LOS DOCUMENTOS DE LA CAPACITACIÓN
+		if(isset($_POST['nombre_documento'])){
+			$nombre_documento = $_POST['nombre_documento'];
+		}else{
+			$nombre_documento = NULL;
+		}
+
+		if(isset($_POST['url_documento'])){
+			$url_documento = $_POST['url_documento'];
+		}else{
+			$url_documento = NULL;
+		}
+
+		if(isset($_POST['cargar_comprobante'])){
+			$cargar_comprobante = $_POST['cargar_comprobante'];
+		}else{
+			$cargar_comprobante = NULL;
+		}
+
+
+
+		for($i=0;$i<count($nombre_documento);$i++){
+			if($nombre_documento[$i] != NULL){
+
+				if(!empty($_FILES['url_documento'.[$i]]['name'])){
+					$ruta_img = "../img/capacitaciones/documentacion/";
+					$ruta_img = $ruta_img . basename( $_FILES['url_documento'.[$i]]['name']); 
+					if(move_uploaded_file($_FILES['url_documento'.[$i]]['tmp_name'], $ruta_img)){ 
+						//echo "El archivo ". basename( $_FILES['img']['name']). " ha sido subido";
+					} /*else{
+						echo "Ha ocurrido un error, trate de nuevo!";
+					}*/
+				}else{
+					$ruta_img = '';
+				}
+				#for($i=0;$i<count($certificacion);$i++){
+				$insertSQL = sprintf("INSERT INTO documentacion (nombre_documento, url_documento, cargar_comprobante, fecha_registro) VALUES (%s, %s, %s, %s)",
+				    GetSQLValueString($nombre_documento[$i], "text"),
+				    GetSQLValueString($ruta_img, "text"),
+				    GetSQLValueString($cargar_comprobante[$i], "int"),
+				    GetSQLValueString($fecha_registro, "text"));
+
+				$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+				#}
+				$fk_id_documento = mysql_insert_id($conectar);
+
+				$query = sprintf("INSERT INTO capacitacion_documentacion (fk_id_capacitacion, fk_id_documentacion) VALUES (%s, %s)", 
+		           GetSQLValueString($fk_id_capacitacion, "int"),
+		           GetSQLValueString($fk_id_documento, "int"));
+				$insertar = mysql_query($query, $conectar) or die(mysql_error());
+
+			}
+		}
 
 		$mensaje = "Se ha agregado una nueva capacitación";
 
@@ -385,48 +458,102 @@ if (!function_exists("GetSQLValueString")) {
 							<label for="contenido">* Contenido del Curso / Capacitación</label>
 							<textarea class="form-control summernote" name="contenido" id="" required></textarea>
 						</div>
-						
-						<div class="col-md-12" style="border-top: 3px solid #2980b9;">
-							<h4 style="color:#2c3e50">Detalle del Curso / Capacitación</h4>
-						</div>
 
-						<!-- detalle sobre la capacitación -->
-						<div class="col-md-12">
+						<div class="col-lg-12">
 							<div class="row">
-								<div class="col-sm-4" >
-									<input type="number" class="form-control campoObligatorio" id="cupo" name="cupo" placeholder="Número maximo de asistentes" required>
-								</div>
-								<div class="col-sm-4">
-									<select class="form-control campoObligatorio" name="tipo_curso" id="tipo_curso" required>
-										<option value="">Modo de presentación</option>
-										<option value="Presencial">Presencial</option>
-										<option value="En linea">En línea</option>
-									</select>
-								</div>
-								<div class="col-sm-4">
-									<div class="input-group">
-										<span class="input-group-addon">$</span>
-									  	<input type="number" class="form-control campoObligatorio" name="costo" id="costo" placeholder="Precio por asistente" required>
+								<!-- detalle sobre la capacitación -->
+								<div class="col-md-6 well" style="border-top: 3px solid #2980b9;">
+									<h4 style="color:#2c3e50">Detalle del Curso / Capacitación</h4>
+									<div class="row">
+										<div class="col-sm-4" >
+											<input type="number" class="form-control campoObligatorio" id="cupo" name="cupo" placeholder="Número maximo de asistentes" required>
+										</div>
+										<div class="col-sm-4">
+											<select class="form-control campoObligatorio" name="tipo_curso" id="tipo_curso" required>
+												<option value="">Modo de presentación</option>
+												<option value="Presencial">Presencial</option>
+												<option value="En linea">En línea</option>
+											</select>
+										</div>
+										<div class="col-sm-4">
+											<div class="input-group">
+												<span class="input-group-addon">$</span>
+											  	<input type="number" class="form-control campoObligatorio" name="costo" id="costo" placeholder="Precio por asistente" required>
+											</div>
+										</div>
+
+										<div class="col-sm-6" style="margin-top:20px;">
+											<label for="fecha_inicio">* Fecha de inicio del curso</label>
+											<input class="form-control campoObligatorio" type="date" name="fecha_inicio" id="fecha_inicio" placeholder="dd/mm/yyyy" required>
+										</div>
+										<div class="col-sm-6" style="margin-top:20px;">
+											<label for="fecha_fin">* Fecha final del curso</label>
+											<input class="form-control campoObligatorio" type="date" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/yyyy" required>
+										</div>
+
+										<div class="col-sm-12" style="margin-top:20px;">
+											<label for="lugar">* Dirección donde se impartira el curso</label>
+											<textarea class="form-contro summernote" name="lugar" id="lugar" required></textarea>
+										</div>
+
 									</div>
 								</div>
 
-								<div class="col-sm-6" style="margin-top:20px;">
-									<label for="fecha_inicio">* Fecha de inicio del curso</label>
-									<input class="form-control campoObligatorio" type="date" name="fecha_inicio" id="fecha_inicio" placeholder="dd/mm/yyyy" required>
-								</div>
-								<div class="col-sm-6" style="margin-top:20px;">
-									<label for="fecha_fin">* Fecha final del curso</label>
-									<input class="form-control campoObligatorio" type="date" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/yyyy" required>
-								</div>
-
-								<div class="col-sm-12" style="margin-top:20px;">
-									<label for="lugar">* Dirección donde se impartira el curso</label>
-									<textarea class="form-contro summernote" name="lugar" id="lugar" required></textarea>
-								</div>
-
+								<div class="col-md-6 well" style="border-top: 3px solid #d35400;">
+									<h4>Incluye</h4>
+									<div style="">
+										<label for="incluye">* Recursos suministrados (ej: material, traslado, alimentación, constancia)</label>
+										<textarea class="form-contro summernote" name="incluye" id="incluye" required></textarea>
+									</div>
+								</div>	
 							</div>
 						</div>
 
+						<div class="col-lg-12">
+							<div class="row">
+								<div class="col-md-6 well" style="border-top: 3px solid #d35400;">
+									<h4>Datos bancarios</h4>
+									<div>
+										<label for="datos_bancarios">* Recursos suministrados (ej: material, traslado, alimentación, constancia)</label>
+										<textarea class="form-contro summernote" name="datos_bancarios" id="datos_bancarios" required></textarea>
+									</div>
+								</div>
+
+								<div class="col-md-6 well" style="border-top: 3px solid #2980b9;">
+									<h4>Documentación</h4> <button type="button" class="btn btn-sm btn-success" data-toggle="tooltip" title="Agregar otro archivo" onclick="tablaDocumentos()"><span class="glyphicon glyphicon-plus"></span></button>
+									<table id="tablaDocumentos" class="table table-bordered table-condensed" style="font-size:10px;">
+										<thead>
+											<tr>
+												<th>
+													<a href="" data-toggle="tooltip" title="Solicitar comprobante de archivo"><span class="glyphicon glyphicon-info-sign"></span> Contraparte</a>
+												</th>
+												<th>Nombre del archivo</th>
+												<th>Archivo</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr>
+												<td>
+													<label>
+														SI <input type="radio" name="cargar_comprobante[0]" value="1">
+													</label>
+													<label>
+														NO <input type="radio" name="cargar_comprobante[0]" value="0">
+													</label>
+												</td>
+												<td>
+													<input type="text" class="form-control" name="nombre_documento[0]" placeholder="Nombre del archivo">
+												</td>
+												<td>
+													<input type="file" class="form-control" name="url_documento[0]">
+												</td>
+											</tr>
+										</tbody>
+									</table>
+
+								</div>
+							</div>
+						</div>
 
 						<div style="position:fixed;z-index:1;right:0px;">
 							<input type="hidden" name="fecha" value="<?php echo time(); ?>">
@@ -434,52 +561,8 @@ if (!function_exists("GetSQLValueString")) {
 							<input class="btn btn-danger" type="submit" value="Crear nueva capacitación">
 						</div>
 
-
-
 				  	</div>
 
-				  	<!--29/08 <div class="col-lg-6">
-						<div class="col-md-6">
-							<label for="tipo_nota">Tipo Nota</label>
-							<select class="form-control" name="tipo_nota" id="tipo_nota">
-								<option value="">...</option>
-								<option value="encabezado">Encabezado</option>
-								<option value="cuerpo">Cuerpo</option>
-							</select>
-						</div>
-						<div class="col-md-6">
-							<label for="fecha">Fecha</label>
-							<input class="form-control" type="date" id="fecha" name="fecha" required>
-						</div>
-						<div class="col-md-6">
-							<label for="contenido_titulo">Titulo Nota (contenido_titulo)</label>
-							<input type="text" class="form-control" id="contenido_titulo" name="contenido_titulo">
-							<!--<textarea class="textarea form-control" id="contenido_titulo" name="contenido_titulo" rows="4" ></textarea>-->
-					<!--29/08	</div>
-						<div class="col-md-6">
-							<label for="descripcion1">Descripción 1</label>
-							<input type="text" class="form-control" id="descripcion1" name="descripcion1">
-							<!--<textarea class="textarea form-control" id="descripcion1" name="descripcion1" rows="4" ></textarea>-->
-					<!--29/08	</div>
-						
-						<div class="col-md-6">
-							<label for="descripcion2"> Descripción 2</label>
-							<input type="text" class="form-control" id="descripcion2" name="descripcion2">
-							<!--<textarea class="textarea form-control" id="descripcion2" name="descripcion2" rows="4" ></textarea>-->
-					<!--29/08	</div>
-
-						<div class="col-md-6">
-							<label for="descripcion3"> Descripción 3</label>
-							<input type="text" class="form-control" id="descripcion3" name="descripcion3">
-							<!--<textarea class="textarea form-control" id="descripcion3" name="descripcion3" rows="4" ></textarea>-->
-					<!--29/08	</div>
-
-						<div class="col-lg-12">
-							<hr>
-							<input type="hidden" name="agregar_capacitacion" value="1">
-							<input class="btn btn-success" type="submit" value="Agregar Articulo">
-						</div>
-				  	</div> 29/08-->
 				  </div>
 				</div>
 			</form>
@@ -489,18 +572,38 @@ if (!function_exists("GetSQLValueString")) {
 	 ?>
 </div>
 <script>
-var contador=0;
-	function tabla_tags()
-	{
-		contador++;
-	var table = document.getElementById("tabla_tags");
-	  {
-	  var row = table.insertRow(2);
-	  var cell1 = row.insertCell(0);
+	var contador=0;
+		function tabla_tags()
+		{
+			contador++;
+		var table = document.getElementById("tabla_tags");
+		  {
+		  var row = table.insertRow(2);
+		  var cell1 = row.insertCell(0);
 
-	  cell1.innerHTML = '<input type="text" class="form-control" name="nuevo_tag['+contador+']" id="exampleInputEmail1" placeholder="Agregar Palabra">';
+		  cell1.innerHTML = '<input type="text" class="form-control" name="nuevo_tag['+contador+']" id="exampleInputEmail1" placeholder="Agregar Palabra">';
 
-	  }
-	}
+		  }
+		}
+
+
+	var contador=0;
+		function tablaDocumentos()
+		{
+			contador++;
+			var table = document.getElementById("tablaDocumentos");
+			{
+				var row = table.insertRow(2);
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
+				var cell3 = row.insertCell(2);
+
+				cell1.innerHTML = '<label>SI <input type="radio" name="cargar_comprobante['+contador+']" value="1"></label><label>NO <input type="radio" name="cargar_comprobante['+contador+']" value="0"></label>';
+				cell2.innerHTML = '<input type="text" class="form-control" name="nombre_documento['+contador+']" placeholder="Nombre del archivo">';
+				cell3.innerHTML = '<input type="file" class="form-control" name="url_documento['+contador+']">';
+
+		  }
+		}
+
 
 </script>
