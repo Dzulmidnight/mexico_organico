@@ -183,12 +183,14 @@ if (!function_exists("GetSQLValueString")) {
 
 
 		for($i=0;$i<count($nombre_documento);$i++){
+			$nom_doc = 'url_documento'.$i;
+
 			if($nombre_documento[$i] != NULL){
 
-				if(!empty($_FILES['url_documento'.[$i]]['name'])){
+				if(!empty($_FILES[$nom_doc]['name'])){
 					$ruta_img = "../img/capacitaciones/documentacion/";
-					$ruta_img = $ruta_img . basename( $_FILES['url_documento'.[$i]]['name']); 
-					if(move_uploaded_file($_FILES['url_documento'.[$i]]['tmp_name'], $ruta_img)){ 
+					$ruta_img = $ruta_img . basename( $_FILES[$nom_doc]['name']); 
+					if(move_uploaded_file($_FILES[$nom_doc]['tmp_name'], $ruta_img)){ 
 						//echo "El archivo ". basename( $_FILES['img']['name']). " ha sido subido";
 					} /*else{
 						echo "Ha ocurrido un error, trate de nuevo!";
@@ -203,7 +205,7 @@ if (!function_exists("GetSQLValueString")) {
 				    GetSQLValueString($cargar_comprobante[$i], "int"),
 				    GetSQLValueString($fecha_registro, "text"));
 
-				$Result = mysql_query($insertSQL, $dspp) or die(mysql_error());
+				$Result = mysql_query($insertSQL, $conectar) or die(mysql_error());
 				#}
 				$fk_id_documento = mysql_insert_id($conectar);
 
@@ -545,7 +547,7 @@ if (!function_exists("GetSQLValueString")) {
 													<input type="text" class="form-control" name="nombre_documento[0]" placeholder="Nombre del archivo">
 												</td>
 												<td>
-													<input type="file" class="form-control" name="url_documento[0]">
+													<input type="file" class="form-control" name="url_documento0">
 												</td>
 											</tr>
 										</tbody>
@@ -600,7 +602,7 @@ if (!function_exists("GetSQLValueString")) {
 
 				cell1.innerHTML = '<label>SI <input type="radio" name="cargar_comprobante['+contador+']" value="1"></label><label>NO <input type="radio" name="cargar_comprobante['+contador+']" value="0"></label>';
 				cell2.innerHTML = '<input type="text" class="form-control" name="nombre_documento['+contador+']" placeholder="Nombre del archivo">';
-				cell3.innerHTML = '<input type="file" class="form-control" name="url_documento['+contador+']">';
+				cell3.innerHTML = '<input type="file" class="form-control" name="url_documento'+contador+'">';
 
 		  }
 		}
