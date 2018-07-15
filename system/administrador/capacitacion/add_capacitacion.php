@@ -182,7 +182,7 @@ if (!function_exists("GetSQLValueString")) {
 
 
 
-		for($i=0;$i<count($nombre_documento);$i++){
+		for($i=0;$i<=count($nombre_documento);$i++){
 			$nom_doc = 'url_documento'.$i;
 
 			if($nombre_documento[$i] != NULL){
@@ -500,11 +500,11 @@ if (!function_exists("GetSQLValueString")) {
 
 									</div>
 								</div>
-
+								<!-- recursos suministrados -->
 								<div class="col-md-6 well" style="border-top: 3px solid #d35400;">
 									<h4>Incluye</h4>
 									<div style="">
-										<label for="incluye">* Recursos suministrados (ej: material, traslado, alimentación, constancia)</label>
+										<p>Recursos suministrados (ej: material, traslado, alimentación, constancia)</p>
 										<textarea class="form-contro summernote" name="incluye" id="incluye" required></textarea>
 									</div>
 								</div>	
@@ -516,13 +516,14 @@ if (!function_exists("GetSQLValueString")) {
 								<div class="col-md-6 well" style="border-top: 3px solid #d35400;">
 									<h4>Datos bancarios</h4>
 									<div>
-										<label for="datos_bancarios">* Recursos suministrados (ej: material, traslado, alimentación, constancia)</label>
 										<textarea class="form-contro summernote" name="datos_bancarios" id="datos_bancarios" required></textarea>
 									</div>
 								</div>
 
 								<div class="col-md-6 well" style="border-top: 3px solid #2980b9;">
-									<h4>Documentación</h4> <button type="button" class="btn btn-sm btn-success" data-toggle="tooltip" title="Agregar otro archivo" onclick="tablaDocumentos()"><span class="glyphicon glyphicon-plus"></span></button>
+									<h4>Documentación</h4> 
+									<p>Formatos suministrados o requeridos a los participantes.</p>
+									<button type="button" class="btn btn-sm btn-success" data-toggle="tooltip" title="Agregar otro archivo" onclick="tablaDocumentos()"><span class="glyphicon glyphicon-plus"></span></button>
 									<table id="tablaDocumentos" class="table table-bordered table-condensed" style="font-size:10px;">
 										<thead>
 											<tr>
@@ -540,7 +541,7 @@ if (!function_exists("GetSQLValueString")) {
 														SI <input type="radio" name="cargar_comprobante[0]" value="1">
 													</label>
 													<label>
-														NO <input type="radio" name="cargar_comprobante[0]" value="0">
+														NO <input type="radio" name="cargar_comprobante[0]" value="0" checked>
 													</label>
 												</td>
 												<td>
@@ -600,7 +601,7 @@ if (!function_exists("GetSQLValueString")) {
 				var cell2 = row.insertCell(1);
 				var cell3 = row.insertCell(2);
 
-				cell1.innerHTML = '<label>SI <input type="radio" name="cargar_comprobante['+contador+']" value="1"></label><label>NO <input type="radio" name="cargar_comprobante['+contador+']" value="0"></label>';
+				cell1.innerHTML = '<label>SI <input type="radio" name="cargar_comprobante['+contador+']" value="1"></label><label>NO <input type="radio" name="cargar_comprobante['+contador+']" value="0" checked></label>';
 				cell2.innerHTML = '<input type="text" class="form-control" name="nombre_documento['+contador+']" placeholder="Nombre del archivo">';
 				cell3.innerHTML = '<input type="file" class="form-control" name="url_documento'+contador+'">';
 

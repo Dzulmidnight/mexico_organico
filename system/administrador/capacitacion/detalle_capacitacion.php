@@ -239,7 +239,7 @@ if (!function_exists("GetSQLValueString")) {
 
 	}
 
-	$query = "SELECT capacitacion.*, detalle_capacitacion.*, usuario.username FROM capacitacion INNER JOIN detalle_capacitacion ON capacitacion.id_capacitacion = detalle_capacitacion.fk_id_capacitacion INNER JOIN usuario ON capacitacion.fk_id_usuario = usuario.idusuario WHERE id_capacitacion = $id_capacitacion";
+	$query = "SELECT capacitacion.*, detalle_capacitacion.*, incluye.descripcion AS 'descripcion_incluye', datos_bancarios.descripcion AS 'descripcion_datos_bancarios', usuario.username FROM capacitacion INNER JOIN detalle_capacitacion ON capacitacion.id_capacitacion = detalle_capacitacion.fk_id_capacitacion INNER JOIN usuario ON capacitacion.fk_id_usuario = usuario.idusuario LEFT JOIN incluye ON capacitacion.id_capacitacion = incluye.fk_id_capacitacion LEFT JOIN datos_bancarios ON capacitacion.id_capacitacion = datos_bancarios.fk_id_capacitacion WHERE id_capacitacion = $id_capacitacion";
 	$row_capacitacion = mysql_query($query, $conectar) or die(mysql_error());
 	$detalle_capacitacion = mysql_fetch_assoc($row_capacitacion);
 
@@ -355,47 +355,146 @@ if (!function_exists("GetSQLValueString")) {
 						<label for="contenido">* Contenido del Curso / Capacitación</label>
 						<textarea class="form-control summernote" name="contenido" id="" required><?php echo $detalle_capacitacion['contenido']; ?></textarea>
 					</div>
-					
-					<div class="col-md-12" style="border-top: 3px solid #2980b9;">
-						<h4 style="color:#2c3e50">Detalle del Curso / Capacitación</h4>
-					</div>
+					<div class="col-lg-12">
+						<div class="row"><!-- inicia row -->
+							<!-- detalle sobre la capacitación -->
+							<div class="col-md-6" style="border-top: 3px solid #2980b9;">
+								<h4 style="color:#2c3e50">Detalle del Curso / Capacitación</h4>
+								<div class="row">
+									<div class="col-sm-4" >
+										<input type="number" class="form-control campoObligatorio" id="cupo" name="cupo" placeholder="Número maximo de asistentes" value="<?php echo $detalle_capacitacion['cupo']; ?>" required>
+									</div>
+									<div class="col-sm-4">
+										<select class="form-control campoObligatorio" name="tipo_curso" id="tipo_curso" required>
+											<option value="">Modo de presentación</option>
+											<option <?php if($detalle_capacitacion['tipo_curso'] == 'Presencial'){ echo 'selected'; } ?> value="Presencial">Presencial</option>
+											<option <?php if($detalle_capacitacion['tipo_curso'] == 'En linea'){ echo 'selected'; } ?> value="En linea">En línea</option>
+										</select>
+									</div>
+									<div class="col-sm-4">
+										<div class="input-group">
+											<span class="input-group-addon">$</span>
+										  	<input type="number" class="form-control campoObligatorio" name="costo" id="costo" placeholder="Precio por asistente" value="<?php echo $detalle_capacitacion['costo']; ?>" required>
+										</div>
+									</div>
 
-					<!-- detalle sobre la capacitación -->
-					<div class="col-md-12">
-						<div class="row">
-							<div class="col-sm-4" >
-								<input type="number" class="form-control campoObligatorio" id="cupo" name="cupo" placeholder="Número maximo de asistentes" value="<?php echo $detalle_capacitacion['cupo']; ?>" required>
-							</div>
-							<div class="col-sm-4">
-								<select class="form-control campoObligatorio" name="tipo_curso" id="tipo_curso" required>
-									<option value="">Modo de presentación</option>
-									<option <?php if($detalle_capacitacion['tipo_curso'] == 'Presencial'){ echo 'selected'; } ?> value="Presencial">Presencial</option>
-									<option <?php if($detalle_capacitacion['tipo_curso'] == 'En linea'){ echo 'selected'; } ?> value="En linea">En línea</option>
-								</select>
-							</div>
-							<div class="col-sm-4">
-								<div class="input-group">
-									<span class="input-group-addon">$</span>
-								  	<input type="number" class="form-control campoObligatorio" name="costo" id="costo" placeholder="Precio por asistente" value="<?php echo $detalle_capacitacion['costo']; ?>" required>
+									<div class="col-sm-6" style="margin-top:20px;">
+										<label for="fecha_inicio">* Fecha de inicio del curso</label>
+										<input class="form-control campoObligatorio" type="date" name="fecha_inicio" id="fecha_inicio" placeholder="dd/mm/yyyy" value="<?php echo $fecha_inicio; ?>" required>
+									</div>
+									<div class="col-sm-6" style="margin-top:20px;">
+										<label for="fecha_fin">* Fecha final del curso</label>
+										<input class="form-control campoObligatorio" type="date" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/yyyy" value="<?php echo $fecha_fin; ?>" required>
+									</div>
+
+									<div class="col-sm-12" style="margin-top:20px;">
+										<label for="lugar">* Dirección donde se impartira el curso</label>
+										<textarea class="form-contro summernote" name="lugar" id="lugar" required><?php echo $detalle_capacitacion['lugar']; ?></textarea>
+									</div>
+
 								</div>
 							</div>
 
-							<div class="col-sm-6" style="margin-top:20px;">
-								<label for="fecha_inicio">* Fecha de inicio del curso</label>
-								<input class="form-control campoObligatorio" type="date" name="fecha_inicio" id="fecha_inicio" placeholder="dd/mm/yyyy" value="<?php echo $fecha_inicio; ?>" required>
-							</div>
-							<div class="col-sm-6" style="margin-top:20px;">
-								<label for="fecha_fin">* Fecha final del curso</label>
-								<input class="form-control campoObligatorio" type="date" name="fecha_fin" id="fecha_fin" placeholder="dd/mm/yyyy" value="<?php echo $fecha_fin; ?>" required>
+							<!-- recursos suministrados -->
+							<div class="col-md-6 well" style="border-top: 3px solid #d35400;">
+								<h4>Incluye</h4>
+								<div style="">
+									<p>Recursos suministrados (ej: material, traslado, alimentación, constancia)</p>
+									<textarea class="form-contro summernote" name="incluye" id="incluye" required><?php echo $detalle_capacitacion['descripcion_incluye']; ?></textarea>
+								</div>
+							</div>	
+						</div><!-- termina row -->
+
+
+					</div>
+
+					<div class="col-lg-12">
+						<div class="row">
+							<!-- datos bancarios del curso -->
+							<div class="col-md-6 well" style="border-top: 3px solid #d35400;">
+								<h4>Datos bancarios</h4>
+								<div>
+									<textarea class="form-contro summernote" name="datos_bancarios" id="datos_bancarios" required><?php echo $detalle_capacitacion['descripcion_datos_bancarios']; ?></textarea>
+								</div>
 							</div>
 
-							<div class="col-sm-12" style="margin-top:20px;">
-								<label for="lugar">* Dirección donde se impartira el curso</label>
-								<textarea class="form-contro summernote" name="lugar" id="lugar" required><?php echo $detalle_capacitacion['lugar']; ?></textarea>
+							<!-- documentación necesaria para el curso -->
+							<div class="col-md-6 well" style="border-top: 3px solid #2980b9;">
+								<h4>Documentación</h4> 
+								<p>Formatos suministrados o requeridos a los participantes.</p>
+								<button type="button" class="btn btn-sm btn-success" data-toggle="tooltip" title="Agregar otro archivo" onclick="tablaDocumentos()"><span class="glyphicon glyphicon-plus"></span></button>
+								<table id="tablaDocumentos" class="table table-bordered table-condensed" style="font-size:10px;">
+									<thead>
+										<tr>
+											<th>
+												<a href="" data-toggle="tooltip" title="Solicitar comprobante de archivo"><span class="glyphicon glyphicon-info-sign"></span> Contraparte</a>
+											</th>
+											<th>Nombre del archivo</th>
+											<th>Archivo</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td>
+												<label>
+													SI <input type="radio" name="cargar_comprobante[0]" value="1">
+												</label>
+												<label>
+													NO <input type="radio" name="cargar_comprobante[0]" value="0" checked>
+												</label>
+											</td>
+											<td>
+												<input type="text" class="form-control" name="nombre_documento[0]" placeholder="Nombre del archivo">
+											</td>
+											<td>
+												<input type="file" class="form-control" name="url_documento0">
+											</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<table class="table table-bordered table-condensed" style="font-size:12px;">
+									<thead>
+										<tr>
+											<th>
+												<a href="" data-toggle="tooltip" title="Solicitar comprobante de archivo"><span class="glyphicon glyphicon-info-sign"></span> Contraparte</a>
+											</th>
+											<th>Nombre del archivo</th>
+											<th>Archivo</th>
+										</tr>
+									</thead>
+									<tbody>
+										<?php 
+										$query_documentacion = mysql_query("SELECT documentacion.* FROM capacitacion_documentacion INNER JOIN documentacion ON capacitacion_documentacion.fk_id_documentacion = documentacion.id_documentacion WHERE capacitacion_documentacion.fk_id_capacitacion = $detalle_capacitacion[id_capacitacion]", $conectar) or die(mysql_error());
+										while($documentacion = mysql_fetch_assoc($query_documentacion)){
+										?>
+											<tr>
+												<td>
+													<label>
+														SI <input type="radio" name="cargar_comprobante[0]" value="1" <?php if($documentacion['cargar_comprobante'] == 1){ echo 'checked'; } ?>>
+													</label>
+													<label>
+														NO <input type="radio" name="cargar_comprobante[0]" value="0" <?php if($documentacion['cargar_comprobante'] == 0){ echo 'checked'; } ?>>
+													</label>
+												</td>
+												<td>
+													<?php echo $documentacion['nombre_documento']; ?>
+												</td>
+												<td>
+													<?php echo $documentacion['url_documento']; ?>
+												</td>
+											</tr>
+										<?php
+										}
+										 ?>
+									</tbody>
+								</table>
+
 							</div>
 
 						</div>
 					</div>
+
 
 
 					<div style="position:fixed;z-index:1;right:0px;">
